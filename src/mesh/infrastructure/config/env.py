@@ -11,6 +11,7 @@ Usage:
 """
 
 import os
+from pathlib import Path
 from typing import Optional
 
 
@@ -127,12 +128,86 @@ def get_tailscale_tailnet() -> Optional[str]:
     return get_env(EnvVars.TAILSCALE_TAILNET)
 
 
+MESH_CONFIG_DIR = os.path.expanduser("~/.mesh")
+MESH_CONFIG_FILE = os.path.join(MESH_CONFIG_DIR, "config")
+
+
+def get_config_file_path() -> str:
+    """Return the path to the mesh config file."""
+    return MESH_CONFIG_FILE
+
+
+def _parse_config_value(file_path: str, key: str) -> Optional[str]:
+    """Parse a shell-style key=value line from a config file.
+
+    Handles formats:
+        NOMAD_ADDR=http://1.2.3.4:4646
+        NOMAD_ADDR="http://1.2.3.4:4646"
+        NOMAD_ADDR='http://1.2.3.4:4646'
+
+    Returns the unquoted value or None if key not found / file missing.
+    """
+    try:
+        with open(file_path, "r") as f:
+            for line in f:
+                stripped = line.strip()
+                if not stripped or stripped.startswith("#"):
+                    continue
+                if "=" not in stripped:
+                    continue
+                k, _, v = stripped.partition("=")
+                k = k.strip()
+                if k != key:
+                    continue
+                v = v.strip()
+                # Remove surrounding quotes (single or double)
+                if len(v) >= 2 and (
+                    (v.startswith('"') and v.endswith('"'))
+                    or (v.startswith("'") and v.endswith("'"))
+                ):
+                    v = v[1:-1]
+                return v
+    except (FileNotFoundError, PermissionError, OSError):
+        pass
+    return None
+
+
+def get_nomad_addr_from_config() -> Optional[str]:
+    """Read NOMAD_ADDR from ~/.mesh/config file.
+
+    Returns the address string or None if not found.
+    """
+    return _parse_config_value(MESH_CONFIG_FILE, "NOMAD_ADDR")
+
+
+def get_consul_addr_from_config() -> Optional[str]:
+    """Read CONSUL_ADDR from ~/.mesh/config file.
+
+    Returns the address string or None if not found.
+    """
+    return _parse_config_value(MESH_CONFIG_FILE, "CONSUL_ADDR")
+
+
 def get_nomad_addr() -> str:
-    """Get the Nomad address, defaulting to localhost."""
-    return (
-        get_env(EnvVars.NOMAD_ADDR, default="http://127.0.0.1:4646")
-        or "http://127.0.0.1:4646"
-    )
+    """Get the Nomad address.
+
+    Resolution order:
+        1. NOMAD_ADDR environment variable (primary)
+        2. ~/.mesh/config file (written by mesh-install.sh)
+        3. http://127.0.0.1:4646 (default for local dev)
+
+    Returns:
+        The Nomad address string.
+    """
+    env_value = os.environ.get(EnvVars.NOMAD_ADDR)
+    if env_value:
+        return env_value
+
+    config_value = get_nomad_addr_from_config()
+    if config_value:
+        return config_value
+
+    return "http://127.0.0.1:4646"
 
 
 def get_nomad_token() -> Optional[str]:
@@ -141,8 +216,22 @@ def get_nomad_token() -> Optional[str]:
 
 
 def get_consul_addr() -> str:
-    """Get the Consul address, defaulting to localhost."""
-    return (
-        get_env(EnvVars.CONSUL_ADDR, default="http://localhost:8500")
-        or "http://localhost:8500"
-    )
+    """Get the Consul address.
+
+    Resolution order:
+        1. CONSUL_ADDR environment variable (primary)
+        2. ~/.mesh/config file (written by mesh-install.sh)
+        3. http://localhost:8500 (default for local dev)
+
+    Returns:
+        The Consul address string.
+    """
+    env_value = os.environ.get(EnvVars.CONSUL_ADDR)
+    if env_value:
+        return env_value
+
+    config_value = get_consul_addr_from_config()
+    if config_value:
+        return config_value
+
+    return "http://localhost:8500"
