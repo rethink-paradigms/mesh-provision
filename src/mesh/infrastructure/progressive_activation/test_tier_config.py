@@ -6,7 +6,7 @@ Test Categories:
     - Tier Detection: detect_cluster_tier from node topology
     - Edge Cases: override, default, error handling
 
-Total: 12 tests
+Total: 8 tests
 """
 
 import pytest
@@ -28,7 +28,6 @@ class TestTierConfig:
         assert config.enable_caddy is True
         assert config.enable_tailscale is False
         assert config.enable_consul is False
-        assert config.enable_traefik is False
         assert config.enable_telegraf is False
 
     def test_standard_tier_enables_caddy_and_consul(self):
@@ -36,28 +35,11 @@ class TestTierConfig:
         assert config.enable_caddy is True
         assert config.enable_consul is True
         assert config.enable_tailscale is True
-        assert config.enable_traefik is False
         assert config.enable_telegraf is False
 
-    def test_ingress_tier_enables_traefik_disables_caddy(self):
-        config = TierConfig.from_tier(ClusterTier.INGRESS)
-        assert config.enable_traefik is True
-        assert config.enable_caddy is False
-        assert config.enable_consul is True
-        assert config.enable_tailscale is True
-        assert config.enable_telegraf is False
-
-    def test_production_tier_enables_all_except_caddy(self):
-        config = TierConfig.from_tier(ClusterTier.PRODUCTION)
-        assert config.enable_tailscale is True
-        assert config.enable_consul is True
-        assert config.enable_traefik is True
-        assert config.enable_telegraf is True
-        assert config.enable_caddy is False
-
-    def test_default_tier_is_production(self):
+    def test_default_tier_is_standard(self):
         config = TierConfig()
-        assert config.tier == ClusterTier.PRODUCTION
+        assert config.tier == ClusterTier.STANDARD
 
     def test_tier_config_from_tier_returns_correct_config(self):
         for tier in ClusterTier:
@@ -79,26 +61,13 @@ class TestDetectClusterTier:
         config = detect_cluster_tier(nodes)
         assert config.tier == ClusterTier.STANDARD
 
-    def test_detect_multi_region_is_ingress(self):
+    def test_detect_multi_region_is_standard(self):
         nodes = [
             NodeInfo(name="node-1", provider="aws", region="us-east-1", role="server"),
             NodeInfo(name="node-2", provider="aws", region="eu-west-1", role="client"),
         ]
         config = detect_cluster_tier(nodes)
-        assert config.tier == ClusterTier.INGRESS
-
-    def test_detect_spot_nodes_is_production(self):
-        nodes = [
-            NodeInfo(
-                name="node-1",
-                provider="aws",
-                region="us-east-1",
-                role="server",
-                is_spot=True,
-            ),
-        ]
-        config = detect_cluster_tier(nodes)
-        assert config.tier == ClusterTier.PRODUCTION
+        assert config.tier == ClusterTier.STANDARD
 
     def test_override_tier_takes_precedence(self):
         nodes = [

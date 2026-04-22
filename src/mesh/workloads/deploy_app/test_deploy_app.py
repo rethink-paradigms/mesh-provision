@@ -55,28 +55,6 @@ def test_deploy_app_standard_tier_uses_lite_service(mock_lite, mock_detect):
 
 
 @patch(
-    "mesh.workloads.deploy_app.deploy._detect_tier_from_nomad",
-    return_value=ClusterTier.INGRESS,
-)
-def test_deploy_app_ingress_tier_returns_false(mock_detect, capsys):
-    result = deploy_app(app_name="test-app", image="test-image")
-    assert result is False
-    captured = capsys.readouterr()
-    assert "Traefik" in captured.out
-
-
-@patch(
-    "mesh.workloads.deploy_app.deploy._detect_tier_from_nomad",
-    return_value=ClusterTier.PRODUCTION,
-)
-def test_deploy_app_production_tier_returns_false(mock_detect, capsys):
-    result = deploy_app(app_name="test-app", image="test-image")
-    assert result is False
-    captured = capsys.readouterr()
-    assert "Traefik" in captured.out
-
-
-@patch(
     "mesh.workloads.deploy_lite_web_service.deploy.deploy_lite_web_service",
     return_value=True,
 )
@@ -116,7 +94,7 @@ def test_detect_tier_from_nomad_multiple_nodes(mock_run):
 
 
 @patch("mesh.workloads.deploy_app.deploy.subprocess.run")
-def test_detect_tier_from_nomad_failure_defaults_production(mock_run):
+def test_detect_tier_from_nomad_failure_defaults_standard(mock_run):
     mock_run.return_value = MagicMock(returncode=1, stdout="")
     tier = _detect_tier_from_nomad()
-    assert tier == ClusterTier.PRODUCTION
+    assert tier == ClusterTier.STANDARD

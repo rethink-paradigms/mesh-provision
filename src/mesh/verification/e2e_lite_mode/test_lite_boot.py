@@ -18,7 +18,6 @@ class TestLiteBoot:
         config = TierConfig.from_tier(ClusterTier.LITE)
         assert config.enable_consul is False
         assert config.enable_tailscale is False
-        assert config.enable_traefik is False
         assert config.enable_caddy is True
 
     def test_lite_boot_script_no_tailscale(self):

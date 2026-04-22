@@ -28,4 +28,3 @@ class TestLiteRouting:
     def test_deploy_app_routes_to_lite_for_single_node(self):
         config = TierConfig.from_tier(ClusterTier.LITE)
         assert config.enable_caddy is True
-        assert config.enable_traefik is False

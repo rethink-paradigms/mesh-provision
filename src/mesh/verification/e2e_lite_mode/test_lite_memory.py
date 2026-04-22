@@ -13,8 +13,6 @@ class TestLiteMemory:
             overhead += 0
         if not config.enable_tailscale:
             overhead += 0
-        if not config.enable_traefik:
-            overhead += 0
         if not config.enable_telegraf:
             overhead += 0
 
@@ -32,16 +30,3 @@ class TestLiteMemory:
         lite_overhead = 80 + 100 + 20
         savings_percent = ((full_overhead - lite_overhead) / full_overhead) * 100
         assert savings_percent >= 60
-
-    def test_production_mode_overhead(self):
-        config = TierConfig.from_tier(ClusterTier.PRODUCTION)
-        overhead = 80 + 100
-        if config.enable_consul:
-            overhead += 50
-        if config.enable_tailscale:
-            overhead += 20
-        if config.enable_traefik:
-            overhead += 256
-        if config.enable_telegraf:
-            overhead += 30
-        assert overhead == 536
