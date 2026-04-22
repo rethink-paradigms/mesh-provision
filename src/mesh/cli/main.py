@@ -34,6 +34,7 @@ from mesh.cli.commands.logs import run_logs
 from mesh.cli.commands.ssh import run_ssh
 from mesh.cli.commands.deploy import run_deploy
 from mesh.cli.commands.doctor import run_doctor
+from mesh.cli.commands.snapshot import snapshot_app
 from mesh.cli.ui.panels import (
     console,
     show_banner,
@@ -360,6 +361,8 @@ def roadmap():
     show_banner()
     show_vision_roadmap()
 
+
+app.add_typer(snapshot_app, name="snapshot")
 
 # Discover and register plugins from installed packages
 # Enterprise features (GPU, monitoring, backups, etc.) register here
