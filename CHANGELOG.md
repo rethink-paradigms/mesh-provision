@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- towncrier release notes start -->
 
+## [0.4.0] - 2026-04-22
+
+### Added
+
+- Add MVP golden path E2E test suite and install script integration tests (125+ test cases total).
+- Add `mesh snapshot` CLI commands (create/restore/list/delete) with Rich-formatted output.
+- Add container volume snapshot engine with tar-based create/restore/list/delete operations and local filesystem storage backend.
+- Add interactive mesh-install.sh for 2-VM cluster bootstrap (server + client) via Tailscale mesh networking.
+- Add shared type definitions module with SnapshotMetadata, NodeRole, SnapshotStatus enums, and snapshot/Nomad constants.
+
+### Changed
+
+- Strip broken Traefik automation and INGRESS/PRODUCTION tiers. Simplify tier system to LITE/STANDARD only.
+
+### Fixed
+
+- Fix NOMAD_ADDR discovery with config file fallback chain (env var, ~/.mesh/config, default). Remove silent demo fallbacks from MVP commands.
+
 
 ## [0.3.0] - 2026-04-17
 
