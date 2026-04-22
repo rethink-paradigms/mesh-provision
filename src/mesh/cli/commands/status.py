@@ -19,6 +19,7 @@ from mesh.cli.ui.panels import (
     console,
     show_banner,
     show_cluster_status,
+    show_error,
     show_resource_comparison,
     show_vision_roadmap,
     show_info,
@@ -105,10 +106,14 @@ def run_status(
     else:
         nodes, apps = _get_live_status()
         if not nodes:
-            show_info("[dim]No cluster detected. Showing demo data.[/dim]")
+            show_error("[red]No Mesh cluster found.[/red]")
             console.print()
-            nodes = MOCK_NODES
-            apps = MOCK_APPS
+            show_info("Run [bold]mesh-install.sh[/bold] on a VM or set [bold]NOMAD_ADDR[/bold] environment variable.")
+            console.print()
+            return
+
+        nodes = nodes or []
+        apps = apps or []
 
     show_cluster_status(
         cluster_name="mesh-cluster",
