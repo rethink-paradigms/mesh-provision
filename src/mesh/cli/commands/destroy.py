@@ -2,6 +2,10 @@
 mesh destroy — Teardown a mesh cluster.
 """
 
+from __future__ import annotations
+
+from typing import Optional
+
 import questionary
 from questionary import Style as QStyle
 
@@ -17,12 +21,62 @@ PROMPT_STYLE = QStyle(
 )
 
 
+def _run_destroy_json(
+    cluster_name: str,
+    api_key: Optional[str],
+    demo: bool,
+) -> None:
+    """Handle destroy --output json."""
+    from mesh.cli.commands.json_output import (
+        build_demo_destroy_json,
+        print_json_error,
+        print_json_success,
+        require_json_mode_args,
+    )
+
+    # Demo mode
+    if demo:
+        result = build_demo_destroy_json(cluster_name)
+        print_json_success(result)
+        return
+
+    # Validate required args
+    require_json_mode_args(api_key=api_key)
+
+    # Use direct Libcloud destroy (single-token providers only per Guardrail G6)
+    from mesh.infrastructure.provision_node.provision_direct import (
+        destroy_resources_direct,
+    )
+
+    try:
+        result = destroy_resources_direct(
+            provider="digitalocean",
+            api_key=api_key,  # type: ignore[arg-type]  # validated by require_json_mode_args
+            region="",
+            cluster_name=cluster_name,
+        )
+        result["demo"] = False
+        print_json_success(result)
+    except Exception as e:
+        print_json_error(
+            code="provision_failed",
+            message=str(e),
+            phase="destroy_resources",
+        )
+
+
 def run_destroy(
     cluster_name: str = "mesh-cluster",
     demo: bool = False,
     yes: bool = False,
+    output: Optional[str] = None,
+    api_key: Optional[str] = None,
 ):
     """Destroy a mesh cluster with confirmation."""
+    if output == "json":
+        _run_destroy_json(cluster_name=cluster_name, api_key=api_key, demo=demo)
+        return
+
     console.print()
     console.print(f"  [bold {MESH_RED}]⚠️  Destroy cluster '{cluster_name}'?[/]")
     console.print(

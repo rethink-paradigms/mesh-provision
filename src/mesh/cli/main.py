@@ -71,6 +71,24 @@ def init(
         None, "--workers", "-w", help="Number of worker nodes"
     ),
     yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation prompt"),
+    output: Optional[str] = typer.Option(
+        None, "--output", help="Output format: 'json' for machine-readable (default: rich)"
+    ),
+    api_key: Optional[str] = typer.Option(
+        None, "--api-key", help="Cloud provider API key/token (overrides .env, required when --output json)"
+    ),
+    daemon_token: Optional[str] = typer.Option(
+        None, "--daemon-token", help="Auth token for Go daemon (written to daemon config.yaml)"
+    ),
+    daemon_url: Optional[str] = typer.Option(
+        None, "--daemon-url", help="Download URL for Go daemon binary"
+    ),
+    leader_size: Optional[str] = typer.Option(
+        None, "--leader-size", help="VM size for leader node (required when --output json)"
+    ),
+    cluster_name: Optional[str] = typer.Option(
+        None, "--cluster-name", help="Cluster name (required when --output json)"
+    ),
 ):
     """
     Initialize a new mesh cluster.
@@ -84,7 +102,19 @@ def init(
         mesh init --provider "Local (Multipass)" --workers 2
         mesh init --provider DigitalOcean --region nyc3 --workers 1 --yes
     """
-    run_init(demo=demo, provider_name=provider, region=region, workers=workers, yes=yes)
+    run_init(
+        demo=demo,
+        provider_name=provider,
+        region=region,
+        workers=workers,
+        yes=yes,
+        output=output,
+        api_key=api_key,
+        daemon_token=daemon_token,
+        daemon_url=daemon_url,
+        leader_size=leader_size,
+        cluster_name=cluster_name,
+    )
 
 
 @app.command("status")
@@ -112,6 +142,12 @@ def destroy(
     cluster: str = typer.Option("mesh-cluster", "--cluster", "-c", help="Cluster name"),
     demo: bool = typer.Option(False, "--demo", help="Run in demo mode"),
     yes: bool = typer.Option(False, "--yes", "-y", help="Skip confirmation prompt"),
+    output: Optional[str] = typer.Option(
+        None, "--output", help="Output format: 'json' for machine-readable (default: rich)"
+    ),
+    api_key: Optional[str] = typer.Option(
+        None, "--api-key", help="Cloud provider API key/token (overrides .env)"
+    ),
 ):
     """
     Tear down a mesh cluster.
@@ -124,7 +160,38 @@ def destroy(
         mesh destroy --cluster my-cluster
         mesh destroy --yes
     """
-    run_destroy(cluster_name=cluster, demo=demo, yes=yes)
+    run_destroy(cluster_name=cluster, demo=demo, yes=yes, output=output, api_key=api_key)
+
+
+@app.command("add-worker")
+def add_worker(
+    cluster: str = typer.Option("mesh-cluster", "--cluster", "-c", help="Cluster name to add worker to"),
+    provider: Optional[str] = typer.Option(None, "--provider", "-p", help="Cloud provider"),
+    region: Optional[str] = typer.Option(None, "--region", "-r", help="Cloud region"),
+    size: Optional[str] = typer.Option(None, "--size", "-s", help="VM size for worker"),
+    leader_ip: Optional[str] = typer.Option(None, "--leader-ip", help="Leader node public IP"),
+    api_key: Optional[str] = typer.Option(None, "--api-key", help="Cloud provider API key/token"),
+    output: Optional[str] = typer.Option(None, "--output", help="Output format: 'json' for machine-readable"),
+    demo: bool = typer.Option(False, "--demo", help="Run in demo mode"),
+):
+    """
+    Add a worker node to an existing mesh cluster.
+
+    Example:
+        mesh add-worker --cluster my-cluster --provider digitalocean
+        mesh add-worker --output json --cluster my-cluster --provider digitalocean --region nyc3 --size s-1vcpu-1gb --api-key $DO_KEY --leader-ip 1.2.3.4
+    """
+    from mesh.cli.commands.add_worker import run_add_worker
+    run_add_worker(
+        cluster_name=cluster,
+        provider=provider,
+        region=region,
+        size=size,
+        api_key=api_key,
+        leader_ip=leader_ip,
+        output=output,
+        demo=demo,
+    )
 
 
 @app.command("logs")

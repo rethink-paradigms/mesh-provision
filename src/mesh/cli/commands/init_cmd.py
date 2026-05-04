@@ -249,6 +249,12 @@ def run_init(
     region: Optional[str] = None,
     workers: Optional[int] = None,
     yes: bool = False,
+    output: Optional[str] = None,
+    api_key: Optional[str] = None,
+    daemon_token: Optional[str] = None,
+    daemon_url: Optional[str] = None,
+    leader_size: Optional[str] = None,
+    cluster_name: Optional[str] = None,
 ):
     """
     Interactive cluster initialization wizard.
@@ -256,6 +262,23 @@ def run_init(
     Guides user through provider → region → sizing → provisioning.
     Uses real Multipass provisioning for local clusters.
     """
+    # Route to JSON mode if --output json is set
+    if output == "json":
+        from mesh.cli.commands.init_json import run_init_json
+        run_init_json(
+            provider=provider_name or "digitalocean",
+            region=region or "",
+            workers=workers or 0,
+            leader_size=leader_size or "s-2vcpu-4gb",
+            worker_size="s-1vcpu-1gb",
+            cluster_name=cluster_name or "mesh-cluster",
+            api_key=api_key or "",
+            daemon_token=daemon_token or "",
+            daemon_url=daemon_url or "",
+            demo=demo,
+        )
+        return
+
     show_banner()
     console.print(f"  [bold {MESH_CYAN}]Initialize a new Mesh cluster[/]\n")
 
