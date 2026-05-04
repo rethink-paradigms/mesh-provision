@@ -1,0 +1,25 @@
+=== Task 13: E2E Backward Compatibility Verification ===
+Date: 2026-05-04
+
+CLI COMMAND TESTS (primary scope for backward compat):
+  src/mesh/cli/commands/test_deploy_hardening.py  23 passed
+  src/mesh/cli/commands/test_doctor.py            10 passed
+  src/mesh/cli/commands/test_logs.py              10 passed
+  src/mesh/cli/commands/test_plugins.py            5 passed
+  src/mesh/cli/commands/test_snapshot_cmd.py      14 passed
+  src/mesh/cli/commands/test_ssh.py               10 passed
+  src/mesh/cli/commands/test_status.py             5 passed
+
+  TOTAL CLI TESTS: 77 passed, 0 failed, 2 deselected (test_env_check)
+
+FULL SUITE RESULT (excluding known flaky/infra tests):
+  - 376 passed in broader run
+  - 74 infrastructure tests FAILED — pre-existing failures:
+    * test_provision_node, test_error_scenarios, test_integration_scenarios,
+      test_output_resolution, test_resource_dependencies: Need AWS credentials
+    * test_libcloud_dynamic_provider: AttributeError on Provider attribute
+    * test_hetzner_mock, test_aws_mock, test_digitalocean_mock: same AttributeError
+    * test_boot_script_rendering_cloud_init: pre-existing path assertion mismatch
+  - These failures are UNRELATED to JSON mode implementation (T1-T10)
+
+CONCLUSION: All CLI backward compatibility tests PASS ✓

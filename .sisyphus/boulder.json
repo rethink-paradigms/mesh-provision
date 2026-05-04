@@ -1,23 +1,82 @@
 {
-  "active_plan": "/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/.sisyphus/plans/commit-changelog.md",
-  "started_at": "2026-04-22T06:06:56.218Z",
+  "active_plan": "/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/.sisyphus/plans/provision-json-mode.md",
+  "started_at": "2026-05-04T17:17:26.240Z",
   "session_ids": [
-    "ses_24eb64feeffeHG27rc7PVYYN62"
+    "ses_20c0156b7ffePHXIv4ESVRUN4q",
+    "ses_20c004d28ffeyzQNUeydEzaBvK",
+    "ses_20c002f3dffe3KHz2j7ZXBajPW",
+    "ses_20c000ee4ffeZu19jWr5oCuBjh"
   ],
-  "plan_name": "commit-changelog",
+  "plan_name": "provision-json-mode",
   "worktree_path": null,
   "session_origins": {
-    "ses_24eb64feeffeHG27rc7PVYYN62": "direct"
+    "ses_20c0156b7ffePHXIv4ESVRUN4q": "direct",
+    "ses_20c004d28ffeyzQNUeydEzaBvK": "appended",
+    "ses_20c002f3dffe3KHz2j7ZXBajPW": "appended",
+    "ses_20c000ee4ffeZu19jWr5oCuBjh": "appended"
   },
   "task_sessions": {
     "todo:1": {
       "task_key": "todo:1",
       "task_label": "1",
-      "task_title": "**Towncrier Setup**",
-      "session_id": "ses_24c2ebd8effes2jQk2pIYEIkjH",
+      "task_title": "**CLI Flag Additions** — `--output`, `--api-key`, `--daemon-token`, `--daemon-url`, `--leader-size`, `--cluster-name`",
+      "session_id": "ses_20bfe3979ffe4CPUCnYFuOozjI",
       "agent": "Sisyphus-Junior",
       "category": "quick",
-      "updated_at": "2026-04-22T06:16:30.140Z"
+      "updated_at": "2026-05-04T17:22:10.992Z"
+    },
+    "todo:4": {
+      "task_key": "todo:4",
+      "task_label": "4",
+      "task_title": "**Boot Script: Template + Generator Changes** — Jinja2 vars and Python params",
+      "session_id": "ses_20bf8cebdffeG1MFOw5I78a6HU",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-04T17:32:12.291Z"
+    },
+    "todo:5": {
+      "task_key": "todo:5",
+      "task_label": "5",
+      "task_title": "**ProvisionNode Direct Libcloud Extraction** — reusable direct provisioning module",
+      "session_id": "ses_20bf2ee83ffeLz10aY2MJlK4PD",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-05-04T17:36:11.542Z"
+    },
+    "todo:6": {
+      "task_key": "todo:6",
+      "task_label": "6",
+      "task_title": "**init_json.py — Direct Libcloud Provisioning with JSON Output** — the core new command handler",
+      "session_id": "ses_20bee957effeZi5jJ1hlHU486n",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-05-04T17:42:09.703Z"
+    },
+    "todo:7": {
+      "task_key": "todo:7",
+      "task_label": "7",
+      "task_title": "**init_cmd.py Routing + Backward Compat** — wire JSON mode into existing init",
+      "session_id": "ses_20be7209effeVTGfDMl3rphn9G",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-05-04T17:50:31.668Z"
+    },
+    "todo:11": {
+      "task_key": "todo:11",
+      "task_label": "11",
+      "task_title": "**End-to-End Verification: init --output json** — verify JSON shapes match spec §6.2",
+      "session_id": "ses_20be0b8ccffe06rloJFDjt17A4",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-05-04T17:57:37.329Z"
+    },
+    "final-wave:f1": {
+      "task_key": "final-wave:f1",
+      "task_label": "F1",
+      "task_title": "**Plan Compliance Audit** — `oracle`",
+      "session_id": "ses_20bdad381ffeqatsWePPCXIWzl",
+      "agent": "oracle",
+      "updated_at": "2026-05-04T18:12:39.898Z"
     }
   }
 }

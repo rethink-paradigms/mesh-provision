@@ -1,0 +1,33 @@
+=== TEST 1: Happy Path (lite tier, workers=0) - Spec §6.2 Compliance ===
+Date: Mon May  4 23:23:49 IST 2026
+
+--- RAW JSON OUTPUT ---
+{
+  "cluster_id": "spec-test",
+  "provider": "digitalocean",
+  "region": "nyc3",
+  "tier": "lite",
+  "leader": {
+    "ip": "192.0.2.1",
+    "id": "demo-spec-test-leader",
+    "size": "s-2vcpu-4gb"
+  },
+  "workers": [],
+  "nomad_addr": "http://127.0.0.1:4646",
+  "daemon_url": "https://daemon-spec-test.agentbodies.com",
+  "daemon_token": "demo-token-placeholder",
+  "caddy_admin": "http://127.0.0.1:2019",
+  "created_at": "2026-05-04T17:53:49.744438Z",
+  "demo": true
+}
+
+--- VALIDATION RESULT ---
+SPEC_COMPLIANT
+  cluster_id: spec-test
+  tier: lite
+  demo: True
+  workers: []
+  leader.ip: 192.0.2.1
+  required keys all present: YES
+
+EXIT_CODE=0

@@ -62,13 +62,13 @@ Replace the single mega-commit with 14 atomic conventional commits in correct de
 - Version bumped to 0.4.0 in pyproject.toml
 
 ### Definition of Done
-- [ ] `git log --oneline HEAD~14..HEAD` shows 14 clean conventional commits
-- [ ] `git diff 7347f7c HEAD` is empty (content preserved)
-- [ ] `pytest --tb=short -q` passes after the final commit
-- [ ] `towncrier build --draft --version 0.4.0` produces expected output
-- [ ] CHANGELOG.md contains v0.4.0 section with all MVP changes
-- [ ] `pyproject.toml` version is "0.4.0"
-- [ ] No fragment files remain in `changelog.d/` after build
+- [x] `git log --oneline HEAD~14..HEAD` shows 14 clean conventional commits
+- [x] `git diff 7347f7c HEAD` is empty (content preserved)
+- [x] `pytest --tb=short -q` passes after the final commit
+- [x] `towncrier build --draft --version 0.4.0` produces expected output
+- [x] CHANGELOG.md contains v0.4.0 section with all MVP changes
+- [x] `pyproject.toml` version is "0.4.0"
+- [x] No fragment files remain in `changelog.d/` after build
 
 ### Must Have
 - Backup branch before reset
@@ -305,7 +305,7 @@ Step FINAL:
   - Files: `pyproject.toml`, `CHANGELOG.md`, `changelog.d/` (7 fragments)
   - Pre-commit: `towncrier build --draft --version 0.4.0`
 
-- [ ] 2. **Shared Types Commit**
+- [x] 2. **Shared Types Commit**
 
   **What to do**:
   - Stage and commit: `src/mesh/shared/__init__.py`, `src/mesh/shared/test_types.py`
@@ -346,7 +346,7 @@ Step FINAL:
 
   **TEST CHECKPOINT**: Run `pytest --tb=short -q` — must pass
 
-- [ ] 3. **Strip Traefik/INGRESS/PRODUCTION Commit**
+- [x] 3. **Strip Traefik/INGRESS/PRODUCTION Commit**
 
   **What to do**:
   - Stage and commit ALL files related to Traefik stripping as ONE atomic commit:
@@ -406,7 +406,7 @@ Step FINAL:
 
   **TEST CHECKPOINT**: Run `pytest --tb=short -q` — must pass
 
-- [ ] 4. **Snapshot Scaffold CONTEXT.md Commit**
+- [x] 4. **Snapshot Scaffold CONTEXT.md Commit**
 
   **What to do**:
   - Stage and commit: `src/mesh/snapshots/CONTEXT.md`
@@ -428,7 +428,7 @@ Step FINAL:
   - Message: `docs(snapshots): add snapshot engine architecture context`
   - Files: `src/mesh/snapshots/CONTEXT.md`
 
-- [ ] 5. **Install Script Commit**
+- [x] 5. **Install Script Commit**
 
   **What to do**:
   - Stage and commit: `scripts/mesh-install.sh`, `scripts/test_mesh_install.py`
@@ -452,7 +452,7 @@ Step FINAL:
   - Files: `scripts/mesh-install.sh`, `scripts/test_mesh_install.py`
   - Pre-commit: `pytest scripts/test_mesh_install.py`
 
-- [ ] 6. **Deploy Hardening Commit**
+- [x] 6. **Deploy Hardening Commit**
 
   **What to do**:
   - Stage and commit: `src/mesh/infrastructure/config/env.py`, `src/mesh/cli/commands/test_deploy_hardening.py`
@@ -489,7 +489,7 @@ Step FINAL:
 
   **TEST CHECKPOINT**: Run `pytest --tb=short -q` — must pass
 
-- [ ] 7. **Snapshot Engine + Storage Commit**
+- [x] 7. **Snapshot Engine + Storage Commit**
 
   **What to do**:
   - Stage and commit all 4 snapshot implementation files:
@@ -531,7 +531,7 @@ Step FINAL:
 
   **TEST CHECKPOINT**: Run `pytest --tb=short -q` — must pass
 
-- [ ] 8. **CLI Snapshot Commands Commit**
+- [x] 8. **CLI Snapshot Commands Commit**
 
   **What to do**:
   - Stage and commit (MUST include main.py for registration):
@@ -563,7 +563,7 @@ Step FINAL:
 
   **TEST CHECKPOINT**: Run `pytest --tb=short -q` — must pass
 
-- [ ] 9. **Install Integration Test Commit**
+- [x] 9. **Install Integration Test Commit**
 
   **What to do**:
   - Stage and commit: `scripts/test_install_integration.py`
@@ -587,7 +587,7 @@ Step FINAL:
   - Files: `scripts/test_install_integration.py`
   - Pre-commit: `pytest scripts/test_install_integration.py`
 
-- [ ] 10. **E2E MVP Test Commit**
+- [x] 10. **E2E MVP Test Commit**
 
   **What to do**:
   - Stage and commit: `src/mesh/verification/e2e_mvp/__init__.py`, `src/mesh/verification/e2e_mvp/test_mvp_flow.py`
@@ -609,7 +609,7 @@ Step FINAL:
   - Message: `test(e2e): add MVP golden path end-to-end test suite`
   - Files: `src/mesh/verification/e2e_mvp/__init__.py`, `src/mesh/verification/e2e_mvp/test_mvp_flow.py`
 
-- [ ] 11. **Demo Mode Cleanup Commit**
+- [x] 11. **Demo Mode Cleanup Commit**
 
   **What to do**:
   - Stage and commit: `src/mesh/cli/commands/status.py`, `src/mesh/cli/commands/test_status.py`
@@ -635,7 +635,7 @@ Step FINAL:
 
   **TEST CHECKPOINT**: Run `pytest --tb=short -q` — must pass
 
-- [ ] 12. **Sisyphus Planning Files Commit**
+- [x] 12. **Sisyphus Planning Files Commit**
 
   **What to do**:
   - Stage and commit: `.sisyphus/` directory (6 files)
@@ -667,7 +667,7 @@ Step FINAL:
   - Message: `chore(planning): add sisyphus planning artifacts for MVP`
   - Files: `.sisyphus/` (6 files, excluding drafts/)
 
-- [ ] 13. **Towncrier Build + Changelog Generation**
+- [x] 13. **Towncrier Build + Changelog Generation**
 
   **What to do**:
   - Run `towncrier build --version 0.4.0 --date $(date +%Y-%m-%d) --yes`
@@ -718,7 +718,7 @@ Step FINAL:
 
   **TEST CHECKPOINT**: Run `pytest --tb=short -q` — must pass
 
-- [ ] 14. **Version Bump to 0.4.0**
+- [x] 14. **Version Bump to 0.4.0**
 
   **What to do**:
   - Update `pyproject.toml` line 7: `version = "0.3.0"` → `version = "0.4.0"`
@@ -751,14 +751,14 @@ Step FINAL:
 
 ## Final Verification Wave
 
-- [ ] F1. **Content Preservation Check** — `quick`
+- [x] F1. **Content Preservation Check** — `quick`
   Run: `git diff 7347f7c HEAD` — must be empty (same content, different history).
   Also verify: `git log --oneline HEAD~14..HEAD` shows exactly 14 commits.
 
-- [ ] F2. **Test Suite Full Run** — `quick`
+- [x] F2. **Test Suite Full Run** — `quick`
   Run: `pytest --tb=short -q` — must pass with same results as pre-restructure (507 pass, 76 pre-existing fail).
 
-- [ ] F3. **Commit History Review** — `quick`
+- [x] F3. **Commit History Review** — `quick`
   Verify: all 14 commits follow conventional format (`type(scope): description`).
   Verify: CHANGELOG.md has v0.4.0 section. Verify: pyproject.toml version is "0.4.0".
   Verify: no fragment files remain in changelog.d/. Verify: `git push` has NOT been run.
@@ -784,10 +784,10 @@ ls changelog.d/*.md 2>/dev/null | wc -l  # Expected: 0 (all consumed)
 ```
 
 ### Final Checklist
-- [ ] All 14 atomic commits present in git log
-- [ ] Content identical to original mega-commit (diff empty)
-- [ ] All tests pass (no regressions from restructure)
-- [ ] CHANGELOG.md has v0.4.0 section with all changes
-- [ ] Version bumped to 0.4.0
-- [ ] Towncrier set up and ready for future use
-- [ ] No git push has occurred
+- [x] All 14 atomic commits present in git log
+- [x] Content identical to original mega-commit (diff empty)
+- [x] All tests pass (no regressions from restructure)
+- [x] CHANGELOG.md has v0.4.0 section with all changes
+- [x] Version bumped to 0.4.0
+- [x] Towncrier set up and ready for future use
+- [x] No git push has occurred

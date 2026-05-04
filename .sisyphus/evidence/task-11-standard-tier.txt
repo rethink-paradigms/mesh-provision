@@ -1,0 +1,41 @@
+=== TEST 3: Workers=2 (standard tier) ===
+Date: Mon May  4 23:25:52 IST 2026
+
+--- RAW JSON OUTPUT ---
+{
+  "cluster_id": "std-test",
+  "provider": "digitalocean",
+  "region": "nyc3",
+  "tier": "standard",
+  "leader": {
+    "ip": "192.0.2.1",
+    "id": "demo-std-test-leader",
+    "size": "s-2vcpu-4gb"
+  },
+  "workers": [
+    {
+      "ip": "192.0.2.2",
+      "id": "demo-std-test-worker-0",
+      "size": "s-1vcpu-1gb"
+    },
+    {
+      "ip": "192.0.2.3",
+      "id": "demo-std-test-worker-1",
+      "size": "s-1vcpu-1gb"
+    }
+  ],
+  "nomad_addr": "http://127.0.0.1:4646",
+  "daemon_url": "https://daemon-std-test.agentbodies.com",
+  "daemon_token": "demo-token-placeholder",
+  "caddy_admin": "http://127.0.0.1:2019",
+  "created_at": "2026-05-04T17:55:52.569238Z",
+  "demo": true
+}
+
+--- VALIDATION ---
+STANDARD_TIER_OK
+  tier: standard
+  workers count: 2
+  worker[0]: ip=192.0.2.2, id=demo-std-test-worker-0, size=s-1vcpu-1gb
+  worker[1]: ip=192.0.2.3, id=demo-std-test-worker-1, size=s-1vcpu-1gb
+EXIT=0

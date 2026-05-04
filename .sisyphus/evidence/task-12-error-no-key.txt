@@ -1,0 +1,13 @@
+Test 3: destroy --output json without --api-key
+
+EXIT=1
+{
+  "error": {
+    "code": "missing_required_args",
+    "message": "Required arguments missing: api_key",
+    "missing_args": [
+      "api_key"
+    ]
+  }
+}
+RESULT: PASS — exits 1, outputs valid error JSON to stderr
