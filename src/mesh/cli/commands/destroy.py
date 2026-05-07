@@ -32,6 +32,7 @@ def _run_destroy_json(
         print_json_error,
         print_json_success,
         require_json_mode_args,
+        to_brief_destroy_shape,
     )
 
     # Demo mode
@@ -55,8 +56,9 @@ def _run_destroy_json(
             region="",
             cluster_name=cluster_name,
         )
-        result["demo"] = False
-        print_json_success(result)
+        transformed = to_brief_destroy_shape(result, cluster_name)
+        transformed["demo"] = False
+        print_json_success(transformed)
     except Exception as e:
         print_json_error(
             code="provision_failed",

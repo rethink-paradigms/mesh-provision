@@ -8,6 +8,7 @@ from mesh.cli.commands.json_output import (
     print_json_error,
     print_json_success,
     require_json_mode_args,
+    to_brief_shape,
 )
 from mesh.infrastructure.boot_consul_nomad.generate_boot_scripts import (
     generate_shell_script,
@@ -50,6 +51,31 @@ def _resolve_api_key(provider: str, api_key: str) -> str:
     raise SystemExit(1)
 
 
+def _poll_health(leader_ip: str, timeout: int = 120, interval: int = 5) -> str:
+    """Poll the leader's health endpoint until it responds or timeout.
+
+    Returns "ready" if health check passes, "provisioned" otherwise.
+    """
+    import time
+
+    import requests
+
+    elapsed = 0
+    health_url = f"http://{leader_ip}:80/health"
+
+    while elapsed < timeout:
+        time.sleep(interval)
+        elapsed += interval
+        try:
+            resp = requests.get(health_url, timeout=5)
+            if resp.status_code == 200:
+                return "ready"
+        except Exception:
+            pass  # Connection refused, timeout, DNS not resolved yet — keep polling
+
+    return "provisioned"
+
+
 def run_init_json(
     provider: str,
     region: str,
@@ -70,7 +96,8 @@ def run_init_json(
             workers=workers,
             leader_size=leader_size,
         )
-        print_json_success(result)
+        brief = to_brief_shape(result)
+        print_json_success(brief)
         return
 
     require_json_mode_args(
@@ -167,11 +194,23 @@ def run_init_json(
     leader: Dict[str, Any] = cluster_result["leader"]
     worker_nodes: list[Dict[str, Any]] = cluster_result.get("workers", [])
 
+    # Health check: poll leader's health endpoint
+    leader_ip = (
+        leader.get("public_ip")
+        or leader.get("private_ip")
+        or ""
+    )
+    if leader_ip:
+        health_status = _poll_health(leader_ip)
+    else:
+        health_status = "provisioned"
+
     result = {
         "cluster_id": cluster_name,
         "provider": provider,
         "region": region,
         "tier": tier,
+        "status": health_status,
         "leader": {
             "ip": leader.get("public_ip") or leader.get("private_ip") or "",
             "id": leader.get("instance_id", ""),
@@ -192,4 +231,5 @@ def run_init_json(
         "created_at": datetime.utcnow().isoformat() + "Z",
     }
 
-    print_json_success(result)
+    brief = to_brief_shape(result, status=health_status)
+    print_json_success(brief)

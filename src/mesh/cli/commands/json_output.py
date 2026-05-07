@@ -204,6 +204,57 @@ def build_demo_init_json(
     }
 
 
+def to_brief_shape(result: dict, status: str = "ready") -> dict:
+    """Transform rich init JSON result into BRIEF-compliant flat shape.
+
+    Pure function — no side effects, no ``sys.exit``.
+
+    Parameters
+    ----------
+    result : dict
+        Rich init JSON result (as produced by ``build_demo_init_json`` or
+        the real provisioning path).
+    status : str, optional
+        Cluster health status. Defaults to ``"ready"``.
+
+    Returns
+    -------
+    dict
+        Flat shape with ``cluster_id``, ``leader_ip``, ``status``, and
+        ``nodes`` (list of ``{id, ip, role}`` dicts).
+    """
+    leader = result.get("leader", {})
+    if isinstance(leader, dict):
+        leader_ip = leader.get("ip", "")
+    else:
+        leader_ip = ""
+
+    nodes = []
+    if isinstance(leader, dict) and (leader.get("id") or leader.get("ip")):
+        nodes.append({
+            "id": leader.get("id", ""),
+            "ip": leader.get("ip", ""),
+            "role": "leader",
+        })
+
+    workers = result.get("workers", [])
+    if isinstance(workers, list):
+        for w in workers:
+            if isinstance(w, dict) and (w.get("id") or w.get("ip")):
+                nodes.append({
+                    "id": w.get("id", ""),
+                    "ip": w.get("ip", ""),
+                    "role": "worker",
+                })
+
+    return {
+        "cluster_id": result.get("cluster_id", ""),
+        "leader_ip": leader_ip,
+        "status": status,
+        "nodes": nodes,
+    }
+
+
 def build_demo_destroy_json(cluster_name: str) -> dict[str, Any]:
     """Build synthetic destroy JSON for demo mode.
 
@@ -219,9 +270,36 @@ def build_demo_destroy_json(cluster_name: str) -> dict[str, Any]:
     """
     return {
         "cluster_id": cluster_name,
+        "status": "destroyed",
         "destroyed": True,
         "resources_cleaned": [],
         "demo": True,
+    }
+
+
+def to_brief_destroy_shape(result: dict, cluster_name: str) -> dict:
+    """Transform destroy result into BRIEF-compliant flat shape.
+
+    Pure function — no side effects, no ``sys.exit``.
+
+    Parameters
+    ----------
+    result : dict
+        Destroy result (from ``destroy_resources_direct`` or demo builder).
+    cluster_name : str
+        Cluster name.
+
+    Returns
+    -------
+    dict
+        Flat shape with ``cluster_id``, ``status``, ``destroyed``, and
+        ``resources_cleaned`` keys.
+    """
+    return {
+        "cluster_id": cluster_name,
+        "status": "destroyed",
+        "destroyed": True,
+        "resources_cleaned": result.get("resources_cleaned", []),
     }
 
 

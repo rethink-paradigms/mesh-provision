@@ -50,7 +50,23 @@ auth_token: "${DAEMON_TOKEN}"
 tier: "${CLUSTER_TIER}"
 EOF
 
-# 5. Create systemd unit
+# 5. Generate Caddyfile for lite-mode health proxy
+if [ "${CLUSTER_TIER:-}" = "lite" ]; then
+    echo ">>> Writing Caddyfile for lite-mode health proxy..."
+    mkdir -p /etc/caddy
+    cat > /etc/caddy/Caddyfile << 'CADDYEOF'
+:80 {
+    reverse_proxy /health localhost:8080
+    respond "mesh-provision OK" 200
+}
+CADDYEOF
+    echo ">>> Validating Caddyfile..."
+    caddy validate --config /etc/caddy/Caddyfile || echo "WARNING: caddy validate failed, continuing..."
+    echo ">>> Restarting Caddy with health proxy Caddyfile..."
+    systemctl restart caddy || echo "WARNING: caddy restart failed, continuing..."
+fi
+
+# 6. Create systemd unit
 cat > /etc/systemd/system/mesh-daemon.service << 'SYSTEMDEOF'
 [Unit]
 Description=Mesh Daemon — body lifecycle manager
@@ -67,10 +83,10 @@ RestartSec=5s
 WantedBy=multi-user.target
 SYSTEMDEOF
 
-# 6. Create data directory
+# 7. Create data directory
 mkdir -p /var/lib/mesh
 
-# 7. Enable and start
+# 8. Enable and start
 systemctl daemon-reload
 systemctl enable mesh-daemon
 systemctl start mesh-daemon
