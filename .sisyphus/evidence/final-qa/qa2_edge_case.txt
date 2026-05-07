@@ -1,0 +1,7 @@
+QA2 PASSED: Empty IPs handled, node with no id+ip filtered
+Result: {
+  "cluster_id": "empty",
+  "leader_ip": "",
+  "status": "ready",
+  "nodes": []
+}

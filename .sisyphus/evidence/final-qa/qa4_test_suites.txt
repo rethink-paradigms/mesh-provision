@@ -1,0 +1,102 @@
+/Users/samanvayayagsen/.pyenv/versions/3.11.11/lib/python3.11/site-packages/pytest_asyncio/plugin.py:217: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform darwin -- Python 3.11.11, pytest-8.3.5, pluggy-1.5.0 -- /Users/samanvayayagsen/.pyenv/versions/3.11.11/bin/python3.11
+cachedir: .pytest_cache
+rootdir: /Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision
+configfile: pyproject.toml
+plugins: anyio-4.12.1, mock-3.15.1, httpx-0.35.0, asyncio-0.26.0, hydra-core-1.3.2, cov-7.0.0, langsmith-0.4.49
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 28 items
+
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_happy_path PASSED [  3%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_empty_ips PASSED [  7%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_zero_workers PASSED [ 10%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_three_workers PASSED [ 14%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_cluster_id_preserved PASSED [ 17%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefDestroyShape::test_with_resources PASSED [ 21%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefDestroyShape::test_empty_resources PASSED [ 25%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefDestroyShape::test_destroyed_always_true PASSED [ 28%]
+src/mesh/cli/commands/test_init_json_health.py::test_health_check_success PASSED [ 32%]
+src/mesh/cli/commands/test_init_json_health.py::test_health_check_failure PASSED [ 35%]
+src/mesh/cli/commands/test_init_json_health.py::test_health_check_no_ip PASSED [ 39%]
+src/mesh/cli/commands/test_init_json_health.py::test_health_check_retry_then_success PASSED [ 42%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_produces_brief_shape PASSED [ 46%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_exits_0 PASSED [ 50%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_leader_ip_present PASSED [ 53%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_nodes_has_leader_role PASSED [ 57%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_no_rich_output PASSED [ 60%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonErrors::test_missing_args_produces_error PASSED [ 64%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonFullFlow::test_full_flow_demo PASSED [ 67%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonFullFlow::test_full_flow_real_mocked PASSED [ 71%]
+src/mesh/cli/commands/test_destroy_json.py::TestDestroyJsonDemo::test_demo_produces_brief_shape PASSED [ 75%]
+src/mesh/cli/commands/test_destroy_json.py::TestDestroyJsonDemo::test_demo_exits_0 PASSED [ 78%]
+src/mesh/cli/commands/test_interactive_regression.py::TestInteractiveNoRegression::test_init_no_flags_non_tty_graceful PASSED [ 82%]
+src/mesh/cli/commands/test_interactive_regression.py::TestInteractiveNoRegression::test_init_demo_yes_no_json_output PASSED [ 85%]
+src/mesh/cli/commands/test_interactive_regression.py::TestInteractiveNoRegression::test_interactive_demo_yes_no_json_fields PASSED [ 89%]
+src/mesh/cli/commands/test_interactive_regression.py::TestJsonModeNoRegression::test_init_json_demo_no_rich_output PASSED [ 92%]
+src/mesh/cli/commands/test_interactive_regression.py::TestJsonModeNoRegression::test_destroy_no_flags_non_tty_graceful PASSED [ 96%]
+src/mesh/cli/commands/test_interactive_regression.py::TestJsonModeNoRegression::test_destroy_json_demo_no_rich_output PASSED [100%]
+
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.11.11-final-0 _______________
+
+Name                                                                 Stmts   Miss   Cover   Missing
+---------------------------------------------------------------------------------------------------
+src/mesh/__init__.py                                                     0      0 100.00%
+src/mesh/cli/__init__.py                                                 0      0 100.00%
+src/mesh/cli/commands/__init__.py                                        0      0 100.00%
+src/mesh/cli/commands/add_worker.py                                     55     55   0.00%   6-164
+src/mesh/cli/commands/deploy.py                                         57     50  12.28%   32-100
+src/mesh/cli/commands/destroy.py                                        91     64  29.67%   45-63, 90-91, 93-94, 104-188
+src/mesh/cli/commands/doctor.py                                        106     84  20.75%   35-40, 44-57, 61-74, 78-91, 95-109, 113-128, 132-138, 142, 154-190, 197-206
+src/mesh/cli/commands/helpers.py                                         3      1  66.67%   5
+src/mesh/cli/commands/init_cmd.py                                      269    157  41.64%   167-203, 211-236, 304-308, 312-313, 321-338, 343-357, 363-369, 380, 397-405, 415-428, 437-438, 446-449, 480-552, 565-633, 657-658
+src/mesh/cli/commands/init_json.py                                      75     24  68.00%   41-51, 76, 117-135, 147-153, 165-171, 185-192
+src/mesh/cli/commands/json_output.py                                    55     16  70.91%   50-51, 85-100, 230, 317
+src/mesh/cli/commands/logs.py                                          109     95  12.84%   62-72, 76-100, 111-191, 200-241
+src/mesh/cli/commands/snapshot.py                                       79     62  21.52%   33-40, 55-70, 86-99, 115-150, 165-175
+src/mesh/cli/commands/ssh.py                                           132    117  11.36%   67-77, 81-107, 111-134, 143-228, 235-290
+src/mesh/cli/commands/status.py                                         56     48  14.29%   101-146, 151-193
+src/mesh/cli/main.py                                                   114     67  41.23%   137, 184-185, 226, 261, 291, 314-388, 401, 407-415, 421-422, 428-429, 437, 442
+src/mesh/cli/plugins.py                                                 22     10  54.55%   39, 42-51
+src/mesh/cli/ui/__init__.py                                              0      0 100.00%
+src/mesh/cli/ui/panels.py                                              117     83  29.06%   39, 44, 49, 59, 73-159, 196, 205-233, 238-263
+src/mesh/cli/ui/themes.py                                               21      0 100.00%
+src/mesh/infrastructure/__init__.py                                      0      0 100.00%
+src/mesh/infrastructure/boot_consul_nomad/__init__.py                    2      0 100.00%
+src/mesh/infrastructure/boot_consul_nomad/generate_boot_scripts.py      46     20  56.52%   17-18, 21-22, 55-56, 147, 192-239
+src/mesh/infrastructure/config/__init__.py                               0      0 100.00%
+src/mesh/infrastructure/config/env.py                                   98     43  56.12%   115-118, 123, 128, 137, 150-172, 180, 188, 202-210, 215, 229-237
+src/mesh/infrastructure/progressive_activation/__init__.py               2      2   0.00%   1-2
+src/mesh/infrastructure/progressive_activation/tier_config.py           17     17   0.00%   1-37
+src/mesh/infrastructure/progressive_activation/tier_manager.py          20     20   0.00%   1-42
+src/mesh/infrastructure/providers/__init__.py                           73     58  20.55%   159-203, 221-241, 277-329, 357
+src/mesh/infrastructure/providers/discovery.py                          96     83  13.54%   71-90, 123-129, 165-182, 218-227, 253-259, 276, 309-318, 349-402, 425-431, 466-472
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py         156    156   0.00%   60-560
+src/mesh/infrastructure/provision_node/__init__.py                       0      0 100.00%
+src/mesh/infrastructure/provision_node/multipass.py                     67     67   0.00%   6-147
+src/mesh/infrastructure/provision_node/provision_direct.py              96     84  12.50%   82-93, 108-141, 186-247, 291-314, 343-370
+src/mesh/infrastructure/provision_node/provision_node.py                39     39   0.00%   6-245
+src/mesh/infrastructure/provision_node/security_groups.py               44     44   0.00%   1-101
+src/mesh/shared/__init__.py                                             31      7  77.42%   30-35, 38
+src/mesh/snapshots/__init__.py                                          84     73  13.10%   52-106, 126-138, 154-176, 191-199
+src/mesh/snapshots/storage.py                                           73     73   0.00%   16-195
+src/mesh/verification/__init__.py                                        0      0 100.00%
+src/mesh/verification/e2e_lite_mode/__init__.py                          0      0 100.00%
+src/mesh/verification/e2e_multi_node_scenarios/__init__.py               2      2   0.00%   16-29
+src/mesh/verification/e2e_mvp/__init__.py                                0      0 100.00%
+src/mesh/workloads/__init__.py                                           0      0 100.00%
+src/mesh/workloads/deploy_app/__init__.py                                2      2   0.00%   1-3
+src/mesh/workloads/deploy_app/deploy.py                                 27     27   0.00%   1-68
+src/mesh/workloads/deploy_lite_ingress/__init__.py                       2      2   0.00%   1-3
+src/mesh/workloads/deploy_lite_ingress/deploy.py                        75     75   0.00%   1-131
+src/mesh/workloads/deploy_lite_ingress/route_manager.py                 64     64   0.00%   1-86
+src/mesh/workloads/deploy_lite_web_service/__init__.py                   2      2   0.00%   1-3
+src/mesh/workloads/deploy_lite_web_service/deploy.py                    65     65   0.00%   1-131
+---------------------------------------------------------------------------------------------------
+TOTAL                                                                 2544   1958  23.03%
+Coverage HTML written to dir htmlcov
+============================= 28 passed in 14.21s ==============================

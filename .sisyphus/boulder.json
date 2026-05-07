@@ -1,82 +1,53 @@
 {
-  "active_plan": "/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/.sisyphus/plans/provision-json-mode.md",
-  "started_at": "2026-05-04T17:17:26.240Z",
+  "active_plan": "/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/.sisyphus/plans/mesh-provision-wave1.md",
+  "started_at": "2026-05-06T16:47:39.554Z",
   "session_ids": [
-    "ses_20c0156b7ffePHXIv4ESVRUN4q",
-    "ses_20c004d28ffeyzQNUeydEzaBvK",
-    "ses_20c002f3dffe3KHz2j7ZXBajPW",
-    "ses_20c000ee4ffeZu19jWr5oCuBjh"
+    "ses_201cfe254ffefF6aYE8uQEDgqx",
+    "ses_201cef371ffeR9DCfMEbdKjmA2",
+    "ses_201ced624ffeZwkoUtetTeJ0GY"
   ],
-  "plan_name": "provision-json-mode",
+  "plan_name": "mesh-provision-wave1",
   "worktree_path": null,
   "session_origins": {
-    "ses_20c0156b7ffePHXIv4ESVRUN4q": "direct",
-    "ses_20c004d28ffeyzQNUeydEzaBvK": "appended",
-    "ses_20c002f3dffe3KHz2j7ZXBajPW": "appended",
-    "ses_20c000ee4ffeZu19jWr5oCuBjh": "appended"
+    "ses_201cfe254ffefF6aYE8uQEDgqx": "direct",
+    "ses_201cef371ffeR9DCfMEbdKjmA2": "appended",
+    "ses_201ced624ffeZwkoUtetTeJ0GY": "appended"
   },
   "task_sessions": {
     "todo:1": {
       "task_key": "todo:1",
       "task_label": "1",
-      "task_title": "**CLI Flag Additions** — `--output`, `--api-key`, `--daemon-token`, `--daemon-url`, `--leader-size`, `--cluster-name`",
-      "session_id": "ses_20bfe3979ffe4CPUCnYFuOozjI",
+      "task_title": "JSON Shape Transformation Function",
+      "session_id": "ses_201cc3035ffeW6q0nWAlbmJjqH",
       "agent": "Sisyphus-Junior",
       "category": "quick",
-      "updated_at": "2026-05-04T17:22:10.992Z"
+      "updated_at": "2026-05-06T16:54:26.537Z"
     },
-    "todo:4": {
-      "task_key": "todo:4",
-      "task_label": "4",
-      "task_title": "**Boot Script: Template + Generator Changes** — Jinja2 vars and Python params",
-      "session_id": "ses_20bf8cebdffeG1MFOw5I78a6HU",
+    "todo:3": {
+      "task_key": "todo:3",
+      "task_label": "3",
+      "task_title": "Health Check Step in init_json.py",
+      "session_id": "ses_201c5990cffe3ejvb4UBSS3mzI",
       "agent": "Sisyphus-Junior",
       "category": "quick",
-      "updated_at": "2026-05-04T17:32:12.291Z"
+      "updated_at": "2026-05-06T17:03:46.874Z"
     },
     "todo:5": {
       "task_key": "todo:5",
       "task_label": "5",
-      "task_title": "**ProvisionNode Direct Libcloud Extraction** — reusable direct provisioning module",
-      "session_id": "ses_20bf2ee83ffeLz10aY2MJlK4PD",
-      "agent": "Sisyphus-Junior",
-      "category": "deep",
-      "updated_at": "2026-05-04T17:36:11.542Z"
-    },
-    "todo:6": {
-      "task_key": "todo:6",
-      "task_label": "6",
-      "task_title": "**init_json.py — Direct Libcloud Provisioning with JSON Output** — the core new command handler",
-      "session_id": "ses_20bee957effeZi5jJ1hlHU486n",
-      "agent": "Sisyphus-Junior",
-      "category": "deep",
-      "updated_at": "2026-05-04T17:42:09.703Z"
-    },
-    "todo:7": {
-      "task_key": "todo:7",
-      "task_label": "7",
-      "task_title": "**init_cmd.py Routing + Backward Compat** — wire JSON mode into existing init",
-      "session_id": "ses_20be7209effeVTGfDMl3rphn9G",
+      "task_title": "JSON Mode Regression Test Suite",
+      "session_id": "ses_201bf96ceffeag22D06BN5RB3Q",
       "agent": "Sisyphus-Junior",
       "category": "quick",
-      "updated_at": "2026-05-04T17:50:31.668Z"
+      "updated_at": "2026-05-06T17:12:02.043Z"
     },
-    "todo:11": {
-      "task_key": "todo:11",
-      "task_label": "11",
-      "task_title": "**End-to-End Verification: init --output json** — verify JSON shapes match spec §6.2",
-      "session_id": "ses_20be0b8ccffe06rloJFDjt17A4",
-      "agent": "Sisyphus-Junior",
-      "category": "unspecified-high",
-      "updated_at": "2026-05-04T17:57:37.329Z"
-    },
-    "final-wave:f1": {
-      "task_key": "final-wave:f1",
-      "task_label": "F1",
-      "task_title": "**Plan Compliance Audit** — `oracle`",
-      "session_id": "ses_20bdad381ffeqatsWePPCXIWzl",
+    "todo:8": {
+      "task_key": "todo:8",
+      "task_label": "8",
+      "task_title": "Real DO Token E2E Verification (Agent-Executed QA)",
+      "session_id": "ses_201b3c985ffeB6DE6uDgPwSVmS",
       "agent": "oracle",
-      "updated_at": "2026-05-04T18:12:39.898Z"
+      "updated_at": "2026-05-06T17:20:28.557Z"
     }
   }
 }
