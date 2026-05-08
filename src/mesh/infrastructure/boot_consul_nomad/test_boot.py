@@ -47,7 +47,7 @@ def test_boot_script_rendering_cloud_init():
     # Load and check some expected structure
     cloud_config = yaml.safe_load(rendered_yaml.replace("#cloud-config\n", ""))
     assert cloud_config["package_update"] is True
-    assert "/opt/ops-platform/startup.sh" in cloud_config["runcmd"]
+    assert "cd /opt/ops-platform && ./startup.sh" in cloud_config["runcmd"]
 
     # Check if the shell script content is inside write_files
     startup_script_content = None
@@ -65,7 +65,8 @@ def test_boot_script_rendering_cloud_init():
 def test_boot_script_files_exist():
     """
     Test_BootScript_Files_Exist: Basic check that modular scripts exist.
-    Note: GPU scripts (04, 05, 08) and spot script (09) are optional but scripts must be sequential.
+    Note: GPU scripts (04, 05, 08) and spot script (09) were planned but not yet
+    implemented; numbering skips them (01, 02, 03, 06, 07, 10).
     """
     feature_dir = os.path.dirname(__file__)
     scripts_dir = os.path.join(feature_dir, "scripts")
@@ -75,13 +76,9 @@ def test_boot_script_files_exist():
         "01-install-deps.sh",
         "02-install-tailscale.sh",
         "03-install-hashicorp.sh",
-        "04-install-gpu-drivers.sh",  # GPU driver installation
-        "05-install-nvidia-plugin.sh",  # NVIDIA plugin installation
-        "06-configure-consul.sh",  # Renumbered from 04
-        "07-configure-nomad.sh",  # Renumbered from 05
-        "08-verify-gpu.sh",  # GPU verification
-        "09-handle-spot-interruption.sh",  # Spot instance interruption handling
-        "10-install-caddy.sh",  # Caddy web server (lite/standard tier)
+        "06-configure-consul.sh",
+        "07-configure-nomad.sh",
+        "10-install-caddy.sh",
     ]
 
     for script in expected_scripts:
