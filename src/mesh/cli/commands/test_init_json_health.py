@@ -33,8 +33,6 @@ def test_health_check_success(mock_poll, mock_provision, mock_error, mock_succes
         worker_size="s-1vcpu-1gb",
         cluster_name="test-cluster",
         api_key="test-key",
-        daemon_token="dtok",
-        daemon_url="https://daemon.test.com",
     )
 
     mock_success.assert_called_once()
@@ -70,8 +68,6 @@ def test_health_check_failure(mock_poll, mock_provision, mock_error, mock_succes
         worker_size="s-1vcpu-1gb",
         cluster_name="test-cluster",
         api_key="test-key",
-        daemon_token="dtok",
-        daemon_url="https://daemon.test.com",
     )
 
     mock_success.assert_called_once()
@@ -106,8 +102,6 @@ def test_health_check_no_ip(mock_poll, mock_provision, mock_error, mock_success)
         worker_size="s-1vcpu-1gb",
         cluster_name="test-cluster",
         api_key="test-key",
-        daemon_token="dtok",
-        daemon_url="https://daemon.test.com",
     )
 
     mock_success.assert_called_once()

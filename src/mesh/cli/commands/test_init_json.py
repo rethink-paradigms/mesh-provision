@@ -92,7 +92,6 @@ class TestInitJsonFullFlow:
             provider="digitalocean", region="nyc3", workers=0,
             leader_size="s-2vcpu-4gb", worker_size="s-1vcpu-1gb",
             cluster_name="demo-cluster", api_key="test-key",
-            daemon_token="dtok", daemon_url="https://daemon.test.com",
             demo=True,
         )
         mock_success.assert_called_once()
@@ -105,7 +104,7 @@ class TestInitJsonFullFlow:
         assert brief["nodes"][0]["role"] == "leader"
         # CRITICAL: Rich fields must NOT leak
         for field in ("provider", "region", "tier", "nomad_addr",
-                       "daemon_url", "daemon_token", "caddy_admin"):
+                       "caddy_admin"):
             assert field not in brief, f"Rich field '{field}' leaked into flat shape"
 
     @patch("mesh.cli.commands.init_json.print_json_success")
@@ -130,7 +129,6 @@ class TestInitJsonFullFlow:
             provider="digitalocean", region="nyc3", workers=0,
             leader_size="s-2vcpu-4gb", worker_size="s-1vcpu-1gb",
             cluster_name="real-cluster", api_key="real-key",
-            daemon_token="dtok", daemon_url="https://daemon.test.com",
         )
 
         mock_success.assert_called_once()
