@@ -77,17 +77,18 @@ def init(
     api_key: Optional[str] = typer.Option(
         None, "--api-key", help="Cloud provider API key/token (overrides .env, required when --output json)"
     ),
-    daemon_token: Optional[str] = typer.Option(
-        None, "--daemon-token", help="Auth token for Go daemon (written to daemon config.yaml)"
-    ),
-    daemon_url: Optional[str] = typer.Option(
-        None, "--daemon-url", help="Download URL for Go daemon binary"
-    ),
+
     leader_size: Optional[str] = typer.Option(
         None, "--leader-size", help="VM size for leader node (required when --output json)"
     ),
     cluster_name: Optional[str] = typer.Option(
         None, "--cluster-name", help="Cluster name (required when --output json)"
+    ),
+    post_boot_script: Optional[str] = typer.Option(
+        None, "--post-boot-script", help="URL of a post-boot script to download and run after infrastructure is ready"
+    ),
+    input: Optional[str] = typer.Option(
+        None, "--input", help="Input mode: 'stdin' to read JSON from stdin (default: CLI args)"
     ),
 ):
     """
@@ -110,10 +111,10 @@ def init(
         yes=yes,
         output=output,
         api_key=api_key,
-        daemon_token=daemon_token,
-        daemon_url=daemon_url,
         leader_size=leader_size,
         cluster_name=cluster_name,
+        post_boot_script=post_boot_script,
+        input=input,
     )
 
 

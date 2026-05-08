@@ -84,8 +84,7 @@ def run_init_json(
     worker_size: str,
     cluster_name: str,
     api_key: str,
-    daemon_token: str,
-    daemon_url: str,
+    post_boot_script: str = "",
     demo: bool = False,
 ) -> None:
     if demo:
@@ -140,9 +139,7 @@ def run_init_json(
             leader_ip="",
             role="server",
             cluster_tier=tier,
-            daemon_token=daemon_token,
-            daemon_url=daemon_url,
-            cluster_id=cluster_name,
+            post_boot_script=post_boot_script,
         )
     except Exception as exc:
         print_json_error(
@@ -158,9 +155,7 @@ def run_init_json(
             leader_ip="",
             role="client",
             cluster_tier=tier,
-            daemon_token=daemon_token,
-            daemon_url=daemon_url,
-            cluster_id=cluster_name,
+            post_boot_script=post_boot_script,
         )
     except Exception as exc:
         print_json_error(
@@ -225,11 +220,52 @@ def run_init_json(
             for w in worker_nodes
         ],
         "nomad_addr": "http://127.0.0.1:4646",
-        "daemon_url": daemon_url or f"https://daemon-{cluster_name}.agentbodies.com",
-        "daemon_token": daemon_token,
         "caddy_admin": "http://127.0.0.1:2019",
         "created_at": datetime.utcnow().isoformat() + "Z",
     }
 
     brief = to_brief_shape(result, status=health_status)
     print_json_success(brief)
+
+
+def run_init_json_from_stdin() -> None:
+    import sys
+    import json
+
+    raw = sys.stdin.read()
+    try:
+        msg = json.loads(raw)
+    except json.JSONDecodeError as e:
+        print(
+            json.dumps({"version": "1", "status": "error", "error": {"code": "invalid_json", "message": f"Invalid JSON: {e}"}}),
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    if not isinstance(msg, dict) or msg.get("version") != "1":
+        print(
+            json.dumps({"version": "1", "status": "error", "error": {"code": "unsupported_version", "message": "Expected version: 1"}}),
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    command = msg.get("command")
+    params = msg.get("params", {})
+
+    if command == "init":
+        run_init_json(
+            provider=params.get("provider", ""),
+            region=params.get("region", ""),
+            workers=params.get("workers", 0),
+            leader_size=params.get("leader_size", "s-2vcpu-4gb"),
+            worker_size=params.get("worker_size", "s-1vcpu-1gb"),
+            cluster_name=params.get("cluster_name", "mesh-cluster"),
+            api_key=params.get("api_key", ""),
+            post_boot_script=params.get("post_boot_script", ""),
+        )
+    else:
+        print(
+            json.dumps({"version": "1", "status": "error", "error": {"code": "unknown_command", "message": f"Unknown command: {command}"}}),
+            file=sys.stderr,
+        )
+        sys.exit(1)

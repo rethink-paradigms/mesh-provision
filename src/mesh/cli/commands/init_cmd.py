@@ -251,10 +251,10 @@ def run_init(
     yes: bool = False,
     output: Optional[str] = None,
     api_key: Optional[str] = None,
-    daemon_token: Optional[str] = None,
-    daemon_url: Optional[str] = None,
     leader_size: Optional[str] = None,
     cluster_name: Optional[str] = None,
+    post_boot_script: Optional[str] = None,
+    input: Optional[str] = None,
 ):
     """
     Interactive cluster initialization wizard.
@@ -262,6 +262,11 @@ def run_init(
     Guides user through provider → region → sizing → provisioning.
     Uses real Multipass provisioning for local clusters.
     """
+    if input == "stdin":
+        from mesh.cli.commands.init_json import run_init_json_from_stdin
+        run_init_json_from_stdin()
+        return
+
     # Route to JSON mode if --output json is set
     if output == "json":
         from mesh.cli.commands.init_json import run_init_json
@@ -272,9 +277,8 @@ def run_init(
             leader_size=leader_size or "s-2vcpu-4gb",
             worker_size="s-1vcpu-1gb",
             cluster_name=cluster_name or "mesh-cluster",
+            post_boot_script=post_boot_script or "",
             api_key=api_key or "",
-            daemon_token=daemon_token or "",
-            daemon_url=daemon_url or "",
             demo=demo,
         )
         return
