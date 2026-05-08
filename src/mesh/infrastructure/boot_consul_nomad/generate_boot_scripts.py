@@ -90,9 +90,7 @@ def generate_shell_script(
     validate: bool = True,
     cluster_tier: str = "production",
     provider: str = "generic",
-    daemon_token: Optional[str] = None,
-    daemon_url: Optional[str] = None,
-    cluster_id: Optional[str] = None,
+    post_boot_script: Optional[str] = None,
 ) -> str:
     """
     Generates the shell script content for bootstrapping a node.
@@ -135,9 +133,7 @@ def generate_shell_script(
         SPOT_GRACE_PERIOD=str(spot_grace_period),
         CLUSTER_TIER=cluster_tier,
         ENABLE_CADDY="true" if enable_caddy else "false",
-        DAEMON_TOKEN=daemon_token or "",
-        DAEMON_URL=daemon_url or "",
-        CLUSTER_ID=cluster_id or "",
+        POST_BOOT_SCRIPT=post_boot_script or "",
     )
 
     # Validate rendered content if validation is enabled

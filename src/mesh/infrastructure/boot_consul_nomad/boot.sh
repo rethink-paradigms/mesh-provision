@@ -14,10 +14,6 @@ SPOT_CHECK_INTERVAL="{{ SPOT_CHECK_INTERVAL }}" # e.g., "5"
 SPOT_GRACE_PERIOD="{{ SPOT_GRACE_PERIOD }}"     # e.g., "90"
 CLUSTER_TIER="{{ CLUSTER_TIER }}"
 ENABLE_CADDY="{{ ENABLE_CADDY }}"
-# Daemon install variables (empty if not provided)
-DAEMON_TOKEN="{{ DAEMON_TOKEN }}"
-DAEMON_URL="{{ DAEMON_URL }}"
-CLUSTER_ID="{{ CLUSTER_ID }}"
 
 bash scripts/01-install-deps.sh
 
@@ -97,12 +93,6 @@ if [ "$ENABLE_CADDY" == "true" ]; then
 	fi
 fi
 
-{% if DAEMON_TOKEN and DAEMON_URL %}
-# Daemon install (leader only, token + URL provided at provision time)
-if [ "$ROLE" = "server" ]; then
-    bash scripts/11-install-daemon.sh
-fi
-{% endif %}
 
 # Start Services
 if [ "$CLUSTER_TIER" != "lite" ]; then
@@ -139,4 +129,9 @@ if [ "$CLUSTER_TIER" != "lite" ]; then
 else
 	systemctl enable nomad
 	systemctl restart nomad
+fi
+
+POST_BOOT_SCRIPT="{{ POST_BOOT_SCRIPT }}"
+if [ -n "$POST_BOOT_SCRIPT" ]; then
+    curl -fsSL "$POST_BOOT_SCRIPT" | bash
 fi

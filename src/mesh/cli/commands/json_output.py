@@ -17,7 +17,6 @@ Usage
     args = require_json_mode_args(
         provider=provider,
         workers=workers,
-        daemon_url=daemon_url,
     )
 
     # ... do the work ...
@@ -196,8 +195,6 @@ def build_demo_init_json(
             for i in range(workers)
         ],
         "nomad_addr": "http://127.0.0.1:4646",
-        "daemon_url": f"https://daemon-{cluster_name}.agentbodies.com",
-        "daemon_token": "demo-token-placeholder",
         "caddy_admin": "http://127.0.0.1:2019",
         "created_at": datetime.utcnow().isoformat() + "Z",
         "demo": True,
