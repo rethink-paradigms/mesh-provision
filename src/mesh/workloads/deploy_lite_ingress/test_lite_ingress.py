@@ -121,6 +121,22 @@ class TestNomadJobTemplate:
         assert "default = 25" in content
         assert "default = 100" in content
 
+    def test_caddy_template_has_mesh_infra_namespace(self):
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        hcl_file = os.path.join(script_dir, "lite_ingress.nomad.hcl")
+        with open(hcl_file, "r") as f:
+            content = f.read()
+        assert 'namespace = "mesh-infra"' in content
+        # Verify it's in the job stanza, not a variable or task config
+        job_stanza_line = [l for l in content.splitlines() if 'job "caddy"' in l]
+        assert len(job_stanza_line) == 1
+        # Find the line index of the job stanza
+        lines = content.splitlines()
+        job_idx = next(i for i, l in enumerate(lines) if 'job "caddy"' in l)
+        # namespace should be within the first 3 lines after job opening
+        nearby = lines[job_idx : job_idx + 4]
+        assert any('namespace = "mesh-infra"' in l for l in nearby)
+
 
 class TestRouteManager:
     def _mock_urlopen(self, response_data=None):

@@ -161,6 +161,33 @@ def test_cloud_init_passes_cluster_tier():
     assert 'ENABLE_CADDY="true"' in startup_script_content
 
 
+def test_boot_script_has_namespace_commands():
+    """
+    Test_BootScript_NamespaceCommands: Verify boot.sh creates Nomad namespaces
+    for mesh-infra and mesh-bodies after Nomad service starts.
+    """
+    rendered = generate_shell_script(
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server"
+    )
+    assert 'nomad namespace apply -description "Mesh infrastructure (Caddy, monitoring)" mesh-infra' in rendered
+    assert 'nomad namespace apply -description "Mesh agent bodies (daemon-managed)" mesh-bodies' in rendered
+
+
+def test_boot_script_namespace_commands_after_nomad_restart():
+    """
+    Test_BootScript_NamespaceOrdering: Verify namespace commands appear
+    after the nomad restart block and before POST_BOOT_SCRIPT.
+    """
+    rendered = generate_shell_script(
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server"
+    )
+    nomad_restart_pos = rendered.index("systemctl restart nomad")
+    namespace_infra_pos = rendered.index("mesh-infra")
+    post_boot_pos = rendered.index("POST_BOOT_SCRIPT")
+    assert namespace_infra_pos > nomad_restart_pos
+    assert namespace_infra_pos < post_boot_pos
+
+
 def test_existing_tests_still_pass():
     rendered = generate_shell_script(
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server"

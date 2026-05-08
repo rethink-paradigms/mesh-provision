@@ -34,6 +34,7 @@ variable "log_level" {
 }
 
 job "caddy" {
+  namespace = "mesh-infra"
   type = "system"
   datacenters = [var.datacenter]
 

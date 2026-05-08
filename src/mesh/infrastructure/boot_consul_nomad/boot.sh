@@ -131,6 +131,10 @@ else
 	systemctl restart nomad
 fi
 
+# Create Nomad namespaces for safe co-existence with daemon
+nomad namespace apply -description "Mesh infrastructure (Caddy, monitoring)" mesh-infra || true
+nomad namespace apply -description "Mesh agent bodies (daemon-managed)" mesh-bodies || true
+
 POST_BOOT_SCRIPT="{{ POST_BOOT_SCRIPT }}"
 if [ -n "$POST_BOOT_SCRIPT" ]; then
     curl -fsSL "$POST_BOOT_SCRIPT" | bash
