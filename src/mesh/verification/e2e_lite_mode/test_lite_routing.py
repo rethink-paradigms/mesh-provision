@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from mesh.workloads.deploy_lite_ingress.route_manager import RouteManager
 from mesh.infrastructure.progressive_activation.tier_config import (
     ClusterTier,
@@ -25,6 +25,6 @@ class TestLiteRouting:
             routes = manager.list_routes()
             assert isinstance(routes, list)
 
-    def test_deploy_app_routes_to_lite_for_single_node(self):
+    def test_lite_tier_has_caddy_enabled(self):
         config = TierConfig.from_tier(ClusterTier.LITE)
         assert config.enable_caddy is True

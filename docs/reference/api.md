@@ -152,61 +152,6 @@ tier_config = detect_cluster_tier(
 
 ## Workloads Domain
 
-### `deploy_app`
-
-Tier-aware unified deployment dispatcher.
-
-```python
-from mesh.workloads.deploy_app import deploy_app
-
-success = deploy_app(
-    app_name="my-api",
-    image="nginx",
-    image_tag="latest",
-    port=8080,
-    domain="api.example.com",
-    cpu=100,              # MHz
-    memory=128,           # MB
-    datacenter="dc1",
-    cluster_tier=None,    # Auto-detected if None
-    nomad_addr="http://leader:4646",
-)
-# Returns: bool (True if deployment succeeded)
-```
-
-Auto-detects cluster tier from running Nomad nodes and routes to:
-
-- **LITE / STANDARD** → `deploy_lite_web_service` (Caddy routing)
-- **INGRESS / PRODUCTION** → Returns `False` (requires Traefik setup first)
-
----
-
-### `deploy_lite_web_service`
-
-Deploys web services in lite mode using Caddy routing.
-
-```python
-from mesh.workloads.deploy_lite_web_service import deploy_lite_web_service
-
-success = deploy_lite_web_service(
-    app_name="myapp",
-    image="nginx",
-    image_tag="latest",
-    port=80,
-    domain="myapp.example.com",
-    cpu=100,
-    memory=256,
-    datacenter="dc1",
-    nomad_addr="http://100.x.y.z:4646",
-    caddy_admin_addr="http://100.x.y.z:2019",
-)
-# Returns: bool
-```
-
-Uses host network mode and Nomad native service registration (no Consul).
-
----
-
 ### `deploy_lite_ingress`
 
 Deploys Caddy as a lightweight HTTPS ingress for single-VM deployments.
@@ -278,24 +223,6 @@ success = deploy_traefik(
 )
 # Returns: bool
 ```
-
----
-
-### `manage_secrets`
-
-Syncs secrets from CI/CD platforms to Nomad Variables.
-
-```python
-from mesh.workloads.manage_secrets import sync_secrets
-
-status = sync_secrets(
-    job_name="myapp",
-    secrets_json='{"DB_URL": "postgres://...", "API_KEY": "sk-xxx"}',
-)
-# Returns: "Success" or error message
-```
-
-Flow: GitHub Secrets → Nomad Variables → Nomad template stanza → Container env vars.
 
 ---
 

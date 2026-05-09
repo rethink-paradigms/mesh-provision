@@ -8,7 +8,6 @@ Command-line interface for the Distributed Mesh Platform. Provides interactive c
 | Command | Input | Output | Description |
 |:---|:---|:---|:---|
 | `mesh init` | --demo, --provider, --workers | Cluster provisioned | Interactive cluster provisioning wizard |
-| `mesh deploy` | name, --image, --tag, --port, --domain, --memory, --cpu, --count, --datacenter, --tier, --demo | Application deployed | Deploy a containerized application to the mesh |
 | `mesh status` | --demo, --compare, --roadmap | Cluster health display | View cluster nodes, apps, topology |
 | `mesh destroy` | --cluster, --demo | Cluster torn down | Terminate cluster nodes |
 | `mesh logs` | [job_name], --follow, --tail N, --alloc, --stderr | Job logs or job list | Stream/view Nomad job logs |
@@ -35,7 +34,6 @@ src/cli/
 ├── main.py             # Typer app entry point with all commands
 ├── commands/
 │   ├── init_cmd.py     # Interactive cluster provisioning wizard
-│   ├── deploy.py       # Application deployment
 │   ├── status.py       # Cluster status display
 │   ├── logs.py         # Stream/view Nomad job logs
 │   ├── ssh.py          # SSH into cluster nodes

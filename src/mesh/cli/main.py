@@ -7,14 +7,12 @@ laptop to a multi-cloud cluster. Zero-SSH deployment. Auto-HTTPS. Multi-cloud.
 Usage:
     mesh init                    Initialize a new cluster
     mesh status                  View cluster health
-    mesh deploy <name>           Deploy an application
     mesh logs                    View application logs
     mesh ssh                     Connect to a node
     mesh destroy                 Tear down cluster
 
 Quick start:
     mesh init                    # Interactive wizard
-    mesh deploy my-app --image nginx:latest
     mesh status
 """
 
@@ -32,7 +30,6 @@ from mesh.cli.commands.status import run_status
 from mesh.cli.commands.destroy import run_destroy
 from mesh.cli.commands.logs import run_logs
 from mesh.cli.commands.ssh import run_ssh
-from mesh.cli.commands.deploy import run_deploy
 from mesh.cli.commands.doctor import run_doctor
 from mesh.cli.commands.snapshot import snapshot_app
 from mesh.cli.ui.panels import (
@@ -262,48 +259,6 @@ def ssh(
     run_ssh(node_name=node_name, user=user, demo=demo, provider=provider)
 
 
-@app.command("deploy")
-def deploy(
-    name: str = typer.Argument(..., help="Application name"),
-    image: str = typer.Option(..., "--image", "-i", help="Docker image"),
-    image_tag: str = typer.Option("latest", "--tag", "-t", help="Image tag"),
-    port: int = typer.Option(8080, "--port", "-p", help="Container port"),
-    domain: Optional[str] = typer.Option(
-        None, "--domain", "-d", help="Domain for HTTPS"
-    ),
-    memory: int = typer.Option(128, "--memory", "-m", help="Memory in MB"),
-    cpu: int = typer.Option(100, "--cpu", "-c", help="CPU in MHz"),
-    count: int = typer.Option(1, "--count", "-n", help="Number of replicas"),
-    datacenter: str = typer.Option("dc1", "--datacenter", help="Nomad datacenter"),
-    cluster_tier: Optional[str] = typer.Option(
-        None, "--tier", help="Force cluster tier"
-    ),
-    demo: bool = typer.Option(False, "--demo", hidden=True),
-):
-    """
-    Deploy a containerized application to the mesh.
-
-    Auto-detects cluster tier and routes to the appropriate deployment path.
-
-    Example:
-        mesh deploy my-app --image nginx:latest
-        mesh deploy api --image python:3.11 --port 5000 --domain api.example.com
-    """
-    run_deploy(
-        name=name,
-        image=image,
-        image_tag=image_tag,
-        port=port,
-        domain=domain,
-        cpu=cpu,
-        memory=memory,
-        count=count,
-        datacenter=datacenter,
-        cluster_tier=cluster_tier,
-        demo=demo,
-    )
-
-
 @app.command("demo")
 def demo():
     """
@@ -381,8 +336,6 @@ def demo():
     next_steps.append("Ready to try for real?\n\n", style="dim")
     next_steps.append("  mesh init          ", style=MESH_GREEN)
     next_steps.append("— provision a real cluster\n", style="dim")
-    next_steps.append("  mesh deploy <app>  ", style=MESH_GREEN)
-    next_steps.append("— deploy your first app\n", style="dim")
     next_steps.append("  mesh doctor        ", style=MESH_GREEN)
     next_steps.append("— check your environment\n", style="dim")
     console.print(Panel(next_steps, border_style=MESH_CYAN, padding=(0, 1)))

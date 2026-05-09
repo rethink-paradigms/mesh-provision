@@ -31,17 +31,14 @@ You can also explicitly set the tier:
 pulumi config set cluster_tier lite
 ```
 
-Deploy an app in lite mode:
+Deploy an app in lite mode using Nomad CLI directly:
 
-```python
-from mesh.workloads.deploy_app import deploy_app
-
-deploy_app(
-    app_name="myapp",
-    image="nginx:latest",
-    cluster_tier="lite",
-    domain="myapp.example.com"
-)
+```bash
+nomad job run src/mesh/workloads/deploy_web_service/web_service.nomad.hcl \
+  -var="app_name=myapp" \
+  -var="image=nginx:latest" \
+  -var="port=80" \
+  -var="host_rule=myapp.localhost"
 ```
 
 ### Cloud Deployment (Pulumi)
@@ -205,14 +202,7 @@ deploy_traefik(
 )
 ```
 
-### Manage Secrets
 
-```bash
-# Sync GitHub Secrets to Nomad Variables
-python -m mesh.workloads.manage_secrets.manage --job myapp --secrets '{"DB_URL": "..."}'
-```
-
----
 
 ## Part 3: `mesh` CLI
 
@@ -223,7 +213,6 @@ The `mesh` CLI is fully implemented and provides interactive cluster provisionin
 | Command | Purpose | Interactive? |
 |---------|---------|-------------|
 | `mesh init` | Interactive cluster creation | Yes |
-| `mesh deploy` | Application deployment | Partial |
 | `mesh status` | Cluster health monitoring | No |
 | `mesh logs` | Tail service logs | No |
 | `mesh ssh` | SSH into cluster nodes | No |
@@ -255,9 +244,6 @@ pip install -e ".[dev]"
 # Initialize a cluster
 mesh init
 
-# Deploy an app
-mesh deploy my-app --image nginx:latest
-
 # Check status
 mesh status
 
@@ -279,7 +265,6 @@ src/mesh/cli/
 ├── plugins.py                 # Plugin discovery via entry_points
 ├── commands/
 │   ├── init_cmd.py            # mesh init — interactive provisioning wizard
-│   ├── deploy.py              # mesh deploy — app deployment
 │   ├── status.py              # mesh status — cluster health display
 │   ├── logs.py                # mesh logs — stream/view Nomad job logs
 │   ├── ssh.py                 # mesh ssh — SSH into cluster nodes

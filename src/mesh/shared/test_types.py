@@ -6,11 +6,9 @@ from dataclasses import FrozenInstanceError
 # Import the types we're testing
 from mesh.shared import (
     SnapshotStatus,
-    NodeRole,
     SnapshotMetadata,
     SNAPSHOT_DIR,
     NOMAD_DATA_DIR,
-    MESH_CONFIG_DIR,
 )
 
 
@@ -30,20 +28,6 @@ class TestSnapshotStatus:
         assert isinstance(SnapshotStatus.COMPLETED.value, str)
         assert isinstance(SnapshotStatus.FAILED.value, str)
         assert isinstance(SnapshotStatus.RESTORING.value, str)
-
-
-class TestNodeRole:
-    """Test NodeRole enum."""
-
-    def test_node_role_has_all_values(self):
-        """NodeRole enum should have: SERVER, CLIENT."""
-        assert hasattr(NodeRole, "SERVER")
-        assert hasattr(NodeRole, "CLIENT")
-
-    def test_node_role_values_are_strings(self):
-        """NodeRole enum values should be string-based."""
-        assert isinstance(NodeRole.SERVER.value, str)
-        assert isinstance(NodeRole.CLIENT.value, str)
 
 
 class TestSnapshotMetadata:
@@ -173,6 +157,4 @@ class TestConstants:
         """NOMAD_DATA_DIR should be defined with correct value."""
         assert NOMAD_DATA_DIR == "/opt/nomad/data/alloc"
 
-    def test_mesh_config_dir_constant(self):
-        """MESH_CONFIG_DIR should be defined with correct value."""
-        assert MESH_CONFIG_DIR == "~/.mesh"
+

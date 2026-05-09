@@ -11,7 +11,6 @@ Encapsulates all concerns related to creating, configuring, and managing the cor
 | `ProvisionNode` | name, provider, role, size, tailscale_auth_key, leader_ip, boot_script | public_ip, private_ip, instance_id | Provisions generic compute node (VM or bare metal) on specified provider |
 | `GenerateBootScripts` | tailscale_key, leader_ip, role, [cluster_tier] | boot_script_sh, boot_script_cloud_init_yaml | Renders modular Jinja2 boot scripts for node initialization |
 | `ConfigureTailscale` | key_name, [ephemeral], [reusable], [tags] | auth_key | Generates Tailscale authentication keys for mesh network joining |
-| `ProvisionLocalCluster` | (CLI command) | (CLI output) | Orchestrates local Multipass VM creation for development |
 | `ProvisionCloudCluster` | (Pulumi config) | leader_public_ip, worker_public_ip | Composes infrastructure primitives to deploy cloud cluster |
 | `ProgressiveActivation` | [nodes], [override_tier] | TierConfig | Detects cluster tier from node topology and returns configuration for enabled services |
 
@@ -64,11 +63,6 @@ Encapsulates all concerns related to creating, configuring, and managing the cor
 
 ### `provision_local_cluster/` - Local Development
 **Purpose:** Orchestrates the creation and management of a local development cluster using Multipass VMs.
-
-**CLI Commands:**
-- `up` - Provisions Leader and Worker VMs
-- `down` - Destroys all local VMs
-- `status` - Lists running VMs
 
 ### `progressive_activation/` - Tier Detection and Configuration
 **Purpose:** Detects cluster tier and provides tier-aware configuration.

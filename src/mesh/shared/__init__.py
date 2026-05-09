@@ -11,11 +11,6 @@ class SnapshotStatus(str, Enum):
     RESTORING = "restoring"
 
 
-class NodeRole(str, Enum):
-    SERVER = "server"
-    CLIENT = "client"
-
-
 @dataclass
 class SnapshotMetadata:
     id: str
@@ -48,4 +43,3 @@ class SnapshotMetadata:
 
 SNAPSHOT_DIR = "/var/lib/mesh/snapshots/"
 NOMAD_DATA_DIR = "/opt/nomad/data/alloc"
-MESH_CONFIG_DIR = "~/.mesh"

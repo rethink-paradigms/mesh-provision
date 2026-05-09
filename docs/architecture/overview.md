@@ -76,7 +76,7 @@ The `configure_tailscale` module generates ephemeral, tagged auth keys (`tag:mes
 - **Automatic rescheduling** — if a worker fails, Nomad moves its containers
 - **Job specification** via HCL templates parameterized by the workloads domain
 
-The `deploy_app` module is a **tier-aware dispatcher** that auto-detects cluster topology and routes to the correct deployment function.
+Applications are deployed via Nomad job files directly or through the `deploy_web_service` module for Traefik-routed deployments.
 
 ### 5. Service Discovery (Consul)
 
@@ -124,39 +124,19 @@ The `ClusterTier` enum and `detect_cluster_tier()` function handle this automati
 ## Data Flow: Deploying an App
 
 ```
-User runs: mesh deploy myapp --image nginx --port 80
+User prepares a Nomad job file or uses deploy_web_service
                     │
                     ▼
             ┌───────────────┐
-            │  CLI (Typer)  │  Parses args, validates
+            │  deploy_web_  │  Creates Nomad HCL with
+            │  service      │  Consul tags for Traefik
             └───────┬───────┘
                     │
                     ▼
             ┌───────────────┐
-            │  deploy_app   │  Auto-detects cluster tier
-            └───────┬───────┘
-                    │
-            ┌───────┴───────────────────────┐
-            │                               │
-            ▼                               ▼
-   ┌────────────────┐            ┌──────────────────┐
-   │ Lite: Caddy    │            │ Full: Traefik    │
-   │ deploy_lite_   │            │ deploy_web_      │
-   │ web_service    │            │ service          │
-   └───────┬────────┘            └───────┬──────────┘
-           │                             │
-           ▼                             ▼
-   ┌────────────────┐          ┌──────────────────┐
-   │ Nomad Job HCL  │          │ Nomad Job HCL    │
-   │ + Caddy route  │          │ + Consul tags    │
-   └───────┬────────┘          └───────┬──────────┘
-           │                           │
-           └───────────┬───────────────┘
-                       ▼
-              ┌────────────────┐
-              │  Nomad API     │  Submits job, schedules
-              │  (leader:4646) │  containers to workers
-              └────────────────┘
+            │  Nomad API    │  Submits job, schedules
+            │  (leader:4646)│  containers to workers
+            └───────────────┘
 ```
 
 ---
@@ -166,8 +146,8 @@ User runs: mesh deploy myapp --image nginx --port 80
 Mesh uses a **zero-infrastructure** secrets approach:
 
 1. Store secrets in **GitHub Secrets** (or your CI/CD platform)
-2. The `manage_secrets` module syncs them to **Nomad Variables** at deploy time
-3. Nomad's `template` stanza injects them into containers as environment variables
+2. Use Nomad's `template` stanza to inject them into containers as environment variables
+3. Alternatively, set secrets directly via the Nomad Variables API
 
 No Vault, no etcd, no encrypted S3 buckets. The trust boundary is your CI/CD platform.
 
@@ -194,9 +174,6 @@ No Vault, no etcd, no encrypted S3 buckets. The trust boundary is your CI/CD pla
 | `boot_consul_nomad` | Render boot scripts | Jinja2 templates → shell/cloud-init |
 | `configure_tailscale` | Generate auth keys | `key_name`, `ephemeral`, `tags` → `auth_key` |
 | `progressive_activation` | Tier detection | `detect_cluster_tier(nodes)` → `TierConfig` |
-| `deploy_app` | Unified deploy dispatcher | `deploy_app(app_name, image, ...)` |
 | `deploy_web_service` | Traefik-routed deploy | Nomad HCL with Consul tags |
-| `deploy_lite_web_service` | Caddy-routed deploy | Nomad HCL + Caddy admin API |
 | `deploy_traefik` | Traefik ingress setup | ACME config, Consul integration |
 | `deploy_lite_ingress` | Caddy ingress setup | `LiteIngressConfig`, `RouteManager` |
-| `manage_secrets` | Secret sync | CI/CD → Nomad Variables |
