@@ -43,8 +43,17 @@ def _run_destroy_json(
         print_json_success(result)
         return
 
-    # Validate required args
-    require_json_mode_args(api_key=api_key)
+    # Validate required args - api_key is optional, falls back to env var
+    if not api_key:
+        from mesh.infrastructure.config.env import get_env, EnvVars
+
+        api_key = get_env(EnvVars.DIGITALOCEAN_API_TOKEN) or ""
+    if not api_key:
+        print_json_error(
+            code="missing_credentials",
+            message="No API key provided and none found in .env",
+        )
+        return
 
     from mesh.infrastructure.providers import PROVIDER_ENUMS, UNSUPPORTED_PROVIDERS
 
