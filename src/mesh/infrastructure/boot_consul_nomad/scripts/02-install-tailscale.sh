@@ -4,7 +4,7 @@ TS_KEY=$1
 
 echo ">>> [02] Installing & Joining Tailscale..."
 if ! command -v tailscale &> /dev/null; then
-  curl -fsSL https://tailscale.com/install.sh | sh
+  TMP=$(mktemp) && curl -fsSL https://tailscale.com/install.sh -o "$TMP" && bash "$TMP" && rm "$TMP"
 fi
 sysctl -w net.ipv4.ip_forward=1
 sysctl -w net.ipv6.conf.all.forwarding=1

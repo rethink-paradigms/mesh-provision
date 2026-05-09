@@ -54,11 +54,12 @@ PROVIDER_ENUMS: Dict[str, Provider] = {
     # DigitalOcean
     "digitalocean": Provider.DIGITAL_OCEAN,
     "do": Provider.DIGITAL_OCEAN,  # Alias
-    # Google Cloud Platform
-    "gcp": Provider.GCE,
-    "google": Provider.GCE,  # Alias
-    # Microsoft Azure
-    "azure": Provider.AZURE_ARM,
+    # Google Cloud Platform — UNSUPPORTED: driver requires service account JSON auth,
+    # not the key/secret pair passed here. Do not use until GCE auth is reworked.
+    "gcp": Provider.GCE,  # UNSUPPORTED: requires service account JSON auth
+    "google": Provider.GCE,  # UNSUPPORTED: requires service account JSON auth (alias)
+    # Microsoft Azure — UNSUPPORTED: Azure ARM driver init not verified against live API.
+    "azure": Provider.AZURE_ARM,  # UNSUPPORTED: Azure ARM driver not verified
     # Linode (Akamai Connected Cloud)
     "linode": Provider.LINODE,
     # Vultr
@@ -73,14 +74,16 @@ PROVIDER_ENUMS: Dict[str, Provider] = {
     "ovh": Provider.OVH,
     # Equinix Metal
     "equinixmetal": Provider.EQUINIXMETAL,
-    # Gridscale
-    "gridscale": Provider.GRIDSCALE,
-    # CloudScale
-    "cloudscale": Provider.CLOUDSCALE,
+    # Gridscale and Cloudscale removed: zero credential env vars, zero tests,
+    # not used in any deployment. Re-add if officially adopted.
     # Note: Hetzner (Hetzner Cloud) may not be available in all Libcloud versions
     # If available, add: "hetzner": Provider.HETZNER
     # Add more providers as needed - see Libcloud docs
 }
+
+# Providers that are enumerated above but cannot be used via get_driver() because
+# their authentication requirements differ from what the current driver init provides.
+UNSUPPORTED_PROVIDERS: frozenset = frozenset({"gcp", "google", "azure"})
 
 
 # =============================================================================
@@ -282,6 +285,13 @@ def get_driver(
             f"See https://libcloud.readthedocs.io/en/stable/compute/supported_providers.html"
         )
 
+    if provider_id in UNSUPPORTED_PROVIDERS:
+        raise ValueError(
+            f"Provider '{provider_id}' is currently UNSUPPORTED. "
+            f"GCP requires service account JSON auth; Azure ARM driver is unverified. "
+            f"Remove '{provider_id}' from UNSUPPORTED_PROVIDERS once auth is correctly implemented."
+        )
+
     provider_enum = PROVIDER_ENUMS[provider_id]
 
     # Get credentials
@@ -294,33 +304,14 @@ def get_driver(
 
         # Build driver args based on provider
         if provider_id == "aws":
-            # AWS: (key, secret, region)
             driver = DriverClass(
                 credentials.get("key"),
                 credentials.get("secret"),
                 region or credentials.get("region", "us-east-1"),
             )
-        elif provider_id == "digitalocean":
-            # DigitalOcean: (key,)
+        elif provider_id in ("digitalocean", "do"):
             driver = DriverClass(credentials.get("key"))
-        elif provider_id == "gcp":
-            # GCP: (key, secret, project) or use service account JSON
-            # This is simplified - real GCP setup is more complex
-            driver = DriverClass(
-                credentials.get("key"),
-                credentials.get("secret", ""),
-                credentials.get("project", ""),
-            )
-        elif provider_id == "azure":
-            # Azure: (tenant_id, subscription_id, client_id, client_secret)
-            driver = DriverClass(
-                credentials.get("tenant_id"),
-                credentials.get("subscription_id"),
-                credentials.get("client_id"),
-                credentials.get("client_secret"),
-            )
         else:
-            # Generic: try passing all credentials as positional args
             driver = DriverClass(*credentials.values())
 
         return driver

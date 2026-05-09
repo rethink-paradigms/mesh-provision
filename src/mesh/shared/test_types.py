@@ -1,9 +1,11 @@
 """Tests for shared type definitions in mesh.shared module."""
 
+import importlib
+import os
 import pytest
 from dataclasses import FrozenInstanceError
+from unittest.mock import patch
 
-# Import the types we're testing
 from mesh.shared import (
     SnapshotStatus,
     SnapshotMetadata,
@@ -149,12 +151,33 @@ class TestSnapshotMetadata:
 class TestConstants:
     """Test module-level constants."""
 
-    def test_snapshot_dir_constant(self):
-        """SNAPSHOT_DIR should be defined with correct value."""
+    def test_snapshot_dir_default_value(self):
+        """SNAPSHOT_DIR should default to /var/lib/mesh/snapshots/ when env var not set."""
         assert SNAPSHOT_DIR == "/var/lib/mesh/snapshots/"
 
     def test_nomad_data_dir_constant(self):
         """NOMAD_DATA_DIR should be defined with correct value."""
         assert NOMAD_DATA_DIR == "/opt/nomad/data/alloc"
+
+    def test_snapshot_dir_configurable_via_env_var(self):
+        """SNAPSHOT_DIR should pick up MESH_SNAPSHOT_DIR when the module is loaded."""
+        import mesh.shared as shared_module
+
+        with patch.dict(os.environ, {"MESH_SNAPSHOT_DIR": "/tmp/mesh-test-snap"}):
+            importlib.reload(shared_module)
+            assert shared_module.SNAPSHOT_DIR == "/tmp/mesh-test-snap"
+
+        importlib.reload(shared_module)
+
+    def test_snapshot_dir_falls_back_to_default_when_env_unset(self):
+        """SNAPSHOT_DIR should fall back to /var/lib/mesh/snapshots/ when env var is absent."""
+        import mesh.shared as shared_module
+
+        env = {k: v for k, v in os.environ.items() if k != "MESH_SNAPSHOT_DIR"}
+        with patch.dict(os.environ, env, clear=True):
+            importlib.reload(shared_module)
+            assert shared_module.SNAPSHOT_DIR == "/var/lib/mesh/snapshots/"
+
+        importlib.reload(shared_module)
 
 

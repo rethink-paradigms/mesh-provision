@@ -1,5 +1,6 @@
 """Shared type definitions for Mesh MVP."""
 
+import os
 from dataclasses import dataclass
 from enum import Enum
 
@@ -41,5 +42,5 @@ class SnapshotMetadata:
         }
 
 
-SNAPSHOT_DIR = "/var/lib/mesh/snapshots/"
+SNAPSHOT_DIR = os.environ.get("MESH_SNAPSHOT_DIR", "/var/lib/mesh/snapshots/")
 NOMAD_DATA_DIR = "/opt/nomad/data/alloc"

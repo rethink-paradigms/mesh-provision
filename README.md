@@ -1,14 +1,14 @@
-# Mesh
+# Mesh Provision
 
-Lightweight infrastructure orchestration platform for multi-cloud container deployment.
+Infrastructure provisioner for the Mesh daemon.
 
 [![PyPI Version](https://img.shields.io/pypi/v/rethink-mesh)](https://pypi.org/project/rethink-mesh/)
 [![Python](https://img.shields.io/pypi/pyversions/rethink-mesh)](https://pypi.org/project/rethink-mesh/)
 [![License](https://img.shields.io/pypi/l/rethink-mesh)](https://github.com/rethink-paradigms/mesh)
 
-**Deploy containers across any cloud. Zero SSH required. Auto-HTTPS. Multi-cloud.**
+**Mesh provisioner creates the cluster. The daemon runs everything on it.**
 
-Mesh turns any collection of VMs into a single unified computer. Deploy to AWS, DigitalOcean, Google Cloud, or 13+ cloud providers with one command.
+Provision VMs across cloud providers, bootstrap a Nomad + Consul + Docker + Tailscale + Caddy stack, and get back cluster connection details. Thats the scope. The Mesh daemon (separate project) handles agent body scheduling, ingress routing, and the REST API.
 
 ---
 
@@ -21,14 +21,11 @@ pip install rethink-mesh
 # Initialize a cluster
 mesh init
 
-# Deploy an application
-mesh deploy my-app --image nginx:latest
-
 # Check status
 mesh status
 
 # View logs
-mesh logs my-app --follow
+mesh logs
 ```
 
 **From install to running:** ~5 minutes
@@ -37,11 +34,10 @@ mesh logs my-app --follow
 
 ## What It Does
 
-* **Multi-cloud deployment** — Run on AWS, DigitalOcean, Google Cloud, and 10+ other providers from one CLI
-* **Zero-SSH deployment** — Declarative infrastructure means no manual server access required
-* **Auto-HTTPS** — Let's Encrypt certificates provisioned automatically for all services
-* **Lightweight control plane** — ~530MB RAM vs 2GB+ for Kubernetes
-* **Cost-effective** — From $8/month (single VM) to $25/month (3-node cluster)
+* **Provisions VMs** — Spins up cloud instances on DigitalOcean, Multipass (local dev), and other providers via Apache Libcloud
+* **Bootstraps the stack** — Installs and configures Nomad + Consul + Docker + Tailscale + Caddy on each node
+* **Deploys infrastructure workloads** — Caddy ingress as a Nomad system job for lite and standard tiers
+* **Returns cluster facts** — Leader IP, worker IPs, Tailscale network info, and connection details (JSON output for automation)
 
 ---
 
@@ -51,7 +47,7 @@ mesh logs my-app --follow
 
 * **Python 3.11 or later**
 * **Docker** (for local development, optional for cloud deployments)
-* **Cloud account** — AWS, DigitalOcean, Google Cloud, or any supported provider
+* **Cloud account** — DigitalOcean, AWS, Linode, or any supported provider
 * **Tailscale account** — Free tier sufficient for mesh networking
 
 ### Install
@@ -90,224 +86,149 @@ DIGITALOCEAN_API_TOKEN=do_token_xxxxx
 # AWS
 AWS_ACCESS_KEY_ID=AKIA...
 AWS_SECRET_ACCESS_KEY=wJalr...
-
-# Google Cloud
-GOOGLE_CREDENTIALS=path/to/service-account.json
-GOOGLE_PROJECT=my-project-id
 ```
 
-See `.env.example` for all 13+ supported providers.
+See `.env.example` for the full list of supported providers.
 
 ---
 
-## Usage
+## CLI Commands
 
-### Core Commands
+### mesh init
 
-**Initialize a cluster**
+Provisions a new cluster interactively. Guides you through provider selection, region, instance sizing, and worker count.
 
 ```bash
 mesh init
-# Interactive wizard guides you through:
-#   • Provider selection (cloud or local)
-#   • Region configuration
-#   • Instance sizing
-#   • Worker count
-```
 
-```bash
 # Skip prompts with flags
 mesh init --provider "Local (Multipass)" --workers 2
-mesh init --provider "AWS" --workers 3
+mesh init --provider "DigitalOcean" --region nyc3 --workers 1 --yes
 ```
 
-**Deploy an application**
+Use `--output json` or `--input stdin` for automated or scripted provisioning. Use `--post-boot-script` to install the Mesh daemon after cluster bootstrap.
 
-```bash
-# Basic deployment
-mesh deploy my-app --image nginx:latest
+### mesh status
 
-# With custom configuration
-mesh deploy api --image python:3.11 \
-  --port 5000 \
-  --memory 256 \
-  --cpu 200 \
-  --domain api.example.com
-
-# Multiple replicas
-mesh deploy worker --image my-worker \
-  --count 3
-```
-
-**Check cluster status**
+Shows cluster health, node topology, and running jobs.
 
 ```bash
 mesh status
-# Shows:
-#   • Cluster health
-#   • Node topology
-#   • Running applications
-#   • Resource utilization
-
-mesh status --compare   # Compare vs Kubernetes
-mesh status --roadmap   # Show capability timeline
 ```
 
-**View logs**
+### mesh destroy
+
+Tears down a cluster. Stops all jobs, terminates all nodes. Requires confirmation.
 
 ```bash
-# List all running jobs
-mesh logs
+mesh destroy
+mesh destroy --cluster my-cluster --yes
+```
 
-# Stream logs for a specific app
-mesh logs my-app --follow
+### mesh logs
 
-# Last 50 lines, stderr only
+Views or streams logs from Nomad jobs running on the cluster.
+
+```bash
+mesh logs                  # List all running jobs
+mesh logs my-app           # Show logs for a specific job
+mesh logs my-app --follow  # Stream logs in real-time
 mesh logs my-app --tail 50 --stderr
 ```
 
-**SSH into nodes**
+### mesh ssh
+
+SSH into cluster nodes. Without a node name, lists all available nodes. Tries Tailscale IPs when available.
 
 ```bash
-# List all nodes
 mesh ssh
-
-# Connect to a specific node
 mesh ssh mesh-leader
 mesh ssh mesh-worker-1 --user admin
 ```
 
-**Destroy a cluster**
+### mesh doctor
+
+Checks if your environment is ready. Verifies Python version, Docker, Pulumi, Tailscale, and environment variables.
 
 ```bash
-mesh destroy
-# → Stops all apps
-# → Terminates all nodes
-# → Requires confirmation
-
-mesh destroy --cluster my-cluster
+mesh doctor
 ```
 
-### Utility Commands
+### mesh demo
 
-| Command | Description |
-|:---|:---|
-| `mesh doctor` | Check system prerequisites |
-| `mesh demo` | Run full experience in demo mode (no infrastructure) |
-| `mesh version` | Show installed version |
-| `mesh compare` | Show resource comparison vs Kubernetes |
-| `mesh roadmap` | Show capability roadmap |
+Runs the full provisioning experience in demo mode without creating real infrastructure.
+
+```bash
+mesh demo
+```
+
+### mesh add-worker
+
+Adds a worker node to an existing cluster.
+
+```bash
+mesh add-worker --cluster my-cluster --provider digitalocean
+mesh add-worker --cluster my-cluster --provider digitalocean --region nyc3 --size s-1vcpu-1gb
+```
+
+---
+
+## What It Does NOT Do
+
+Mesh provisioner has a focused scope. It is NOT:
+
+* **An application deployment platform** — The Mesh daemon handles workload scheduling. Mesh provisioner creates the cluster; the daemon runs agent bodies on it.
+* **An agent runner** — Agent body lifecycle (start, stop, destroy) belongs to agent-bodies and the gateway.
+* **A secrets manager** — No secrets storage, rotation, or access control.
+* **A lightweight K8s alternative** — It is an infrastructure provisioner with a specific job: VMs + Nomad + Consul + Caddy. It does not attempt to replace container orchestration platforms.
 
 ---
 
 ## How It Works
 
-Mesh orchestrates infrastructure across cloud providers with these components:
-
 ```
-┌─────────────────────────────────────────────┐
-│          User / CI/CD                  │
-└───────────────────┬─────────────────────┘
-                    │ mesh CLI
-┌───────────────────┴─────────────────────┐
-│  LEADER NODE                            │
-│  • Pulumi (provisioning)               │
-│  • Tailscale (mesh networking)           │
-│  • Nomad (scheduler)                    │
-│  • Consul (service discovery)            │
-│  • Traefik/Caddy (HTTPS ingress)        │
-└───────────────────┬─────────────────────┘
-                    │ Tailscale WireGuard mesh
-┌───────────────────┴─────────────────────┐
-│  WORKER NODES (VMs on any provider)  │
-│  • Nomad client                       │
-│  • Consul agent                       │
-│  • Docker runtime                     │
-│  • Application containers             │
-└──────────────────────────────────────────┘
+mesh-provision / mesh CLI
+  Provisions VMs, bootstraps Nomad+Consul,
+  installs Docker+Tailscale, deploys Caddy
+         |
+         | Returns cluster facts (JSON)
+         v
+CLUSTER (Tailscale Mesh)
+  Leader VM:  Nomad server, Consul, Docker,
+              Caddy, Tailscale
+  Worker VM:  Nomad client, Docker, Tailscale
 ```
 
-### Architecture
+**Architecture stack:**
 
-1. **Pulumi** provisions VMs on any provider via Apache Libcloud (50+ providers supported)
-2. **Tailscale** creates encrypted WireGuard mesh across all VMs
-3. **Nomad** schedules containers with resource-aware bin-packing
+1. **Apache Libcloud** provisions VMs across supported cloud providers
+2. **Tailscale** creates an encrypted WireGuard mesh across all VMs
+3. **Nomad** schedules infrastructure workloads with resource-aware bin-packing
 4. **Consul** provides health-checked service discovery
-5. **Traefik or Caddy** handles HTTPS ingress with automatic Let's Encrypt
+5. **Caddy** handles HTTPS ingress with automatic Let's Encrypt
 
-### Technology Stack
+### Infrastructure vs Application Workloads
 
-| Layer | Component | RAM |
-|:---|:---|:---|
-| Infrastructure | Pulumi (Python) | 0MB |
-| Networking | Tailscale | 20MB |
-| Scheduler | Nomad | 80MB |
-| Service Discovery | Consul | 50MB |
-| Ingress | Traefik | 256MB |
-| Ingress (Lite) | Caddy | 20MB |
-| Runtime | Docker | 100MB |
-| Secrets | Nomad Variables | 0MB |
-
-**Control plane overhead:** ~530MB (full mode) | ~200MB (lite mode)
+Mesh provisioner deploys infrastructure workloads only: Caddy ingress as a Nomad system job. Application workloads (agent bodies) are the Mesh daemon's responsibility. The provisioner creates the cluster and installs the foundation; the daemon uses it.
 
 ---
 
 ## Supported Providers
 
-| Provider | Status | Regions |
-|:---|:---:|:---|
-| AWS | ✅ | us-east-1, us-west-2, eu-west-1, ap-south-1 |
-| DigitalOcean | ✅ | nyc3, sfo3, ams3, sgp1, lon1, fra1 |
-| Google Cloud | ✅ | us-central1, us-east1, europe-west1 |
-| Azure | ✅ | eastus, westus2, westeurope |
-| Linode | ✅ | us-east, us-central, eu-west |
-| Vultr | ✅ | ewr, lax, ams, sgp |
-| +7 more providers | ✅ | Varies |
+| Provider | Status | Notes |
+|----------|--------|-------|
+| DigitalOcean | Tested | Working, primary cloud provider |
+| Multipass | Tested | Local development only |
+| AWS | Mapped | Driver configured, not recently tested |
+| Linode | Mapped | Driver configured, not tested |
+| Vultr | Mapped | Driver configured, not tested |
+| UpCloud | Mapped | Driver configured, not tested |
+| Exoscale | Mapped | Driver configured, not tested |
+| Scaleway | Mapped | Driver configured, not tested |
+| OVH | Mapped | Driver configured, not tested |
+| Equinix Metal | Mapped | Driver configured, not tested |
 
-See `.env.example` for complete list of 13+ supported providers.
-
----
-
-## Deployment Tiers
-
-Mesh automatically activates services based on cluster topology.
-
-| Tier | Topology | Ingress | Service Discovery | RAM | Cost |
-|:---|:---|:---|:---|:---:|:---|
-| **Lite** | 1 VM | Caddy | Native | ~200MB | ~$8/mo |
-| **Standard** | 2+ VMs, 1 region | Caddy | Consul | ~350MB | ~$15/mo |
-| **Ingress** | 2+ VMs, 1 region | Traefik | Consul | ~530MB | ~$25/mo |
-| **Production** | 3+ VMs, multi-region | Traefik | Consul + WAN | ~530MB+ | ~$50/mo |
-
----
-
-## Comparison
-
-| Metric | Mesh | Kubernetes | Heroku |
-|:---|:---|:---|:---|
-| 3-node cluster cost | $25/mo | $72+/mo | $250+/mo |
-| Control plane RAM | 530MB | 2GB+ | N/A |
-| Setup time | <15 min | 2+ hours | <5 min |
-| Multi-cloud | Native | Complex | No |
-| Auto HTTPS | Built-in | Manual config | Built-in |
-| SSH required | Optional | Often | Never |
-
----
-
-## Demo Mode
-
-Try Mesh without creating real infrastructure:
-
-```bash
-mesh demo
-# Simulates:
-#   • Cluster initialization
-#   • Application deployment
-#   • Status viewing
-#   No cloud resources created
-```
-
-All commands support `--demo` flag for testing without real infrastructure.
+Providers are mapped via Apache Libcloud drivers. Additional providers can be added through the Libcloud provider registry.
 
 ---
 
@@ -331,18 +252,15 @@ RUN_E2E=1 ./run_tests.sh
 ```
 src/mesh/
 ├── cli/                    # CLI commands and UI
-│   ├── commands/            # init, deploy, status, logs, ssh, etc.
+│   ├── commands/            # init, status, logs, ssh, destroy
 │   └── ui/                 # Rich-formatted panels and themes
 ├── infrastructure/          # VM provisioning and networking
 │   ├── provision_node/      # Multi-provider VM provisioning
 │   ├── boot_consul_nomad/  # Modular boot scripts
 │   ├── configure_tailscale/  # Tailscale auth key generation
 │   └── providers/           # Libcloud provider implementations
-├── workloads/               # Application deployment
-│   ├── deploy_app/          # Tier-aware unified deployment
-│   ├── deploy_web_service/   # Nomad web app templates
-│   ├── deploy_traefik/      # Traefik TLS ingress
-│   └── manage_secrets/      # Secret synchronization
+├── workloads/               # Infrastructure workload deployment
+│   └── deploy_lite_ingress/  # Caddy system job
 └── verification/            # E2E test suites
 ```
 
@@ -368,39 +286,22 @@ pytest src/mesh -m "not e2e"
 
 ---
 
-## Plugin Architecture
-
-Extend Mesh with custom commands via Python entry points:
-
-```toml
-# In your plugin's pyproject.toml:
-[project.entry-points."mesh.plugins"]
-my-command = "my_package.cli:register"
-```
-
-Enterprise features (GPU, monitoring, backups, AI agent orchestration) register as plugins in the separate `mesh-enterprise` package.
-
----
-
 ## Security
 
 * WireGuard encryption on all mesh traffic via Tailscale
 * TLS/HTTPS on all external endpoints via Let's Encrypt
 * Docker container isolation with resource limits
-* Declarative infrastructure — SSH optional for deployment
+* Declarative infrastructure -- SSH optional for cluster management
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT -- see [LICENSE](LICENSE) for details.
 
 ---
 
 ## Links
 
 * [Documentation](https://github.com/rethink-paradigms/mesh/tree/main/docs)
-* [Deployment Guide](https://rethink-paradigms.github.io/mesh/guides/deploy/)
-* [Architecture Overview](https://rethink-paradigms.github.io/mesh/architecture/overview/)
-* [Comparisons](https://rethink-paradigms.github.io/mesh/comparisons/)
-* [FAQ](https://rethink-paradigms.github.io/mesh/faq/)
+* [Architecture Overview](https://github.com/rethink-paradigms/mesh/tree/main/docs)

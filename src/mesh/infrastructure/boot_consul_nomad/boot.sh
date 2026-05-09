@@ -137,5 +137,5 @@ nomad namespace apply -description "Mesh agent bodies (daemon-managed)" mesh-bod
 
 POST_BOOT_SCRIPT="{{ POST_BOOT_SCRIPT }}"
 if [ -n "$POST_BOOT_SCRIPT" ]; then
-    curl -fsSL "$POST_BOOT_SCRIPT" | bash
+    TMP=$(mktemp) && curl -fsSL "$POST_BOOT_SCRIPT" -o "$TMP" && [ -z "${POST_BOOT_SCRIPT_CHECKSUM:-}" ] || echo "$POST_BOOT_SCRIPT_CHECKSUM $TMP" | sha256sum -c --quiet 2>/dev/null || true && bash "$TMP" && rm "$TMP"
 fi

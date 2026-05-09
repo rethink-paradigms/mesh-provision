@@ -258,7 +258,7 @@ install_tailscale() {
     if command -v tailscale &>/dev/null; then
         log "Tailscale already installed ($(tailscale version 2>/dev/null | head -1 || echo 'unknown'))."
     else
-        run_cmd curl -fsSL https://tailscale.com/install.sh | sh
+        TMP=$(mktemp) && run_cmd curl -fsSL https://tailscale.com/install.sh -o "$TMP" && run_cmd bash "$TMP" && rm "$TMP"
         log "Tailscale installed."
     fi
 

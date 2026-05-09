@@ -812,3 +812,36 @@ class TestDiscoveryMethods:
 
         assert is_region_available("aws", "us-east-1") is True
         assert is_region_available("aws", "ap-south-1") is False
+
+
+from mesh.infrastructure.providers import UNSUPPORTED_PROVIDERS, get_driver
+
+
+class TestHardenedProviders:
+
+    def test_gcp_raises_unsupported(self):
+        with pytest.raises(ValueError, match="UNSUPPORTED"):
+            get_driver("gcp")
+
+    def test_google_alias_raises_unsupported(self):
+        with pytest.raises(ValueError, match="UNSUPPORTED"):
+            get_driver("google")
+
+    def test_azure_raises_unsupported(self):
+        with pytest.raises(ValueError, match="UNSUPPORTED"):
+            get_driver("azure")
+
+    def test_gridscale_absent_from_provider_enums(self):
+        assert "gridscale" not in PROVIDER_ENUMS
+
+    def test_cloudscale_absent_from_provider_enums(self):
+        assert "cloudscale" not in PROVIDER_ENUMS
+
+    def test_unsupported_providers_set_includes_gcp_and_azure(self):
+        assert "gcp" in UNSUPPORTED_PROVIDERS
+        assert "google" in UNSUPPORTED_PROVIDERS
+        assert "azure" in UNSUPPORTED_PROVIDERS
+
+    def test_gridscale_cloudscale_not_in_unsupported_providers(self):
+        assert "gridscale" not in UNSUPPORTED_PROVIDERS
+        assert "cloudscale" not in UNSUPPORTED_PROVIDERS
