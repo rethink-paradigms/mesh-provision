@@ -1,0 +1,9 @@
+REJECTED: nonexistent — unknown provider
+Available: ['aws', 'digitalocean', 'do', 'equinixmetal', 'exoscale', 'linode', 'ovh', 'scaleway', 'upcloud', 'vultr']
+REJECTED: gcp — unsupported provider
+ACCEPTED: digitalocean
+
+Provider validation correctly:
+  - Rejects unknown providers (nonexistent)
+  - Rejects unsupported providers (gcp, azure, google)
+  - Accepts valid providers (digitalocean, aws, etc.)
