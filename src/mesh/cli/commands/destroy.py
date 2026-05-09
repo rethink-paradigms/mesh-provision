@@ -25,6 +25,8 @@ def _run_destroy_json(
     cluster_name: str,
     api_key: Optional[str],
     demo: bool,
+    provider: str = "digitalocean",
+    region: str = "",
 ) -> None:
     """Handle destroy --output json."""
     from mesh.cli.commands.json_output import (
@@ -44,6 +46,20 @@ def _run_destroy_json(
     # Validate required args
     require_json_mode_args(api_key=api_key)
 
+    from mesh.infrastructure.providers import PROVIDER_ENUMS, UNSUPPORTED_PROVIDERS
+
+    if provider not in PROVIDER_ENUMS or provider in UNSUPPORTED_PROVIDERS:
+        available = sorted(
+            p for p in PROVIDER_ENUMS if p not in UNSUPPORTED_PROVIDERS
+        )
+        print_json_error(
+            code="unknown_provider",
+            message=f"Unknown or unsupported provider '{provider}'. "
+            f"Available providers: {', '.join(available)}",
+            available_providers=available,
+        )
+        return
+
     # Use direct Libcloud destroy (single-token providers only per Guardrail G6)
     from mesh.infrastructure.provision_node.provision_direct import (
         destroy_resources_direct,
@@ -51,9 +67,9 @@ def _run_destroy_json(
 
     try:
         result = destroy_resources_direct(
-            provider="digitalocean",
+            provider=provider,
             api_key=api_key,  # type: ignore[arg-type]  # validated by require_json_mode_args
-            region="",
+            region=region,
             cluster_name=cluster_name,
         )
         transformed = to_brief_destroy_shape(result, cluster_name)
@@ -76,7 +92,13 @@ def run_destroy(
 ):
     """Destroy a mesh cluster with confirmation."""
     if output == "json":
-        _run_destroy_json(cluster_name=cluster_name, api_key=api_key, demo=demo)
+        _run_destroy_json(
+            cluster_name=cluster_name,
+            api_key=api_key,
+            demo=demo,
+            provider="digitalocean",
+            region="",
+        )
         return
 
     console.print()

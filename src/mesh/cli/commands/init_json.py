@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Dict
 
+from mesh.cli.commands.add_worker import _run_add_worker_json
+from mesh.cli.commands.destroy import _run_destroy_json
 from mesh.cli.commands.json_output import (
     build_demo_init_json,
     print_json_error,
@@ -228,6 +230,66 @@ def run_init_json(
     print_json_success(brief)
 
 
+# ---------------------------------------------------------------------------
+# Stdin command handlers (dispatched by run_init_json_from_stdin)
+# ---------------------------------------------------------------------------
+
+
+def _handle_init_stdin(params: dict) -> None:
+    """Handle 'init' command from stdin."""
+    run_init_json(
+        provider=params.get("provider", ""),
+        region=params.get("region", ""),
+        workers=params.get("workers", 0),
+        leader_size=params.get("leader_size", "s-2vcpu-4gb"),
+        worker_size=params.get("worker_size", "s-1vcpu-1gb"),
+        cluster_name=params.get("cluster_name", "mesh-cluster"),
+        api_key=params.get("api_key", ""),
+        post_boot_script=params.get("post_boot_script", ""),
+    )
+
+
+def _handle_destroy_stdin(params: dict) -> None:
+    """Handle 'destroy' command from stdin."""
+    require_json_mode_args(
+        cluster_name=params.get("cluster_name"),
+    )
+    _run_destroy_json(
+        cluster_name=params.get("cluster_name", ""),
+        api_key=params.get("api_key", ""),
+        demo=False,
+        provider=params.get("provider", "digitalocean"),
+        region=params.get("region", ""),
+    )
+
+
+def _handle_add_worker_stdin(params: dict) -> None:
+    """Handle 'add-worker' command from stdin."""
+    require_json_mode_args(
+        provider=params.get("provider"),
+        region=params.get("region"),
+        cluster_name=params.get("cluster_name"),
+        size=params.get("worker_size"),
+        leader_ip=params.get("leader_ip"),
+    )
+    _run_add_worker_json(
+        cluster_name=params.get("cluster_name", ""),
+        provider=params.get("provider", ""),
+        region=params.get("region", ""),
+        size=params.get("worker_size", ""),
+        api_key=params.get("api_key", ""),
+        leader_ip=params.get("leader_ip", ""),
+        demo=False,
+    )
+
+
+COMMAND_HANDLERS = {
+    "init": _handle_init_stdin,
+    "destroy": _handle_destroy_stdin,
+    "add-worker": _handle_add_worker_stdin,
+}
+
+
 def run_init_json_from_stdin() -> None:
     import sys
     import json
@@ -252,20 +314,16 @@ def run_init_json_from_stdin() -> None:
     command = msg.get("command")
     params = msg.get("params", {})
 
-    if command == "init":
-        run_init_json(
-            provider=params.get("provider", ""),
-            region=params.get("region", ""),
-            workers=params.get("workers", 0),
-            leader_size=params.get("leader_size", "s-2vcpu-4gb"),
-            worker_size=params.get("worker_size", "s-1vcpu-1gb"),
-            cluster_name=params.get("cluster_name", "mesh-cluster"),
-            api_key=params.get("api_key", ""),
-            post_boot_script=params.get("post_boot_script", ""),
-        )
-    else:
+    handler = COMMAND_HANDLERS.get(command)
+    if handler is None:
         print(
             json.dumps({"version": "1", "status": "error", "error": {"code": "unknown_command", "message": f"Unknown command: {command}"}}),
             file=sys.stderr,
         )
         sys.exit(1)
+    try:
+        handler(params)
+    except SystemExit:
+        raise
+    except Exception as e:
+        print_json_error(code="provision_failed", message=str(e))
