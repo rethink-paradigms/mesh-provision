@@ -135,7 +135,13 @@ fi
 nomad namespace apply -description "Mesh infrastructure (Caddy, monitoring)" mesh-infra || true
 nomad namespace apply -description "Mesh agent bodies (daemon-managed)" mesh-bodies || true
 
-POST_BOOT_SCRIPT="{{ POST_BOOT_SCRIPT }}"
-if [ -n "$POST_BOOT_SCRIPT" ]; then
-    TMP=$(mktemp) && curl -fsSL "$POST_BOOT_SCRIPT" -o "$TMP" && [ -z "${POST_BOOT_SCRIPT_CHECKSUM:-}" ] || echo "$POST_BOOT_SCRIPT_CHECKSUM $TMP" | sha256sum -c --quiet 2>/dev/null || true && bash "$TMP" && rm "$TMP"
+DAEMON_CONFIG="{{ DAEMON_CONFIG }}"
+if [ -n "$DAEMON_CONFIG" ]; then
+    mkdir -p /etc/mesh
+    printf '%s' "$DAEMON_CONFIG" | base64 -d > /etc/mesh/config.yaml
+    chmod 600 /etc/mesh/config.yaml
+    INSTALL_URL="${MESH_DAEMON_INSTALL_URL:-https://raw.githubusercontent.com/rethink-paradigms/mesh/main/scripts/install.sh}"
+    TMP_INSTALL=$(mktemp) && curl -fsSL "$INSTALL_URL" -o "$TMP_INSTALL" && MESH_SKIP_INIT=1 bash "$TMP_INSTALL" && rm -f "$TMP_INSTALL"
+    systemctl enable mesh-daemon 2>/dev/null || true
+    systemctl start mesh-daemon 2>/dev/null || true
 fi
