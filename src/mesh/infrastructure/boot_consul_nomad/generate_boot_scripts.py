@@ -90,7 +90,7 @@ def generate_shell_script(
     validate: bool = True,
     cluster_tier: str = "production",
     provider: str = "generic",
-    post_boot_script: Optional[str] = None,
+    daemon_config: Optional[str] = None,
 ) -> str:
     """
     Generates the shell script content for bootstrapping a node.
@@ -109,6 +109,7 @@ def generate_shell_script(
         validate: Whether to validate rendered template (default: True).
         cluster_tier: Cluster tier - "lite", "standard", "ingress", "production" (default: "production").
         provider: Cloud provider name, used for provider-specific features like spot handling (default: "generic").
+        daemon_config: Base64-encoded YAML content for /etc/mesh/config.yaml (default: None).
 
     Returns:
         Rendered shell script as a string.
@@ -133,7 +134,7 @@ def generate_shell_script(
         SPOT_GRACE_PERIOD=str(spot_grace_period),
         CLUSTER_TIER=cluster_tier,
         ENABLE_CADDY="true" if enable_caddy else "false",
-        POST_BOOT_SCRIPT=post_boot_script or "",
+        DAEMON_CONFIG=daemon_config or "",
     )
 
     # Validate rendered content if validation is enabled
@@ -162,6 +163,7 @@ def generate_cloud_init_yaml(
     validate: bool = True,
     cluster_tier: str = "production",
     provider: str = "generic",
+    daemon_config: Optional[str] = None,
 ) -> str:
     """
     Generates the cloud-init YAML content for bootstrapping a node.
@@ -178,6 +180,7 @@ def generate_cloud_init_yaml(
         spot_check_interval: Polling interval for spot termination notices in seconds (default: 5).
         spot_grace_period: Grace period for workload migration in seconds (default: 90).
         validate: Whether to validate rendered template (default: True).
+        daemon_config: Mesh daemon configuration YAML content to write to /etc/mesh/config.yaml (default: None).
 
     Returns:
         Cloud-init YAML as a string.
@@ -198,6 +201,7 @@ def generate_cloud_init_yaml(
         validate=validate,
         cluster_tier=cluster_tier,
         provider=provider,
+        daemon_config=daemon_config,
     )
 
     # Cloud-init structure to execute the shell script
@@ -230,6 +234,16 @@ def generate_cloud_init_yaml(
                         "content": content,
                     }
                 )
+
+    if daemon_config:
+        cloud_config["write_files"].append({
+            "path": "/etc/mesh/config.yaml",
+            "permissions": "0600",
+            "content": daemon_config,
+        })
+        cloud_config.setdefault("runcmd", []).append(
+            'sh -c \'INSTALL_URL="${MESH_DAEMON_INSTALL_URL:-https://raw.githubusercontent.com/rethink-paradigms/mesh/main/scripts/install.sh}" && curl -fsSL "$INSTALL_URL" | MESH_SKIP_INIT=1 bash\''
+        )
 
     yaml_content = yaml.dump(cloud_config, default_flow_style=False)
     return "#cloud-config\n" + yaml_content
