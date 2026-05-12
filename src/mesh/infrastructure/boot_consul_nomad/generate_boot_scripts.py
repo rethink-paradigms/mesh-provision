@@ -245,5 +245,25 @@ def generate_cloud_init_yaml(
             'sh -c \'INSTALL_URL="${MESH_DAEMON_INSTALL_URL:-https://raw.githubusercontent.com/rethink-paradigms/mesh/main/scripts/install.sh}" && curl -fsSL "$INSTALL_URL" | MESH_SKIP_INIT=1 bash\''
         )
 
+    # Install goss binary for daemon health verification
+    cloud_config.setdefault("runcmd", []).append(
+        'curl -fsSL https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 '
+        '-o /usr/local/bin/goss && chmod +rx /usr/local/bin/goss'
+    )
+
+    # Write goss spec to VM — read from workspace root for auto-propagation
+    import pathlib
+    # parents[0] = boot_consul_nomad, [1] = infrastructure, [2] = mesh, [3] = src, [4] = mesh-provision, [5] = mesh-workspace
+    workspace_root = pathlib.Path(__file__).resolve().parents[5]
+    goss_spec_file = workspace_root / 'scripts' / 'goss' / 'mesh-daemon-goss.yaml'
+    if goss_spec_file.exists():
+        goss_content = goss_spec_file.read_text()
+        cloud_config["write_files"].append({
+            "path": "/etc/mesh/goss.yaml",
+            "permissions": "0644",
+            "content": goss_content,
+        })
+    # If goss_spec_file does not exist: skip silently — goss is optional
+
     yaml_content = yaml.dump(cloud_config, default_flow_style=False)
     return "#cloud-config\n" + yaml_content
