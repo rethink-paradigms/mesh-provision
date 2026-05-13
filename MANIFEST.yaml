@@ -1,0 +1,29 @@
+name: mesh-provision
+role: infrastructure-provisioner
+description: >
+  Python CLI that creates and destroys cloud VMs with Nomad/Consul bootstrap
+  and daemon config injection via cloud-init.
+  NEVER called directly — always spawned by agent-bodies as a subprocess.
+
+direct_use: false
+warning: >
+  Running mesh-provision CLI directly bypasses Auth0, database tracking,
+  config generation, and audit logging. This is FORBIDDEN.
+called_by: agent-bodies
+protocol: "stdin JSON v1 — see contracts/mesh-provision-protocol.md"
+
+capabilities:
+  init:
+    description: "Provision a cloud VM"
+    called_via: "agent-bodies POST /api/clusters/{id}/provision"
+    direct_cli_use: FORBIDDEN
+  destroy:
+    description: "Destroy a provisioned VM"
+    called_via: "agent-bodies DELETE /api/clusters/{id}"
+    direct_cli_use: FORBIDDEN
+  status:
+    description: "Get provisioner status"
+    called_via: "agent-bodies (internal)"
+    direct_cli_use: FORBIDDEN
+
+known_issues: "see KNOWN-ISSUES.md — MP-* and E2E-* issues (config injection bugs)"
