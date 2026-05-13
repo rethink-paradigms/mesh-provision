@@ -222,15 +222,36 @@ def provision_node_direct(
     # Get driver
     driver = _get_driver_direct(provider, api_key, region)
 
-    # Create node
+    # Look up existing SSH keys to inject into the new node
+    ssh_keys: list = []
     try:
-        node = driver.create_node(
-            name=name,
-            size=size,
-            image=image,
-            location=location,
-            ex_user_data=boot_script,  # type: ignore[call-arg]
-        )
+        if hasattr(driver, "ex_list_ssh_keys"):
+            all_keys = driver.ex_list_ssh_keys()
+            for key in all_keys:
+                key_id = (
+                    getattr(key, "fingerprint", None)
+                    or getattr(key, "name", None)
+                    or getattr(key, "id", None)
+                )
+                if key_id is not None:
+                    ssh_keys.append(key_id)
+            if ssh_keys:
+                logger.info("Found %d SSH key(s) to inject", len(ssh_keys))
+    except Exception as exc:
+        logger.warning("Could not list SSH keys (non-fatal): %s", exc)
+
+    # Create node
+    create_kwargs = {
+        "name": name,
+        "size": size,
+        "image": image,
+        "location": location,
+        "ex_user_data": boot_script,  # type: ignore[call-arg]
+    }
+    if ssh_keys:
+        create_kwargs["ex_create_attr"] = {"ssh_keys": ssh_keys}
+    try:
+        node = driver.create_node(**create_kwargs)
     except Exception as exc:
         raise RuntimeError(
             f"Failed to create node '{name}' on {provider}: {exc}"
@@ -320,25 +341,28 @@ def provision_cluster_direct(
     }
 
 
-def destroy_resources_direct(
+def query_cluster_status(
     provider: str,
     api_key: str,
-    region: str,
     cluster_name: str,
+    region: str = "",
 ) -> Dict[str, Any]:
-    """Destroy all nodes whose names start with the cluster name prefix.
+    """Query the status of a cluster by listing nodes matching the cluster name prefix.
 
     Args:
-        provider: Provider identifier
-        api_key: API token / key
-        region: Target region
+        provider: Provider identifier (e.g., "digitalocean", "aws")
+        api_key: API token / key for the provider
         cluster_name: Cluster name prefix to match against node names
+        region: Target region (default: "" — uses provider default)
 
     Returns:
         Dictionary with keys:
-            - cluster_name (str)
-            - destroyed (bool)
-            - resources_cleaned (list[str]): instance IDs that were destroyed
+            - cluster_name (str): The cluster name queried
+            - exists (bool): Whether any matching nodes were found
+            - nodes (list[dict]): List of node info dicts with keys:
+                - id (str): Provider instance ID
+                - ip (str): Public IP (or private if no public)
+                - role (str): "leader", "worker", or "unknown"
     """
     driver = _get_driver_direct(provider, api_key, region)
 
@@ -349,8 +373,143 @@ def destroy_resources_direct(
             f"Failed to list nodes on {provider}: {exc}"
         ) from exc
 
+    prefix = f"{cluster_name}-"
+    matching_nodes = []
+
+    for node in all_nodes:
+        if node.name and node.name.startswith(prefix):
+            name = node.name
+            if name.endswith("-leader"):
+                role = "leader"
+            elif "-worker-" in name:
+                role = "worker"
+            else:
+                role = "unknown"
+
+            ip = ""
+            if node.public_ips:
+                ip = node.public_ips[0]
+            elif node.private_ips:
+                ip = node.private_ips[0]
+
+            matching_nodes.append({
+                "id": node.id or "",
+                "ip": ip,
+                "role": role,
+            })
+
+    return {
+        "cluster_name": cluster_name,
+        "exists": len(matching_nodes) > 0,
+        "nodes": matching_nodes,
+    }
+
+
+def destroy_resources_direct(
+    provider: str,
+    api_key: str,
+    region: str,
+    cluster_name: str,
+    cleanup_all: bool = False,
+) -> Dict[str, Any]:
+    """Destroy all nodes whose names start with the cluster name prefix.
+
+    Args:
+        provider: Provider identifier
+        api_key: API token / key
+        region: Target region
+        cluster_name: Cluster name prefix to match against node names
+        cleanup_all: If True, also clean up auxiliary resources (volumes,
+            firewalls, floating IPs, SSH keys) before destroying compute
+            nodes. Only supported for DigitalOcean.
+
+    Returns:
+        Dictionary with keys:
+            - cluster_name (str)
+            - destroyed (bool)
+            - resources_cleaned (list[str]): instance IDs and resource
+              identifiers that were destroyed
+    """
+    if cleanup_all and provider != "digitalocean":
+        raise NotImplementedError(
+            f"cleanup_all not supported for provider '{provider}'. "
+            f"Only DigitalOcean is supported."
+        )
+
+    driver = _get_driver_direct(provider, api_key, region)
+
     cleaned: List[str] = []
     prefix = f"{cluster_name}-"
+
+    # Phase 1: Auxiliary resource cleanup (DigitalOcean only)
+    if cleanup_all:
+        # Volumes
+        try:
+            if hasattr(driver, "ex_list_volumes"):
+                volumes = driver.ex_list_volumes()  # type: ignore[attr-defined]
+                for vol in volumes:
+                    cleaned.append(f"volume:{vol.id}")
+                    try:
+                        driver.ex_destroy_volume(vol)  # type: ignore[attr-defined]
+                    except Exception as exc:
+                        logger.warning(
+                            "Failed to destroy volume %s: %s", vol.id, exc
+                        )
+        except Exception as exc:
+            logger.warning("Failed to list volumes: %s", exc)
+
+        # Firewalls
+        try:
+            if hasattr(driver, "ex_list_firewalls"):
+                firewalls = driver.ex_list_firewalls()  # type: ignore[attr-defined]
+                for fw in firewalls:
+                    cleaned.append(f"firewall:{fw.id}")
+                    try:
+                        driver.ex_delete_firewall(fw)  # type: ignore[attr-defined]
+                    except Exception as exc:
+                        logger.warning(
+                            "Failed to delete firewall %s: %s", fw.id, exc
+                        )
+        except Exception as exc:
+            logger.warning("Failed to list firewalls: %s", exc)
+
+        # Floating IPs
+        try:
+            if hasattr(driver, "ex_list_floating_ips"):
+                floating_ips = driver.ex_list_floating_ips()  # type: ignore[attr-defined]
+                for fip in floating_ips:
+                    cleaned.append(f"floating_ip:{fip.id}")
+                    try:
+                        driver.ex_release_floating_ip(fip)  # type: ignore[attr-defined]
+                    except Exception as exc:
+                        logger.warning(
+                            "Failed to release floating IP %s: %s", fip.id, exc
+                        )
+        except Exception as exc:
+            logger.warning("Failed to list floating IPs: %s", exc)
+
+        # SSH Keys
+        try:
+            if hasattr(driver, "ex_list_ssh_keys"):
+                ssh_keys = driver.ex_list_ssh_keys()  # type: ignore[attr-defined]
+                for key in ssh_keys:
+                    cleaned.append(f"ssh_key:{key.id}")
+                    try:
+                        driver.ex_delete_ssh_key(key)  # type: ignore[attr-defined]
+                    except Exception as exc:
+                        logger.warning(
+                            "Failed to delete SSH key %s: %s", key.id, exc
+                        )
+        except Exception as exc:
+            logger.warning("Failed to list SSH keys: %s", exc)
+
+    # Phase 2: Compute node destruction
+    try:
+        all_nodes = driver.list_nodes()
+    except Exception as exc:
+        raise RuntimeError(
+            f"Failed to list nodes on {provider}: {exc}"
+        ) from exc
 
     for node in all_nodes:
         if node.name and node.name.startswith(prefix):
