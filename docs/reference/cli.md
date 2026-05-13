@@ -8,6 +8,8 @@ Complete reference for all `mesh` CLI commands.
 
 Interactive cluster provisioning wizard. Creates a new Mesh cluster on any supported provider.
 
+Supports stdin JSON protocol for automated provisioning. The `daemon_config` parameter (passed via stdin JSON, not CLI flag) injects Mesh daemon configuration via cloud-init `write_files` + `runcmd` during VM bootstrap.
+
 ```bash
 mesh init [OPTIONS]
 ```
@@ -18,7 +20,19 @@ mesh init [OPTIONS]
 |:---|:---|:---|:---|
 | `--provider` / `-p` | string | interactive | Cloud provider name (e.g., `"DigitalOcean"`, `"AWS"`, `"Local (Multipass)"`) |
 | `--workers` / `-w` | int | `1` | Number of worker nodes |
+| `--input` | string | — | Read provisioning config from stdin (JSON protocol v1) |
+| `--output` | string | — | Output format: `json` for structured results |
 | `--demo` | flag | false | Run in demo mode (no real infrastructure) |
+
+**Stdin JSON protocol parameters:**
+
+| Parameter | Type | Description |
+|:---|:---|:---|
+| `cluster_name` | string | Unique cluster identifier |
+| `provider` | string | Cloud provider name |
+| `region` | string | Provider region |
+| `workers` | int | Number of worker nodes |
+| `daemon_config` | object | Mesh daemon configuration injected via cloud-init. Includes API URL, JWT public key, cluster ID, etc. |
 
 **Examples:**
 
@@ -84,7 +98,7 @@ mesh deploy worker --image python:3.11 --count 3
 
 ## `mesh status`
 
-View cluster health, nodes, and running applications.
+View cluster health, nodes, and running applications. Can query existing VMs by cluster_name via the stdin JSON protocol.
 
 ```bash
 mesh status [OPTIONS]
@@ -94,9 +108,17 @@ mesh status [OPTIONS]
 
 | Flag | Type | Default | Description |
 |:---|:---|:---|:---|
+| `--input` | string | — | Read query from stdin (JSON protocol v1). Includes `cluster_name` to look up existing VMs. |
+| `--output` | string | — | Output format: `json` for structured results |
 | `--demo` | flag | false | Show demo output |
 | `--compare` | flag | false | Show K8s comparison |
 | `--roadmap` | flag | false | Show capability roadmap |
+
+**Stdin JSON protocol (status):**
+
+```json
+{"action": "status", "cluster_name": "my-cluster"}
+```
 
 **Output includes:**
 
@@ -167,10 +189,12 @@ mesh destroy [OPTIONS]
 | Flag | Type | Default | Description |
 |:---|:---|:---|:---|
 | `--cluster` / `-c` | string | `mesh-cluster` | Cluster name |
+| `--cleanup-all` | flag | false | Remove compute + volumes + firewalls + floating IPs — full teardown |
+| `--yes` / `-y` | flag | false | Skip confirmation prompt |
 | `--demo` | flag | false | Run in demo mode |
 
 !!! warning "Destructive"
-    This permanently deletes all VMs, data, and deployed applications. Cannot be undone.
+    This permanently deletes all VMs, data, and deployed applications. Cannot be undone. Use `--cleanup-all` for complete resource removal including associated volumes, firewalls, and floating IPs.
 
 ---
 

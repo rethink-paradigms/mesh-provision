@@ -33,9 +33,10 @@
 ### 1. JSON Mode E2E Verification
 **Output**: A test run with real DO token:
 ```bash
-mesh init --output json --api-key $DO_TOKEN --name test-cluster --region nyc3
+mesh init --output json --api-key $DO_TOKEN --name test-cluster --region nyc3 --daemon-config '{"cluster":{"id":"...","name":"test-cluster"},"gateway":{"url":"https://agent-bodies.example.com"},"auth":{"type":"jwt","jwks_uri":"...","audience":"..."}}'
 ```
 Expected JSON response shape matches central service's parser:
+> **Note:** The `daemon_config` parameter is required by the stdin JSON protocol (`mesh-provision-protocol.md`). It carries the daemon configuration (cluster identity, gateway URL, auth settings) that gets written to the VM via cloud-init `write_files` and applied by `runcmd`. Without it, the provisioned daemon has no cluster identity or gateway registration.
 ```json
 {
   "cluster_id": "...",
@@ -48,8 +49,8 @@ Verify: daemon is installed, Caddy is running, health endpoint responds.
 
 ### 2. Regression Guard
 **Output**: Test that `--output json` does NOT break interactive mode:
-- `mesh init` (no flags) → interactive prompts work
-- `mesh init --output json` → silent JSON output
+- `mesh init` (no flags) → interactive prompts work (includes interactive `daemon_config` collection)
+- `mesh init --output json --daemon-config '{...}'` → silent JSON output
 - `mesh destroy --output json` → works
 - Both paths coexist without conflict
 
@@ -68,4 +69,4 @@ Verify: daemon is installed, Caddy is running, health endpoint responds.
 ## Integration Points
 
 - **agent-bodies/central**: Central spawns `mesh init --output json --api-key $KEY` as subprocess, parses JSON response
-- **mesh/daemon**: Boot script installs daemon binary from GitHub Releases, starts via systemd
+- **mesh/daemon**: Daemon config is injected via the `daemon_config` stdin parameter (JSON object with daemon config fields). The provisioner writes it through cloud-init `write_files` + `runcmd` — no GitHub Releases binary download, no separate boot script. See `contracts/mesh-provision-protocol.md` for the full stdin protocol schema.

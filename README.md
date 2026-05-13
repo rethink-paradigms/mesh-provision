@@ -6,7 +6,7 @@ Infrastructure provisioner for the Mesh daemon.
 [![Python](https://img.shields.io/pypi/pyversions/rethink-mesh)](https://pypi.org/project/rethink-mesh/)
 [![License](https://img.shields.io/pypi/l/rethink-mesh)](https://github.com/rethink-paradigms/mesh)
 
-**Mesh provisioner creates the cluster. The daemon runs everything on it.**
+**Provision cloud VMs, bootstrap Nomad/Consul/Docker/Tailscale/Caddy infrastructure stack, and inject Mesh daemon configuration for agent body orchestration.**
 
 Provision VMs across cloud providers, bootstrap a Nomad + Consul + Docker + Tailscale + Caddy stack, and get back cluster connection details. Thats the scope. The Mesh daemon (separate project) handles agent body scheduling, ingress routing, and the REST API.
 
@@ -106,7 +106,7 @@ mesh init --provider "Local (Multipass)" --workers 2
 mesh init --provider "DigitalOcean" --region nyc3 --workers 1 --yes
 ```
 
-Use `--output json` or `--input stdin` for automated or scripted provisioning. Use `--post-boot-script` to install the Mesh daemon after cluster bootstrap.
+Use `--output json` or `--input stdin` for automated or scripted provisioning. Use the daemon_config stdin parameter to inject the Mesh daemon configuration via cloud-init write_files + runcmd during VM bootstrap.
 
 ### mesh status
 
