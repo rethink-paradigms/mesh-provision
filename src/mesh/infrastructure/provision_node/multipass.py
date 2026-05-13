@@ -44,6 +44,7 @@ def generate_cloud_init_yaml(
         "runcmd": ["/opt/ops-platform/startup.sh"],
     }
 
+    # Daemon runs on leader only; workers get Nomad/Consul only
     if daemon_config:
         cloud_config["write_files"].append({
             "path": "/etc/mesh/config.yaml",

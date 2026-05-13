@@ -176,16 +176,16 @@ def test_boot_script_has_namespace_commands():
 def test_boot_script_namespace_commands_after_nomad_restart():
     """
     Test_BootScript_NamespaceOrdering: Verify namespace commands appear
-    after the nomad restart block and before POST_BOOT_SCRIPT.
+    after the nomad restart block (daemon section was removed — namespaces
+    are now the final boot.sh content).
     """
     rendered = generate_shell_script(
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server"
     )
     nomad_restart_pos = rendered.index("systemctl restart nomad")
     namespace_infra_pos = rendered.index("mesh-infra")
-    post_boot_pos = rendered.index("POST_BOOT_SCRIPT")
     assert namespace_infra_pos > nomad_restart_pos
-    assert namespace_infra_pos < post_boot_pos
+    # DAEMON_CONFIG was removed — no need to assert a following section exists
 
 
 def test_existing_tests_still_pass():

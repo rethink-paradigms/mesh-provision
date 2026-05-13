@@ -68,6 +68,7 @@ WantedBy=multi-user.target
 EOF
 
 	# Copy script to permanent location
+	# TODO: scripts/09-handle-spot-interruption.sh does not exist in repo yet — must be created before enabling spot handling
 	cp scripts/09-handle-spot-interruption.sh /opt/ops-platform/scripts/09-handle-spot-interruption.sh
 	chmod +x /opt/ops-platform/scripts/09-handle-spot-interruption.sh
 
@@ -134,14 +135,3 @@ fi
 # Create Nomad namespaces for safe co-existence with daemon
 nomad namespace apply -description "Mesh infrastructure (Caddy, monitoring)" mesh-infra || true
 nomad namespace apply -description "Mesh agent bodies (daemon-managed)" mesh-bodies || true
-
-DAEMON_CONFIG="{{ DAEMON_CONFIG }}"
-if [ -n "$DAEMON_CONFIG" ]; then
-    mkdir -p /etc/mesh
-    printf '%s' "$DAEMON_CONFIG" | base64 -d > /etc/mesh/config.yaml
-    chmod 600 /etc/mesh/config.yaml
-    INSTALL_URL="${MESH_DAEMON_INSTALL_URL:-https://raw.githubusercontent.com/rethink-paradigms/mesh/main/scripts/install.sh}"
-    TMP_INSTALL=$(mktemp) && curl -fsSL "$INSTALL_URL" -o "$TMP_INSTALL" && MESH_SKIP_INIT=1 bash "$TMP_INSTALL" && rm -f "$TMP_INSTALL"
-    systemctl enable mesh-daemon 2>/dev/null || true
-    systemctl start mesh-daemon 2>/dev/null || true
-fi

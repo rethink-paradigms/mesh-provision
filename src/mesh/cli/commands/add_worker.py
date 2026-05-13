@@ -90,6 +90,8 @@ def _run_add_worker_json(
         generate_shell_script,
     )
 
+    # Daemon runs on leader only; workers get Nomad/Consul only
+    # daemon_config intentionally omitted — workers boot without daemon
     worker_boot_script = generate_shell_script(
         tailscale_key=tailscale_key,
         leader_ip=leader_ip,

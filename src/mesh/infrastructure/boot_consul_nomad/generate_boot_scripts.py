@@ -211,6 +211,8 @@ def generate_cloud_init_yaml(
     cloud_config = {
         "package_update": True,
         "packages": ["curl", "git"],
+        "chpasswd": {"expire": False},
+        "ssh_pwauth": False,
         "write_files": [
             {
                 "path": "/opt/ops-platform/startup.sh",
@@ -240,12 +242,36 @@ def generate_cloud_init_yaml(
 
     if daemon_config:
         cloud_config["write_files"].append({
+            "path": "/etc/systemd/system/mesh-daemon.service",
+            "permissions": "0644",
+            "content": (
+                "[Unit]\n"
+                "Description=Mesh Daemon — Portable agent-body runtime\n"
+                "After=network-online.target docker.service\n"
+                "\n"
+                "[Service]\n"
+                "Type=simple\n"
+                "ExecStart=/usr/local/bin/mesh-daemon serve --config /etc/mesh/config.yaml\n"
+                "Restart=on-failure\n"
+                "RestartSec=5\n"
+                "User=root\n"
+                "StandardOutput=journal\n"
+                "StandardError=journal\n"
+                "\n"
+                "[Install]\n"
+                "WantedBy=multi-user.target\n"
+            ),
+        })
+        cloud_config["write_files"].append({
             "path": "/etc/mesh/config.yaml",
             "permissions": "0600",
             "content": daemon_config,
         })
         cloud_config.setdefault("runcmd", []).append(
             'sh -c \'INSTALL_URL="${MESH_DAEMON_INSTALL_URL:-https://raw.githubusercontent.com/rethink-paradigms/mesh/main/scripts/install.sh}" && curl -fsSL "$INSTALL_URL" | MESH_SKIP_INIT=1 bash\''
+        )
+        cloud_config.setdefault("runcmd", []).append(
+            "systemctl daemon-reload && systemctl enable mesh-daemon && systemctl start mesh-daemon"
         )
 
     # Install goss binary for daemon health verification
