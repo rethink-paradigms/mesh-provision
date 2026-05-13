@@ -238,6 +238,81 @@ def destroy_cluster(
 
 
 # ---------------------------------------------------------------------------
+# Remove single worker
+# ---------------------------------------------------------------------------
+
+
+def remove_worker(
+    provider: str,
+    api_key: str,
+    region: str,
+    cluster_name: str,
+    node_id: str = "",
+    node_name: str = "",
+) -> dict[str, Any]:
+    """Destroy a single worker node by node_id or node_name.
+
+    Either node_id or node_name must be provided. If both are given,
+    node_id takes precedence.
+
+    The node must belong to the cluster (its name must start with
+    '{cluster_name}-worker-') — safety guard against removing the leader
+    or nodes from a different cluster.
+
+    Returns:
+        {node_id, node_name, removed: True}
+
+    Raises:
+        ValueError:   Node not found, or node is the leader, or doesn't belong to cluster.
+        RuntimeError: Cloud API call failed.
+    """
+    if not node_id and not node_name:
+        raise ValueError("Either node_id or node_name must be provided.")
+
+    driver = _get_driver(provider, api_key=api_key, region=region)
+    prefix = f"{cluster_name}-worker-"
+
+    try:
+        all_nodes = driver.list_nodes()
+    except Exception as exc:
+        raise RuntimeError(f"Failed to list nodes on {provider}: {exc}") from exc
+
+    target = None
+    for node in all_nodes:
+        if node_id and node.id == node_id:
+            target = node
+            break
+        if node_name and node.name == node_name:
+            target = node
+            break
+
+    if target is None:
+        identifier = node_id or node_name
+        raise ValueError(f"Node {identifier!r} not found on {provider}.")
+
+    # Safety: refuse to remove the leader or anything outside this cluster
+    if not (target.name and target.name.startswith(prefix)):
+        raise ValueError(
+            f"Node {target.name!r} is not a worker of cluster {cluster_name!r}. "
+            f"Expected name starting with {prefix!r}. Refusing to remove."
+        )
+
+    try:
+        driver.destroy_node(target)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Failed to destroy node {target.name!r} (id={target.id}): {exc}"
+        ) from exc
+
+    logger.info("Removed worker %s (id=%s) from cluster %s", target.name, target.id, cluster_name)
+    return {
+        "node_id": target.id or node_id,
+        "node_name": target.name or node_name,
+        "removed": True,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Query
 # ---------------------------------------------------------------------------
 

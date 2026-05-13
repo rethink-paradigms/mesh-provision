@@ -59,6 +59,10 @@ def main() -> None:
         from mesh.commands.add_worker import handle_add_worker
         handle_add_worker(params)
 
+    elif command == "remove-worker":
+        from mesh.commands.remove_worker import handle_remove_worker
+        handle_remove_worker(params)
+
     elif command == "status":
         from mesh.commands.status import handle_status
         handle_status(params)
@@ -66,7 +70,7 @@ def main() -> None:
     else:
         _fatal(
             "unknown_command",
-            f"Unknown command {command!r}. Valid commands: init, destroy, add-worker, status",
+            f"Unknown command {command!r}. Valid commands: init, destroy, add-worker, remove-worker, status",
         )
 
 

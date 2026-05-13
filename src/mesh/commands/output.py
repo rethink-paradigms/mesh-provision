@@ -162,6 +162,18 @@ def demo_destroy(cluster_name: str) -> dict[str, Any]:
     }
 
 
+def remove_worker_success(node_id: str, node_name: str) -> dict[str, Any]:
+    return {
+        "node_id": node_id,
+        "node_name": node_name,
+        "removed": True,
+    }
+
+
+def demo_remove_worker() -> dict[str, Any]:
+    return remove_worker_success(node_id="32323232", node_name="my-cluster-worker-1747000000")
+
+
 def demo_add_worker() -> dict[str, Any]:
     return {
         "node": {"ip": "192.0.2.99", "id": "demo-worker-new", "role": "worker"},
