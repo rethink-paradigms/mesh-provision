@@ -223,22 +223,31 @@ def provision_node_direct(
     driver = _get_driver_direct(provider, api_key, region)
 
     # Look up existing SSH keys to inject into the new node
+    # Uses the DO API directly since Libcloud's DigitalOcean driver
+    # does not expose ex_list_ssh_keys.
     ssh_keys: list = []
     try:
-        if hasattr(driver, "ex_list_ssh_keys"):
-            all_keys = driver.ex_list_ssh_keys()
-            for key in all_keys:
-                key_id = (
-                    getattr(key, "fingerprint", None)
-                    or getattr(key, "name", None)
-                    or getattr(key, "id", None)
-                )
+        import json as _json
+        import urllib.request as _urllib
+
+        api_url = "https://api.digitalocean.com/v2/account/keys"
+        req = _urllib.Request(
+            api_url,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+        )
+        with _urllib.urlopen(req, timeout=10) as resp:
+            body = _json.loads(resp.read().decode())
+            for key in body.get("ssh_keys", []):
+                key_id = key.get("id")
                 if key_id is not None:
                     ssh_keys.append(key_id)
             if ssh_keys:
-                logger.info("Found %d SSH key(s) to inject", len(ssh_keys))
+                logger.info("Found %d DO SSH key(s) to inject", len(ssh_keys))
     except Exception as exc:
-        logger.warning("Could not list SSH keys (non-fatal): %s", exc)
+        logger.warning("Could not list SSH keys via DO API (non-fatal): %s", exc)
 
     # Create node
     create_kwargs = {
