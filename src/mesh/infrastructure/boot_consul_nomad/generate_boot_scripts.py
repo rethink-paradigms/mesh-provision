@@ -164,6 +164,7 @@ def generate_cloud_init_yaml(
     cluster_tier: str = "production",
     provider: str = "generic",
     daemon_config: Optional[str] = None,
+    ssh_authorized_keys: Optional[List[str]] = None,
 ) -> str:
     """
     Generates the cloud-init YAML content for bootstrapping a node.
@@ -181,6 +182,8 @@ def generate_cloud_init_yaml(
         spot_grace_period: Grace period for workload migration in seconds (default: 90).
         validate: Whether to validate rendered template (default: True).
         daemon_config: Mesh daemon configuration YAML content to write to /etc/mesh/config.yaml (default: None).
+        ssh_authorized_keys: Optional list of SSH public keys to inject into cloud-init.
+            Auto-reads ~/.ssh/mesh_test_key.pub if None. (default: None).
 
     Returns:
         Cloud-init YAML as a string.
@@ -264,6 +267,20 @@ def generate_cloud_init_yaml(
             "content": goss_content,
         })
     # If goss_spec_file does not exist: skip silently — goss is optional
+
+    # Inject SSH authorized keys for test VM access
+    # Keys are auto-discovered from ~/.ssh/mesh_test_key.pub if no explicit list provided
+    if ssh_authorized_keys is None:
+        import pathlib
+        key_file = pathlib.Path.home() / ".ssh" / "mesh_test_key.pub"
+        if key_file.exists():
+            ssh_authorized_keys = [key_file.read_text().strip()]
+    if ssh_authorized_keys:
+        import re
+        KEY_PATTERN = re.compile(r'^ssh-(ed25519|rsa|ecdsa|dss) [A-Za-z0-9+/=]+(\s+\S+)?\s*$')
+        valid_keys = [k for k in ssh_authorized_keys if KEY_PATTERN.match(k)]
+        if valid_keys:
+            cloud_config.setdefault("ssh_authorized_keys", []).extend(valid_keys)
 
     yaml_content = yaml.dump(cloud_config, default_flow_style=False)
     return "#cloud-config\n" + yaml_content
