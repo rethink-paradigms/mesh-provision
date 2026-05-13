@@ -101,3 +101,30 @@ def test_cloud_init_has_daemon_install_runcmd():
     install_cmds = [c for c in runcmds if "install.sh" in str(c)]
     assert len(install_cmds) >= 1
     assert "MESH_DAEMON_INSTALL_URL" in str(install_cmds[0])
+
+
+def test_ssh_authorized_keys_in_cloud_init():
+    """Verify ssh_authorized_keys parameter adds keys to cloud-init YAML."""
+    y = generate_cloud_init_yaml(
+        **MINIMAL_ARGS,
+        ssh_authorized_keys=["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtest test-key"],
+    )
+    config = yaml.safe_load(y.replace("#cloud-config\n", ""))
+    assert "ssh_authorized_keys" in config
+    assert "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtest test-key" in config["ssh_authorized_keys"]
+
+
+def test_ssh_authorized_keys_none_backward_compat():
+    """Verify no ssh_authorized_keys when param is None and no key file exists."""
+    import pathlib
+    key_file = pathlib.Path.home() / ".ssh" / "mesh_test_key.pub"
+    if key_file.exists():
+        import pytest
+        pytest.skip("mesh_test_key.pub exists — backward compat test requires clean state")
+
+    y = generate_cloud_init_yaml(
+        **MINIMAL_ARGS,
+        ssh_authorized_keys=None,
+    )
+    config = yaml.safe_load(y.replace("#cloud-config\n", ""))
+    assert "ssh_authorized_keys" not in config
