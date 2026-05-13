@@ -13,11 +13,13 @@ from mesh.cli.commands.json_output import (
     to_brief_shape,
 )
 from mesh.infrastructure.boot_consul_nomad.generate_boot_scripts import (
-    generate_shell_script,
+    generate_cloud_init_yaml,
 )
 from mesh.infrastructure.config.env import EnvVars, get_env
+from mesh.infrastructure.providers import PROVIDER_ENUMS, UNSUPPORTED_PROVIDERS
 from mesh.infrastructure.provision_node.provision_direct import (
     provision_cluster_direct,
+    query_cluster_status,
 )
 
 _PROVIDER_ENV_MAP: dict[str, str] = {
@@ -86,7 +88,7 @@ def run_init_json(
     worker_size: str,
     cluster_name: str,
     api_key: str,
-    post_boot_script: str = "",
+    daemon_config: str = "",
     demo: bool = False,
 ) -> None:
     if demo:
@@ -136,12 +138,12 @@ def run_init_json(
             return
 
     try:
-        leader_boot_script = generate_shell_script(
+        leader_boot_script = generate_cloud_init_yaml(
             tailscale_key=tailscale_key,
             leader_ip="",
             role="server",
             cluster_tier=tier,
-            post_boot_script=post_boot_script,
+            daemon_config=daemon_config,
         )
     except Exception as exc:
         print_json_error(
@@ -152,12 +154,12 @@ def run_init_json(
         return
 
     try:
-        worker_boot_script = generate_shell_script(
+        worker_boot_script = generate_cloud_init_yaml(
             tailscale_key=tailscale_key,
             leader_ip="",
             role="client",
             cluster_tier=tier,
-            post_boot_script=post_boot_script,
+            daemon_config=daemon_config,
         )
     except Exception as exc:
         print_json_error(
@@ -245,7 +247,7 @@ def _handle_init_stdin(params: dict) -> None:
         worker_size=params.get("worker_size", "s-1vcpu-1gb"),
         cluster_name=params.get("cluster_name", "mesh-cluster"),
         api_key=params.get("api_key", ""),
-        post_boot_script=params.get("post_boot_script", ""),
+        daemon_config=params.get("daemon_config", ""),
     )
 
 
@@ -260,6 +262,7 @@ def _handle_destroy_stdin(params: dict) -> None:
         demo=False,
         provider=params.get("provider", "digitalocean"),
         region=params.get("region", ""),
+        cleanup_all=params.get("cleanup_all", False),
     )
 
 
@@ -283,10 +286,58 @@ def _handle_add_worker_stdin(params: dict) -> None:
     )
 
 
+def _handle_status_stdin(params: dict) -> None:
+    provider = params.get("provider", "")
+    cluster_name = params.get("cluster_name", "")
+    api_key = params.get("api_key", "")
+
+    if not cluster_name:
+        print_json_error(
+            code="missing_parameter",
+            message="cluster_name is required for status command",
+        )
+        return
+
+    if provider not in PROVIDER_ENUMS or provider in UNSUPPORTED_PROVIDERS:
+        available = sorted(
+            p for p in PROVIDER_ENUMS if p not in UNSUPPORTED_PROVIDERS
+        )
+        print_json_error(
+            code="unknown_provider",
+            message=f"Unknown or unsupported provider '{provider}'. Available: {', '.join(available)}",
+            available_providers=available,
+        )
+        return
+
+    resolved_key = _resolve_api_key(provider, api_key)
+
+    try:
+        result = query_cluster_status(
+            provider=provider,
+            api_key=resolved_key,
+            cluster_name=cluster_name,
+            region=params.get("region", ""),
+        )
+        brief = {
+            "cluster_name": result["cluster_name"],
+            "exists": result["exists"],
+            "node_count": len(result.get("nodes", [])),
+            "nodes": result.get("nodes", []),
+        }
+        print_json_success(brief)
+    except Exception as exc:
+        print_json_error(
+            code="status_failed",
+            message=str(exc),
+            phase="query_status",
+        )
+
+
 COMMAND_HANDLERS = {
     "init": _handle_init_stdin,
     "destroy": _handle_destroy_stdin,
     "add-worker": _handle_add_worker_stdin,
+    "status": _handle_status_stdin,
 }
 
 
