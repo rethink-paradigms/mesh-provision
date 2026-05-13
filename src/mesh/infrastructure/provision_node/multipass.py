@@ -8,14 +8,28 @@ import subprocess
 import json
 import yaml
 import click  # Used by the original cli.py for styling output
-from typing import Dict, Any, Optional, Union
+from typing import Dict, Any, Optional, Union, List
 
 MULTIPASS_CMD = "multipass"
 
 
-def generate_cloud_init_yaml(boot_script_content: str) -> str:
+def generate_cloud_init_yaml(
+    boot_script_content: str,
+    daemon_config: Optional[str] = None,
+    ssh_authorized_keys: Optional[List[str]] = None,
+) -> str:
     """
     Generate the cloud-init YAML content to execute the boot script.
+
+    Args:
+        boot_script_content: The shell script content to execute on boot.
+        daemon_config: Mesh daemon configuration YAML content to write
+                       to /etc/mesh/config.yaml (default: None).
+        ssh_authorized_keys: Optional list of SSH public keys to inject into cloud-init.
+            Auto-reads ~/.ssh/mesh_test_key.pub if None. (default: None).
+
+    Returns:
+        Cloud-init YAML as a string prefixed with "#cloud-config".
     """
     cloud_config = {
         "package_update": True,
@@ -29,6 +43,29 @@ def generate_cloud_init_yaml(boot_script_content: str) -> str:
         ],
         "runcmd": ["/opt/ops-platform/startup.sh"],
     }
+
+    if daemon_config:
+        cloud_config["write_files"].append({
+            "path": "/etc/mesh/config.yaml",
+            "permissions": "0600",
+            "content": daemon_config,
+        })
+        cloud_config.setdefault("runcmd", []).append(
+            'sh -c \'INSTALL_URL="${MESH_DAEMON_INSTALL_URL:-https://releases.mesh.dev/daemon/latest/install.sh}" && curl -fsSL "$INSTALL_URL" | bash\''
+        )
+
+    # Inject SSH authorized keys for test VM access
+    if ssh_authorized_keys is None:
+        import pathlib
+        key_file = pathlib.Path.home() / ".ssh" / "mesh_test_key.pub"
+        if key_file.exists():
+            ssh_authorized_keys = [key_file.read_text().strip()]
+    if ssh_authorized_keys:
+        import re
+        KEY_PATTERN = re.compile(r'^ssh-(ed25519|rsa|ecdsa|dss) [A-Za-z0-9+/=]+(\s+\S+)?\s*$')
+        valid_keys = [k for k in ssh_authorized_keys if KEY_PATTERN.match(k)]
+        if valid_keys:
+            cloud_config.setdefault("ssh_authorized_keys", []).extend(valid_keys)
 
     # Dump to string, then prepend #cloud-config
     yaml_content = yaml.dump(cloud_config, default_flow_style=False)
