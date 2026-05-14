@@ -66,7 +66,7 @@ class TestInitRealPath:
     """Real provisioning path with mocked cloud calls."""
 
     @patch("mesh.commands.init.provision_cluster")
-    @patch("mesh.commands.init._poll_health", return_value="ready")
+    @patch("mesh.commands.init.poll_daemon_health", return_value=True)
     @patch("mesh.commands.init.generate_cloud_init", return_value="#cloud-config\n{}")
     def test_successful_provision(self, mock_boot, mock_poll, mock_cluster, capsys):
         mock_cluster.return_value = {
@@ -100,7 +100,7 @@ class TestInitRealPath:
         assert "quota exceeded" in err["error"]["message"]
 
     @patch("mesh.commands.init.provision_cluster")
-    @patch("mesh.commands.init._poll_health", return_value="provisioned")
+    @patch("mesh.commands.init.poll_daemon_health", return_value=False)
     @patch("mesh.commands.init.generate_cloud_init", return_value="#cloud-config\n{}")
     def test_health_timeout_returns_provisioned(self, mock_boot, mock_poll, mock_cluster, capsys):
         mock_cluster.return_value = {

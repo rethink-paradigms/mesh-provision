@@ -367,6 +367,39 @@ def query_cluster(
 # ---------------------------------------------------------------------------
 
 
+def poll_daemon_health(
+    leader_ip: str,
+    port: int = 8080,
+    timeout: int = 120,
+    interval: int = 5,
+) -> bool:
+    """Poll http://{leader_ip}:{port}/healthz every `interval` seconds.
+
+    Returns True on first HTTP 200 response.
+    Returns False if `timeout` seconds elapse with no 200.
+    Uses urllib.request — no extra dependencies.
+    Swallows all per-attempt exceptions (connection refused, timeout, etc.).
+    """
+    import urllib.request as _urllib_req
+    import urllib.error as _urllib_err
+
+    url = f"http://{leader_ip}:{port}/healthz"
+    elapsed = 0
+    while elapsed < timeout:
+        time.sleep(interval)
+        elapsed += interval
+        logger.debug("poll_daemon_health: attempt %s/%s %s", elapsed, timeout, url)
+        try:
+            with _urllib_req.urlopen(url, timeout=5) as resp:
+                if resp.status == 200:
+                    logger.info("poll_daemon_health: daemon ready at %s (elapsed=%ss)", url, elapsed)
+                    return True
+        except Exception:
+            pass
+    logger.info("poll_daemon_health: timed out after %ss waiting for %s", timeout, url)
+    return False
+
+
 def _poll_for_ip(
     driver, node_id: str, timeout: int = 120, interval: int = 5
 ) -> tuple[Optional[str], Optional[str]]:

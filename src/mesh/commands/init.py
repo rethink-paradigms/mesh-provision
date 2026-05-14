@@ -12,8 +12,6 @@ from __future__ import annotations
 import time
 from typing import Any, Optional
 
-import requests as _requests
-
 from mesh.commands.output import (
     print_json_error,
     print_json_success,
@@ -23,7 +21,7 @@ from mesh.commands.output import (
 )
 from mesh.providers import is_provider_usable, USABLE_PROVIDERS
 from mesh.provisioning.boot import generate_cloud_init
-from mesh.provisioning.direct import provision_cluster, query_cluster
+from mesh.provisioning.direct import provision_cluster, query_cluster, poll_daemon_health
 
 
 def handle_init(params: dict[str, Any]) -> None:
@@ -115,7 +113,7 @@ def handle_init(params: dict[str, Any]) -> None:
     leader_ip = leader.get("public_ip") or leader.get("private_ip") or ""
 
     # Health poll
-    health_status = _poll_health(leader_ip) if leader_ip else "provisioned"
+    health_status = ("ready" if poll_daemon_health(leader_ip) else "provisioned") if leader_ip else "provisioned"
 
     # Build nodes list
     nodes = [{"id": leader.get("instance_id", ""), "ip": leader_ip, "role": "leader"}]
@@ -136,26 +134,4 @@ def handle_init(params: dict[str, Any]) -> None:
     )
 
 
-# ---------------------------------------------------------------------------
-# Health polling
-# ---------------------------------------------------------------------------
 
-def _poll_health(leader_ip: str, timeout: int = 120, interval: int = 5) -> str:
-    """Poll http://{leader_ip}:80/health until HTTP 200 or timeout.
-
-    Returns "ready" if the endpoint responds, "provisioned" if it times out.
-    Both values mean the VM exists; "provisioned" means Caddy/daemon may still
-    be starting up.
-    """
-    url = f"http://{leader_ip}:80/health"
-    elapsed = 0
-    while elapsed < timeout:
-        time.sleep(interval)
-        elapsed += interval
-        try:
-            resp = _requests.get(url, timeout=5)
-            if resp.status_code == 200:
-                return "ready"
-        except Exception:
-            pass
-    return "provisioned"
