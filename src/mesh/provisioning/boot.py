@@ -72,6 +72,9 @@ _TIER_SCRIPTS: dict[str, list[str]] = {
 
 _SCRIPTS_DIR = os.path.join(os.path.dirname(__file__), "scripts")
 _BOOT_SH = os.path.join(os.path.dirname(__file__), "boot.sh")
+_INSTALL_SH = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "mesh", "scripts", "install.sh")
+)
 
 
 def generate_cloud_init(
@@ -168,6 +171,11 @@ def generate_cloud_init(
 
     # Daemon config injection (leader only, plain text pass-through)
     if daemon_config:
+        install_sh_content = ""
+        if os.path.exists(_INSTALL_SH):
+            with open(_INSTALL_SH) as f:
+                install_sh_content = f.read()
+
         cloud_config["write_files"] += [
             {
                 "path": "/etc/mesh/config.yaml",
@@ -180,14 +188,20 @@ def generate_cloud_init(
                 "content": _DAEMON_SYSTEMD_UNIT,
             },
         ]
-        cloud_config["runcmd"] += [
-            (
-                'sh -c \'INSTALL_URL="${MESH_DAEMON_INSTALL_URL:-'
-                "https://raw.githubusercontent.com/rethink-paradigms/mesh/main/scripts/install.sh"
-                '}" && curl -fsSL "$INSTALL_URL" | MESH_SKIP_INIT=1 MESH_VERSION=v0.1.0 bash\''
-            ),
-            "systemctl daemon-reload && systemctl enable mesh-daemon && systemctl start mesh-daemon",
-        ]
+        if install_sh_content:
+            cloud_config["write_files"].append({
+                "path": "/tmp/install-mesh.sh",
+                "permissions": "0755",
+                "content": install_sh_content,
+            })
+            cloud_config["runcmd"] += [
+                "MESH_SKIP_INIT=1 MESH_VERSION=v0.1.0 bash /tmp/install-mesh.sh",
+                # Ensure ~/.mesh/ exists (SQLite store needs parent dir)
+                "mkdir -p /root/.mesh",
+                # Try daemon directly for 2s to capture any startup error
+                "timeout 2 /usr/local/bin/mesh-daemon serve --config /etc/mesh/config.yaml 2>/tmp/daemon-stderr.txt || true; cat /tmp/daemon-stderr.txt > /tmp/daemon-diag.txt 2>/dev/null; echo '--- diag end ---' >> /tmp/daemon-diag.txt",
+                "systemctl daemon-reload && systemctl enable mesh-daemon && systemctl start mesh-daemon",
+            ]
 
     # goss health spec (optional — silently skipped if not present)
     goss_spec = _load_goss_spec()
@@ -198,7 +212,8 @@ def generate_cloud_init(
             "content": goss_spec,
         })
         cloud_config["runcmd"].append(
-            "curl -fsSL https://github.com/goss-org/goss/releases/latest/download/goss-linux-amd64 "
+            "curl -fsSL --connect-timeout 10 --max-time 30 "
+            "https://github.com/goss-org/goss/releases/download/v0.4.9/goss-linux-amd64 "
             "-o /usr/local/bin/goss && chmod +rx /usr/local/bin/goss"
         )
 
@@ -222,7 +237,7 @@ def generate_cloud_init(
 
 _DAEMON_SYSTEMD_UNIT = """\
 [Unit]
-Description=Mesh Daemon — Portable agent-body runtime
+Description=Mesh Daemon -- Portable agent-body runtime
 After=network-online.target docker.service
 
 [Service]
