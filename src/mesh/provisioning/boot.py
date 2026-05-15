@@ -253,9 +253,9 @@ def _load_goss_spec() -> Optional[str]:
     Uses a search relative to this file's known location in the repo.
     Returns None silently if not found — goss is optional.
     """
-    # Walk up to find workspace root (mesh-provision is 2 levels above provisioning/)
+    # Walk up to find workspace root (mesh-provision is 3 levels above provisioning/)
     candidate = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "scripts", "goss", "mesh-daemon-goss.yaml")
+        os.path.join(os.path.dirname(__file__), "..", "..", "..", "scripts", "goss", "mesh-daemon-goss.yaml")
     )
     if os.path.exists(candidate):
         with open(candidate) as f:
