@@ -68,7 +68,6 @@ WantedBy=multi-user.target
 EOF
 
 	# Copy script to permanent location
-	# TODO: scripts/09-handle-spot-interruption.sh does not exist in repo yet — must be created before enabling spot handling
 	cp scripts/09-handle-spot-interruption.sh /opt/ops-platform/scripts/09-handle-spot-interruption.sh
 	chmod +x /opt/ops-platform/scripts/09-handle-spot-interruption.sh
 
