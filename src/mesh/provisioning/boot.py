@@ -184,7 +184,7 @@ def generate_cloud_init(
             (
                 'sh -c \'INSTALL_URL="${MESH_DAEMON_INSTALL_URL:-'
                 "https://raw.githubusercontent.com/rethink-paradigms/mesh/main/scripts/install.sh"
-                '}" && curl -fsSL "$INSTALL_URL" | MESH_SKIP_INIT=1 bash\''
+                '}" && curl -fsSL "$INSTALL_URL" | MESH_SKIP_INIT=1 MESH_VERSION=v0.1.0 bash\''
             ),
             "systemctl daemon-reload && systemctl enable mesh-daemon && systemctl start mesh-daemon",
         ]
