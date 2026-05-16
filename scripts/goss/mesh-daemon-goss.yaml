@@ -30,7 +30,7 @@ service:
     running: true
 
 port:
-  # Daemon binds to [::]:8080 (IPv6 dual-stack) on Linux — check tcp6, not tcp
+  # Daemon binds to [::]:8080 (IPv6 dual-stack) on Linux - check tcp6, not tcp
   tcp6:8080:
     listening: true
 
@@ -38,7 +38,7 @@ http:
   http://localhost:8080/healthz:
     status: 200
     body:
-      - "status"   # Accept both "healthy" and "degraded" — just verify JSON shape
+      - "status"   # Accept both "healthy" and "degraded" - just verify JSON shape
     timeout: 5000
 
 command:
