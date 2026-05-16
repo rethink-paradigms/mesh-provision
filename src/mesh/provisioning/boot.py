@@ -196,8 +196,8 @@ def generate_cloud_init(
             })
             cloud_config["runcmd"] += [
                 "MESH_SKIP_INIT=1 MESH_VERSION=v0.1.0 bash /tmp/install-mesh.sh",
-                # Ensure ~/.mesh/ exists (SQLite store needs parent dir)
-                "mkdir -p /root/.mesh",
+                # Ensure ~/.mesh/ and sub-dirs exist (store + plugin dir needed at daemon start)
+                "mkdir -p /root/.mesh/plugins /root/.mesh/agents",
                 # Try daemon directly for 2s to capture any startup error
                 "timeout 2 /usr/local/bin/mesh-daemon serve --config /etc/mesh/config.yaml 2>/tmp/daemon-stderr.txt || true; cat /tmp/daemon-stderr.txt > /tmp/daemon-diag.txt 2>/dev/null; echo '--- diag end ---' >> /tmp/daemon-diag.txt",
                 "systemctl daemon-reload && systemctl enable mesh-daemon && systemctl start mesh-daemon",
