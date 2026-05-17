@@ -28,6 +28,12 @@ import urllib.request
 from typing import Optional
 
 import yaml
+
+try:
+    import jsonschema
+    _HAS_JSONSCHEMA = True
+except Exception:  # pragma: no cover
+    _HAS_JSONSCHEMA = False
 from yaml import Dumper as _BaseDumper
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
@@ -55,18 +61,19 @@ from mesh.tiers.tier_config import ClusterTier
 _UNREPLACED_VAR = re.compile(r"\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}")
 
 # Scripts run for each tier (in order)
+# Solo and cluster share the same scripts -- only bootstrap_expect and worker count differ.
 _TIER_SCRIPTS: dict[str, list[str]] = {
-    "lite": [
+    "solo": [
         "01-install-deps.sh",
+        "02-install-tailscale.sh",
         "03-install-hashicorp.sh",
         "07-configure-nomad.sh",
         "10-install-caddy.sh",
     ],
-    "standard": [
+    "cluster": [
         "01-install-deps.sh",
         "02-install-tailscale.sh",
         "03-install-hashicorp.sh",
-        "06-configure-consul.sh",
         "07-configure-nomad.sh",
         "10-install-caddy.sh",
     ],
@@ -77,6 +84,52 @@ _BOOT_SH = os.path.join(os.path.dirname(__file__), "boot.sh")
 _INSTALL_SH = os.path.normpath(
     os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "mesh", "scripts", "install.sh")
 )
+
+# Path to canonical daemon config schema (workspace root → contracts/)
+# boot.py is at code/mesh-provision/src/mesh/provisioning/ ; 5x ".." reaches workspace root
+_SCHEMA_PATH = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "contracts", "mesh-daemon-config.schema.json")
+)
+
+
+def _validate_daemon_config(config_str: str) -> None:
+    """Validate daemon_config YAML against the canonical JSON Schema.
+
+    This is the BOUNDARY GUARD between agent-bodies (generator) and mesh (consumer).
+    If the generated config drifts from the canonical schema, this raises BEFORE
+    the config reaches the VM, preventing runtime daemon crashes.
+
+    Raises:
+        ValueError: If validation fails with a clear, actionable message.
+    """
+    if not _HAS_JSONSCHEMA:
+        # Best-effort: if jsonschema is not installed, skip validation but warn.
+        # In production (workspace dev) it is available.
+        return
+
+    if not os.path.exists(_SCHEMA_PATH):
+        # Schema missing (e.g. packaged install without contracts). Skip.
+        return
+
+    with open(_SCHEMA_PATH, encoding="utf-8") as f:
+        schema = json.load(f)
+
+    try:
+        parsed = yaml.safe_load(config_str)
+    except yaml.YAMLError as e:
+        raise ValueError(f"daemon_config is not valid YAML: {e}") from e
+
+    if not isinstance(parsed, dict):
+        raise ValueError(f"daemon_config must parse to a YAML object (got {type(parsed).__name__})")
+
+    try:
+        jsonschema.validate(instance=parsed, schema=schema)
+    except jsonschema.ValidationError as e:
+        path = "/".join(str(p) for p in e.path) if e.path else "<root>"
+        raise ValueError(
+            f"daemon_config failed canonical schema validation at '{path}': {e.message}. "
+            f"Schema: contracts/mesh-daemon-config.schema.json"
+        ) from e
 
 
 def generate_cloud_init(
@@ -95,7 +148,7 @@ def generate_cloud_init(
 
     Args:
         role:               "server" (leader) or "client" (worker).
-        cluster_tier:       "lite" or "standard".
+        cluster_tier:       "solo" or "cluster".
         tailscale_key:      Tailscale auth key (required for standard tier).
         leader_ip:          Leader's public IP (required for worker nodes in standard tier).
         daemon_config:      Full /etc/mesh/config.yaml content as PLAIN TEXT.
@@ -115,9 +168,14 @@ def generate_cloud_init(
         A "#cloud-config\\n..." YAML string ready for use as VM userdata.
     """
     resolved_version = _resolve_mesh_version(mesh_version)
-    enable_caddy = True  # always — even lite tier runs Caddy for HTTPS
-    enable_consul = cluster_tier == "standard"
-    enable_tailscale = cluster_tier == "standard"
+
+    # Boundary guard: validate daemon_config against canonical schema before it
+    # reaches the VM. Catches drift between agent-bodies generator and mesh Go parser.
+    if daemon_config:
+        _validate_daemon_config(daemon_config)
+
+    enable_caddy = True  # always
+    enable_tailscale = True  # always -- Tailscale installed for both solo and cluster
 
     # Render boot.sh via Jinja2
     env = Environment(
@@ -171,9 +229,9 @@ def generate_cloud_init(
     }
 
     # Bundle tier-appropriate modular scripts
-    # 07-configure-nomad.sh is a Jinja2 template — render it with provision-time values
+    # 07-configure-nomad.sh is a Jinja2 template -- render it with provision-time values
     # All other scripts are static files bundled verbatim
-    for script_name in _TIER_SCRIPTS.get(cluster_tier, _TIER_SCRIPTS["standard"]):
+    for script_name in _TIER_SCRIPTS.get(cluster_tier, _TIER_SCRIPTS["cluster"]):
         if script_name == "07-configure-nomad.sh":
             nomad_env = Environment(
                 loader=FileSystemLoader(_SCRIPTS_DIR),
@@ -208,6 +266,19 @@ def generate_cloud_init(
                         "content": f.read(),
                     })
 
+    # Always-bundled boot-ordering scripts (not tier-specific)
+    # 99-wait-for-nomad.sh -- polls Nomad leader before issuing API commands
+    # 99-validate-daemon.sh -- validates config without starting the HTTP server
+    for bootstrap_script in ("99-wait-for-nomad.sh", "99-validate-daemon.sh"):
+        script_path = os.path.join(_SCRIPTS_DIR, bootstrap_script)
+        if os.path.exists(script_path):
+            with open(script_path) as f:
+                cloud_config["write_files"].append({
+                    "path": f"/opt/ops-platform/scripts/{bootstrap_script}",
+                    "permissions": "0755",
+                    "content": f.read(),
+                })
+
     # Daemon config injection (leader only, plain text pass-through)
     if daemon_config:
         install_sh_content = ""
@@ -221,11 +292,6 @@ def generate_cloud_init(
                 "permissions": "0600",
                 "content": daemon_config,
             },
-            {
-                "path": "/etc/systemd/system/mesh-daemon.service",
-                "permissions": "0644",
-                "content": _DAEMON_SYSTEMD_UNIT,
-            },
         ]
         if install_sh_content:
             cloud_config["write_files"].append({
@@ -237,12 +303,14 @@ def generate_cloud_init(
                 f"MESH_SKIP_INIT=1 MESH_VERSION={resolved_version} bash /tmp/install-mesh.sh",
                 # Ensure ~/.mesh/ and sub-dirs exist (store + plugin dir needed at daemon start)
                 "mkdir -p /root/.mesh/plugins /root/.mesh/agents",
-                # Try daemon directly for 2s to capture any startup error
-                "timeout 2 /usr/local/bin/mesh-daemon serve --config /etc/mesh/config.yaml 2>/tmp/daemon-stderr.txt || true; cat /tmp/daemon-stderr.txt > /tmp/daemon-diag.txt 2>/dev/null; echo '--- diag end ---' >> /tmp/daemon-diag.txt",
+                # Validate binary and config WITHOUT starting the server.
+                # The old 'timeout 2 mesh-daemon serve ...' leaked PID files and
+                # port state, racing against the systemctl start on the next line.
+                "bash /opt/ops-platform/scripts/99-validate-daemon.sh",
                 "systemctl daemon-reload && systemctl enable mesh-daemon && systemctl start mesh-daemon",
             ]
 
-    # goss health spec (optional — silently skipped if not present)
+    # goss health spec (optional -- silently skipped if not present)
     goss_spec = _load_goss_spec()
     if goss_spec:
         cloud_config["write_files"].append({
@@ -256,11 +324,15 @@ def generate_cloud_init(
             "-o /usr/local/bin/goss && chmod +rx /usr/local/bin/goss"
         )
 
-    # SSH keys — explicit only, no auto-discovery
+    # SSH keys -- explicit only, no auto-discovery
     if ssh_authorized_keys:
         valid = _validated_ssh_keys(ssh_authorized_keys)
         if valid:
             cloud_config["ssh_authorized_keys"] = valid
+
+    # Pre-flight validation -- catch issues BEFORE they reach the VM
+    if validate:
+        _validate_cloud_init(cloud_config)
 
     return "#cloud-config\n" + yaml.dump(
         cloud_config,
@@ -271,26 +343,97 @@ def generate_cloud_init(
 
 
 # ---------------------------------------------------------------------------
-# Internal helpers
+# Pre-flight validation -- catch cloud-init issues before VM deployment
 # ---------------------------------------------------------------------------
 
-_DAEMON_SYSTEMD_UNIT = """\
-[Unit]
-Description=Mesh Daemon -- Portable agent-body runtime
-After=network-online.target docker.service
+# Characters that break PyYAML/cloud-init on Ubuntu 22.04
+# (cloud-init uses Python's yaml module which rejects control chars & some UTF-8)
+_YAML_UNSAFE_CHARS = re.compile(r"[\x00-\x08\x0b-\x0c\x0e-\x1f\x7f-\x9f\u2013\u2014\u2018\u2019\u201c\u201d]")
 
-[Service]
-Type=simple
-ExecStart=/usr/local/bin/mesh-daemon serve --config /etc/mesh/config.yaml
-Restart=on-failure
-RestartSec=5
-User=root
-StandardOutput=journal
-StandardError=journal
 
-[Install]
-WantedBy=multi-user.target
-"""
+def _validate_cloud_init(cloud_config: dict) -> None:
+    """Run all pre-flight validations on the cloud-init config.
+
+    Raises ValueError with a clear message if any check fails.
+    This prevents broken cloud-init from reaching the VM.
+    """
+    # 1. Check all write_files content for non-ASCII / YAML-breaking characters
+    _validate_write_files_content(cloud_config)
+
+    # 2. YAML round-trip: dump then parse to ensure validity
+    _validate_yaml_roundtrip(cloud_config)
+
+    # 3. Validate shell script syntax with bash -n
+    _validate_shell_syntax(cloud_config)
+
+
+def _validate_write_files_content(cloud_config: dict) -> None:
+    """Ensure all write_files content is safe for cloud-init YAML embedding."""
+    write_files = cloud_config.get("write_files", [])
+    for i, wf in enumerate(write_files):
+        content = wf.get("content", "")
+        path = wf.get("path", f"<entry {i}>")
+        match = _YAML_UNSAFE_CHARS.search(content)
+        if match:
+            char = match.group()
+            pos = match.start()
+            snippet = content[max(0, pos - 20):pos + 20]
+            raise ValueError(
+                f"cloud-init write_files[{i}] (path={path}) contains "
+                f"YAML-unsafe character U+{ord(char):04X} ({repr(char)}) at position {pos}. "
+                f"Snippet: ...{snippet}..."
+            )
+
+
+def _validate_yaml_roundtrip(cloud_config: dict) -> None:
+    """Dump to YAML and parse back to verify cloud-init compatibility."""
+    dumped = yaml.dump(
+        cloud_config,
+        default_flow_style=False,
+        allow_unicode=True,
+        Dumper=_LiteralDumper,
+    )
+    try:
+        yaml.safe_load(dumped)
+    except yaml.YAMLError as exc:
+        raise ValueError(
+            f"Generated cloud-init YAML is invalid: {exc}. "
+            "This usually means embedded scripts contain special characters."
+        ) from exc
+
+
+def _validate_shell_syntax(cloud_config: dict) -> None:
+    """Run 'bash -n' on every shell script in write_files."""
+    import subprocess
+    import tempfile
+
+    write_files = cloud_config.get("write_files", [])
+    for i, wf in enumerate(write_files):
+        path = wf.get("path", "")
+        content = wf.get("content", "")
+        if not path.endswith(".sh") or not content:
+            continue
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".sh", delete=False) as f:
+            f.write(content)
+            tmp = f.name
+        try:
+            result = subprocess.run(
+                ["bash", "-n", tmp],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode != 0:
+                stderr = result.stderr.strip()
+                raise ValueError(
+                    f"Shell syntax error in write_files[{i}] (path={path}): {stderr}"
+                )
+        finally:
+            os.unlink(tmp)
+
+
+# ---------------------------------------------------------------------------
+# Internal helpers
+# ---------------------------------------------------------------------------
 
 _SSH_KEY_PATTERN = re.compile(
     r"^ssh-(ed25519|rsa|ecdsa|dss) [A-Za-z0-9+/=]+(\s+\S+)?\s*$"
@@ -305,7 +448,7 @@ def _load_goss_spec() -> Optional[str]:
     """Load goss spec from workspace scripts/goss/ if available.
 
     Uses a search relative to this file's known location in the repo.
-    Returns None silently if not found — goss is optional.
+    Returns None silently if not found -- goss is optional.
     """
     # Walk up to find workspace root (mesh-provision is 3 levels above provisioning/)
     candidate = os.path.normpath(

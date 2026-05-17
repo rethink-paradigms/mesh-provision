@@ -19,7 +19,7 @@ def test_boot_script_rendering_shell():
     }
 
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key=context["TAILSCALE_KEY"],
         leader_ip=context["LEADER_IP"],
         role=context["ROLE"],
@@ -37,7 +37,7 @@ def test_boot_script_rendering_cloud_init():
     """
     context = {"TAILSCALE_KEY": "ts-key-abc", "LEADER_IP": "10.0.0.2", "ROLE": "client"}
 
-    rendered_yaml = generate_cloud_init(cluster_tier="standard", 
+    rendered_yaml = generate_cloud_init(cluster_tier="cluster", 
         tailscale_key=context["TAILSCALE_KEY"],
         leader_ip=context["LEADER_IP"],
         role=context["ROLE"],
@@ -79,9 +79,11 @@ def test_boot_script_files_exist():
         "01-install-deps.sh",
         "02-install-tailscale.sh",
         "03-install-hashicorp.sh",
-        "06-configure-consul.sh",
         "07-configure-nomad.sh.j2",  # Jinja2 template, rendered at provision time
         "10-install-caddy.sh",
+        # Boot-ordering scripts bundled for all tiers
+        "99-wait-for-nomad.sh",
+        "99-validate-daemon.sh",
     ]
 
     for script in expected_scripts:
@@ -91,10 +93,10 @@ def test_boot_script_files_exist():
 
 def test_shell_script_includes_cluster_tier_default_standard():
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server"
     )
-    assert 'CLUSTER_TIER="standard"' in rendered
+    assert 'CLUSTER_TIER="cluster"' in rendered
 
 
 def test_shell_script_includes_cluster_tier_lite():
@@ -102,9 +104,9 @@ def test_shell_script_includes_cluster_tier_lite():
         tailscale_key="ts-key-123",
         leader_ip="10.0.0.1",
         role="server",
-        cluster_tier="lite",
+        cluster_tier="solo",
     )
-    assert 'CLUSTER_TIER="lite"' in rendered
+    assert 'CLUSTER_TIER="solo"' in rendered
 
 
 def test_shell_script_lite_enables_caddy():
@@ -112,7 +114,7 @@ def test_shell_script_lite_enables_caddy():
         tailscale_key="ts-key-123",
         leader_ip="10.0.0.1",
         role="server",
-        cluster_tier="lite",
+        cluster_tier="solo",
     )
     assert 'ENABLE_CADDY="true"' in rendered
 
@@ -122,7 +124,7 @@ def test_shell_script_standard_enables_caddy():
         tailscale_key="ts-key-123",
         leader_ip="10.0.0.1",
         role="server",
-        cluster_tier="standard",
+        cluster_tier="cluster",
     )
     assert 'ENABLE_CADDY="true"' in rendered
 
@@ -154,7 +156,7 @@ def test_cloud_init_passes_cluster_tier():
         tailscale_key="ts-key-abc",
         leader_ip="10.0.0.2",
         role="client",
-        cluster_tier="lite",
+        cluster_tier="solo",
     )
     cloud_config = yaml.safe_load(rendered_yaml.replace("#cloud-config\n", ""))
     startup_script_content = None
@@ -163,7 +165,7 @@ def test_cloud_init_passes_cluster_tier():
             startup_script_content = item["content"]
             break
     assert startup_script_content is not None
-    assert 'CLUSTER_TIER="lite"' in startup_script_content
+    assert 'CLUSTER_TIER="solo"' in startup_script_content
     assert 'ENABLE_CADDY="true"' in startup_script_content
 
 
@@ -173,7 +175,7 @@ def test_boot_script_has_namespace_commands():
     for mesh-infra and mesh-bodies after Nomad service starts.
     """
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server"
     )
     assert 'nomad namespace apply -description "Mesh infrastructure (Caddy, monitoring)" mesh-infra' in rendered
@@ -186,7 +188,7 @@ def test_boot_script_namespace_commands_after_nomad_restart():
     after the nomad restart block (daemon section was removed — namespaces
     are now the final boot.sh content).
     """
-    rendered = generate_cloud_init(cluster_tier="standard", 
+    rendered = generate_cloud_init(cluster_tier="cluster", 
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server"
     )
     nomad_restart_pos = rendered.index("systemctl restart nomad")
@@ -196,13 +198,13 @@ def test_boot_script_namespace_commands_after_nomad_restart():
 
 
 def test_existing_tests_still_pass():
-    rendered = generate_cloud_init(cluster_tier="standard", 
+    rendered = generate_cloud_init(cluster_tier="cluster", 
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server"
     )
     assert 'TAILSCALE_KEY="ts-key-123"' in rendered
     assert 'LEADER_IP="10.0.0.1"' in rendered
     assert 'ROLE="server"' in rendered
-    assert 'CLUSTER_TIER="standard"' in rendered
+    assert 'CLUSTER_TIER="cluster"' in rendered
     assert 'ENABLE_CADDY="true"' in rendered
 
 
@@ -212,7 +214,7 @@ def test_nomad_template_renders_bootstrap_expect():
     contains the correct bootstrap_expect value.
     """
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
         bootstrap_expect=3,
     )
@@ -224,7 +226,7 @@ def test_nomad_template_default_bootstrap_expect_is_one():
     Test_NomadTemplate_DefaultBootstrapExpectIsOne: Verify default is 1.
     """
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
     )
     assert "bootstrap_expect = 1" in rendered
@@ -236,7 +238,7 @@ def test_nomad_template_server_role_includes_server_block():
     get the server stanza in their Nomad config.
     """
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
     )
     assert "server {" in rendered
@@ -249,7 +251,7 @@ def test_nomad_template_client_role_no_server_block():
     do NOT get the server stanza.
     """
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="client",
     )
     assert "server {" not in rendered
@@ -259,15 +261,23 @@ def test_nomad_template_client_role_no_server_block():
 def test_nomad_template_gpu_enables_nvidia_config():
     """
     Test_NomadTemplate_GpuEnablesNvidiaConfig: Verify has_gpu=True includes
-    NVIDIA plugin configuration.
+    NVIDIA plugin configuration in the rendered Nomad script.
     """
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
         has_gpu=True,
     )
-    assert "nvidia" in rendered
-    assert "driver.allowlist" in rendered
+    import yaml
+    config = yaml.safe_load(rendered.replace("#cloud-config\n", ""))
+    nomad_script = None
+    for item in config.get("write_files", []):
+        if "07-configure-nomad.sh" in item.get("path", ""):
+            nomad_script = item.get("content", "")
+            break
+    assert nomad_script is not None, "07-configure-nomad.sh not found in write_files"
+    assert "nvidia" in nomad_script.lower()
+    assert "driver.allowlist" in nomad_script
 
 
 def test_nomad_template_no_gpu_omits_nvidia():
@@ -276,7 +286,7 @@ def test_nomad_template_no_gpu_omits_nvidia():
     does NOT include NVIDIA plugin config in the rendered Nomad script.
     """
     rendered = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
     )
     # Extract the 07-configure-nomad.sh content from write_files
@@ -289,3 +299,97 @@ def test_nomad_template_no_gpu_omits_nvidia():
             break
     assert nomad_script is not None, "07-configure-nomad.sh not found in write_files"
     assert "nvidia" not in nomad_script.lower(), "NVIDIA config should not appear when has_gpu=False"
+
+
+# ---------------------------------------------------------------------------
+# Feature: Boot ordering — synchronisation primitives (F8)
+# ---------------------------------------------------------------------------
+
+
+def test_boot_script_includes_wait_for_nomad():
+    """
+    Test_BootScript_IncludesWaitForNomad: Verify boot.sh calls wait-for-nomad
+    before issuing Nomad API commands.
+
+    Without this, `nomad namespace apply` races against Nomad's Raft leader
+    election and silently fails (the || true swallows the error).
+    """
+    rendered = generate_cloud_init(
+        cluster_tier="cluster",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+    )
+    # The wait script must be called BEFORE namespace apply but AFTER restart
+    nomad_restart_pos = rendered.index("systemctl restart nomad")
+    wait_pos = rendered.index("99-wait-for-nomad.sh")
+    namespace_pos = rendered.index("mesh-infra")
+    assert nomad_restart_pos < wait_pos, "wait-for-nomad must appear after nomad restart"
+    assert wait_pos < namespace_pos, "wait-for-nomad must appear before namespace apply"
+
+
+def test_boot_script_replaces_timeout_two_with_validate_daemon():
+    """
+    Test_BootScript_ReplacesTimeoutTwo: Verify the old `timeout 2 mesh-daemon serve`
+    diagnostic has been replaced with a config-validation approach that doesn't
+    start the HTTP server.
+
+    The old approach leaked PID/port state that raced against the subsequent
+    `systemctl start mesh-daemon`.
+    """
+    rendered = generate_cloud_init(
+        cluster_tier="cluster",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+        daemon_config='''daemon:\n  cluster_id: test-cluster-id\n  gateway_url: https://example.com\n  heartbeat_interval_seconds: 30\n  auth_mode: both\n  auth_token: test-token\n  auth0_domain: test.auth0.com\n  auth0_audience: https://test\n  listen_addr: 0.0.0.0:8080\nstore:\n  path: /root/.mesh/state.db\nplugin:\n  dir: /root/.mesh/plugins\ningress:\n  adapter: caddy\nlimits:\n  max_bodies: 10\n  max_snapshots: 5\n''',
+    )
+    # Old diagnostic MUST NOT appear
+    assert "timeout 2 /usr/local/bin/mesh-daemon serve" not in rendered, \
+        "timeout 2 diagnostic must be removed"
+    # New validation script MUST appear in runcmd
+    assert "99-validate-daemon.sh" in rendered, \
+        "99-validate-daemon.sh must be called instead"
+
+
+def test_bootstrap_scripts_are_bundled_in_cloud_init():
+    """
+    Test_BootstrapScripts_AreBundled: Verify 99-wait-for-nomad.sh and
+    99-validate-daemon.sh are included in write_files for all tiers.
+    """
+    for tier in ("standard", "solo"):
+        rendered = generate_cloud_init(
+            cluster_tier=tier,
+            tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+        )
+        import yaml
+        config = yaml.safe_load(rendered.replace("#cloud-config\n", ""))
+        paths = [w["path"] for w in config.get("write_files", [])]
+        assert "opt/ops-platform/scripts/99-wait-for-nomad.sh" in "/".join(paths), \
+            f"99-wait-for-nomad.sh must be bundled for tier={tier}"
+        assert "opt/ops-platform/scripts/99-validate-daemon.sh" in "/".join(paths), \
+            f"99-validate-daemon.sh must be bundled for tier={tier}"
+
+
+def test_wait_for_nomad_script_uses_nomad_addr_env():
+    """
+    Test_WaitForNomad_UsesNomadAddrEnv: Verify the wait script honours
+    $NOMAD_ADDR, $NOMAD_POLL_INTERVAL, and $NOMAD_WAIT_TIMEOUT overrides.
+    """
+    import subprocess
+    script = os.path.join(os.path.dirname(__file__), "scripts", "99-wait-for-nomad.sh")
+    assert os.path.exists(script), f"Script not found: {script}"
+    content = open(script).read()
+    assert 'NOMAD_ADDR="${NOMAD_ADDR:-http://127.0.0.1:4646}"' in content
+    assert 'NOMAD_POLL_INTERVAL' in content or 'POLL_INTERVAL' in content
+    assert 'NOMAD_WAIT_TIMEOUT' in content or 'TIMEOUT' in content
+
+
+def test_validate_daemon_script_gracefully_skips_without_config():
+    """
+    Test_ValidateDaemon_GracefullySkips: Verify the validate script handles
+    a missing config file gracefully (non-leader nodes won't have one).
+    """
+    import subprocess
+    script = os.path.join(os.path.dirname(__file__), "scripts", "99-validate-daemon.sh")
+    assert os.path.exists(script), f"Script not found: {script}"
+    content = open(script).read()
+    assert 'SKIP:' in content or 'exit 0' in content
+    # Must not exit with error when config is absent (non-leader path)
+    assert "not found (non-leader node" in content
