@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR" || { echo "ERROR: Failed to cd to $SCRIPT_DIR"; exit 1; }
 
 # Pulumi injects these variables
 TAILSCALE_KEY="{{ TAILSCALE_KEY }}"
