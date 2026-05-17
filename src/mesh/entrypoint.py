@@ -23,6 +23,20 @@ import sys
 
 
 def main() -> None:
+    # Handle --help or no input on TTY
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print("mesh-provision — lightweight cluster orchestrator")
+        print("\nUsage:")
+        print("  echo '{\"command\": \"init\", ...}' | mesh")
+        print("\nCommands:")
+        print("  init, destroy, add-worker, remove-worker, status")
+        sys.exit(0)
+
+    if sys.stdin.isatty():
+        print("Error: No input provided on stdin. mesh-provision expects a JSON envelope.", file=sys.stderr)
+        print("Use 'mesh --help' for usage information.", file=sys.stderr)
+        sys.exit(1)
+
     raw = sys.stdin.read()
 
     # Parse envelope

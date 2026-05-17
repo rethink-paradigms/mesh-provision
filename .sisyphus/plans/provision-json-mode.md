@@ -30,7 +30,7 @@ Add three capabilities on top of the existing working Python provisioning tool:
 
 **Key Discussions**:
 - **Daemon binary source**: Pass download URL as `--daemon-url` CLI arg. Central controls the version.
-- **Credential handling**: `--api-key` wins if provided, falls back to `.env`. Single-token providers (DO, Linode, Vultr) only — multi-credential providers handled later.
+- **Credential handling**: `--api-key` wins if provided, falls back to Infisical env (via `.workspace-secrets.yml`). Single-token providers (DO, Linode, Vultr) only — multi-credential providers handled later.  [OUTDATED — see SECRETS-PROTOCOL.md]
 - **Provisioning engine**: Use direct Libcloud for `--output json` mode. Pulumi stays untouched for interactive mode.
 - **Test strategy**: No automated unit tests per E2E plan — agent QA scenarios only.
 
@@ -190,7 +190,7 @@ Wave FINAL (After ALL tasks):
     ```
   - Add `--api-key` flag to `init`, `destroy`, `add-worker` — single string for token-based providers:
     ```python
-    api_key: Optional[str] = typer.Option(None, "--api-key", help="Cloud provider API key/token (overrides .env)")
+    api_key: Optional[str] = typer.Option(None, "--api-key", help="Cloud provider API key/token (overrides Infisical env)")
     ```
   - Add `--daemon-token` flag to `init`:
     ```python
@@ -937,7 +937,7 @@ Wave FINAL (After ALL tasks):
     ```
   - **JSON mode** (`_run_add_worker_json`):
     1. Validate all required args (cluster, provider, region, size, api_key, leader_ip must ALL be present)
-    2. Resolve credentials (--api-key or .env fallback)
+    2. Resolve credentials (--api-key or Infisical env fallback)  [OUTDATED — see SECRETS-PROTOCOL.md]
     3. Get TAILSCALE_KEY from env (required for worker mesh join)
     4. Generate worker boot script via `generate_shell_script(role="client", leader_ip=leader_ip, ...)`
     5. Provision via `provision_node_direct()` (Task 5)
@@ -1206,7 +1206,7 @@ Wave FINAL (After ALL tasks):
   - Run `mesh destroy --output json --demo` with various arg combinations and validate:
     - **Happy path**: `--cluster test --api-key test-key --yes` → exit 0, valid destroy JSON
     - **Without --cluster**: uses default → JSON output with default cluster name
-    - **Without --api-key**: error JSON (if no .env fallback)
+    - **Without --api-key**: error JSON (if no Infisical env fallback)  [OUTDATED — see SECRETS-PROTOCOL.md]
   - Validate JSON shape against spec §6.2:
     ```json
     {"cluster_id": "test-cluster", "destroyed": true, "resources_cleaned": [...]}

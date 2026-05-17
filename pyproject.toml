@@ -56,6 +56,10 @@ dev = [
     "mkdocs-material>=9.4.0",
     "towncrier>=24.0.0",
 ]
+http = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+]
 
 # Enterprise features (GPU, monitoring, backups) are in the mesh-enterprise package
 

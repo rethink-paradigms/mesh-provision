@@ -66,7 +66,9 @@ pip install "click>=8.0.0" "typer>=0.9.0"
 
 **Solution:**
 
-Set environment variables in `.env` or your shell:
+> **Workspace:** Secrets are managed in Infisical. Run commands via `infisical run -- python -m mesh ...` from workspace root. See [`SERVICES.md`](../../SERVICES.md).
+
+For standalone/public use, set environment variables in your shell or a local `.env` file:
 
 === "AWS"
     ```bash
@@ -92,7 +94,7 @@ Set environment variables in `.env` or your shell:
     export AZURE_TENANT_ID=...
     ```
 
-See [`.env.example`](https://github.com/rethink-paradigms/mesh/blob/main/.env.example) for all providers.
+See [`SECRETS-PROTOCOL.md`](../../SECRETS-PROTOCOL.md) for the workspace secret management protocol and canonical env var names.
 
 ### Multipass VMs won't start
 

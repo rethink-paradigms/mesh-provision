@@ -14,6 +14,21 @@ Provision VMs across cloud providers, bootstrap a Nomad + Consul + Docker + Tail
 
 ## Quick Start
 
+### Workspace Development
+
+This repo is part of the Mesh workspace. From workspace root:
+
+```bash
+make up                   # Start all services (includes agent-bodies)
+# Or manually:
+cd ../.. && infisical run -- python -m mesh init --provider "Local (Multipass)" --workers 0
+cd ../.. && infisical run -- python -m mesh status
+```
+
+See [`SERVICES.md`](../../SERVICES.md) and [`services.json`](../../services.json).
+
+### Public Installation
+
 ```bash
 # Install
 pip install rethink-mesh
@@ -66,11 +81,13 @@ mesh doctor
 
 ## Configuration
 
-Mesh reads configuration from environment variables. Copy the example file and add your credentials:
+Mesh reads configuration from environment variables.
 
-```bash
-cp .env.example .env
-```
+> **Workspace:** Secrets are managed in [Infisical](https://app.infisical.com).
+> Run all commands via `infisical run --` from the workspace root.
+> See workspace [`SERVICES.md`](../../SERVICES.md).
+
+For standalone/public use (no Infisical), set environment variables in your shell or a local `.env` file.
 
 ### Required Variables
 
@@ -88,7 +105,7 @@ AWS_ACCESS_KEY_ID=AKIA...
 AWS_SECRET_ACCESS_KEY=wJalr...
 ```
 
-See `.env.example` for the full list of supported providers.
+See [`SECRETS-PROTOCOL.md`](../../SECRETS-PROTOCOL.md) for the workspace secret management protocol and canonical env var names.
 
 ---
 

@@ -21,8 +21,10 @@ Design decisions:
 from __future__ import annotations
 
 import importlib.resources
+import json
 import os
 import re
+import urllib.request
 from typing import Optional
 
 import yaml
@@ -85,6 +87,9 @@ def generate_cloud_init(
     daemon_config: Optional[str] = None,
     ssh_authorized_keys: Optional[list[str]] = None,
     validate: bool = True,
+    mesh_version: str = "latest",
+    bootstrap_expect: int = 1,
+    has_gpu: bool = False,
 ) -> str:
     """Build a cloud-init YAML string for a VM.
 
@@ -99,10 +104,17 @@ def generate_cloud_init(
         ssh_authorized_keys: List of SSH public key strings to inject.
                             Nothing is injected if omitted or empty.
         validate:           If True, raise if any {{ VAR }} remains unreplaced.
+        mesh_version:       Mesh release version to install (e.g. "1.0.0").
+                            Defaults to "latest" which resolves from GitHub API.
+        bootstrap_expect:   Expected number of Nomad server nodes for raft quorum.
+                            Defaults to 1 (single-server cluster).
+        has_gpu:            Whether to include NVIDIA GPU plugin configuration.
+                            Defaults to False.
 
     Returns:
         A "#cloud-config\\n..." YAML string ready for use as VM userdata.
     """
+    resolved_version = _resolve_mesh_version(mesh_version)
     enable_caddy = True  # always — even lite tier runs Caddy for HTTPS
     enable_consul = cluster_tier == "standard"
     enable_tailscale = cluster_tier == "standard"
@@ -159,15 +171,42 @@ def generate_cloud_init(
     }
 
     # Bundle tier-appropriate modular scripts
+    # 07-configure-nomad.sh is a Jinja2 template — render it with provision-time values
+    # All other scripts are static files bundled verbatim
     for script_name in _TIER_SCRIPTS.get(cluster_tier, _TIER_SCRIPTS["standard"]):
-        script_path = os.path.join(_SCRIPTS_DIR, script_name)
-        if os.path.exists(script_path):
-            with open(script_path) as f:
-                cloud_config["write_files"].append({
-                    "path": f"/opt/ops-platform/scripts/{script_name}",
-                    "permissions": "0755",
-                    "content": f.read(),
-                })
+        if script_name == "07-configure-nomad.sh":
+            nomad_env = Environment(
+                loader=FileSystemLoader(_SCRIPTS_DIR),
+                undefined=StrictUndefined if validate else __import__("jinja2").Undefined,
+                autoescape=False,
+            )
+            nomad_template = nomad_env.get_template("07-configure-nomad.sh.j2")
+            rendered_nomad = nomad_template.render(
+                role=role,
+                has_gpu=has_gpu,
+                bootstrap_expect=bootstrap_expect,
+                cluster_tier=cluster_tier,
+            )
+            if validate:
+                leftover = _UNREPLACED_VAR.findall(rendered_nomad)
+                if leftover:
+                    raise ValueError(
+                        f"Unreplaced template variables in 07-configure-nomad.sh.j2: {list(set(leftover))}"
+                    )
+            cloud_config["write_files"].append({
+                "path": f"/opt/ops-platform/scripts/07-configure-nomad.sh",
+                "permissions": "0755",
+                "content": rendered_nomad,
+            })
+        else:
+            script_path = os.path.join(_SCRIPTS_DIR, script_name)
+            if os.path.exists(script_path):
+                with open(script_path) as f:
+                    cloud_config["write_files"].append({
+                        "path": f"/opt/ops-platform/scripts/{script_name}",
+                        "permissions": "0755",
+                        "content": f.read(),
+                    })
 
     # Daemon config injection (leader only, plain text pass-through)
     if daemon_config:
@@ -195,7 +234,7 @@ def generate_cloud_init(
                 "content": install_sh_content,
             })
             cloud_config["runcmd"] += [
-                "MESH_SKIP_INIT=1 MESH_VERSION=v0.1.1 bash /tmp/install-mesh.sh",
+                f"MESH_SKIP_INIT=1 MESH_VERSION={resolved_version} bash /tmp/install-mesh.sh",
                 # Ensure ~/.mesh/ and sub-dirs exist (store + plugin dir needed at daemon start)
                 "mkdir -p /root/.mesh/plugins /root/.mesh/agents",
                 # Try daemon directly for 2s to capture any startup error
@@ -295,6 +334,30 @@ class TemplateValidationError(ValueError):
     def __init__(self, message: str, unreplaced_variables: list[str]):
         self.unreplaced_variables = unreplaced_variables
         super().__init__(f"Template validation failed. {message} Unreplaced: {', '.join(unreplaced_variables)}")
+
+
+def _resolve_mesh_version(version: str) -> str:
+    """Resolve mesh version for install.sh.
+
+    - If version is not "latest", return it as-is.
+    - If "latest", query GitHub API for the newest release tag.
+    - On any failure, fall back to "latest" (install.sh will also resolve it).
+    """
+    if version != "latest":
+        return version
+    try:
+        req = urllib.request.Request(
+            "https://api.github.com/repos/rethink-paradigms/mesh/releases/latest",
+            headers={"Accept": "application/vnd.github+json", "User-Agent": "mesh-provision"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            tag = data.get("tag_name", "")
+            if tag:
+                return tag
+    except Exception:
+        pass
+    return "latest"
 
 
 def _get_jinja2_env(strict: bool = True):

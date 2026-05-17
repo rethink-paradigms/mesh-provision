@@ -34,7 +34,7 @@ bash scripts/03-install-hashicorp.sh
 if [ "$CLUSTER_TIER" != "lite" ]; then
 	bash scripts/06-configure-consul.sh "$LEADER_IP" "$ROLE"
 fi
-bash scripts/07-configure-nomad.sh "$ROLE" "$HAS_GPU"
+bash scripts/07-configure-nomad.sh
 
 # GPU verification (only if HAS_GPU == "true")
 # NOTE: GPU verification script (08) is not yet implemented.

@@ -10,6 +10,16 @@ surface.
 
 Requires Python 3.11+.
 
+> **Workspace:** This repo is part of the Mesh workspace.
+> From workspace root:
+> ```bash
+> infisical run -- pip install -e code/mesh-provision/[dev]
+> infisical run -- bash code/mesh-provision/run_tests.sh
+> ```
+> See [`SERVICES.md`](../../SERVICES.md).
+
+For standalone development:
+
 ```bash
 git clone https://github.com/rethink-paradigms/mesh.git
 cd mesh

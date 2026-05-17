@@ -1,0 +1,42 @@
+#!/bin/bash
+set -e
+echo ">>> [07] Configuring Nomad..."
+mkdir -p /etc/nomad.d
+mkdir -p /opt/nomad
+
+cat <<NOMAD_EOF > /etc/nomad.d/nomad.hcl
+datacenter = "dc1"
+data_dir = "/opt/nomad"
+bind_addr = "0.0.0.0"
+
+client {
+  enabled = true
+  meta {
+    role = "{{ role }}"
+  }
+}
+{% if has_gpu %}
+
+client {
+  options {
+    "driver.allowlist" = "docker,nvidia"
+  }
+}
+
+plugin "nvidia" {
+  config {
+    fingerprint_period = "30s"
+  }
+}
+{% endif %}
+{% if role == "server" %}
+server {
+  enabled = true
+  bootstrap_expect = {{ bootstrap_expect }}
+}
+
+ui {
+  enabled = true
+}
+{% endif %}
+NOMAD_EOF

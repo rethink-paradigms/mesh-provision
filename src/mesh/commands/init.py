@@ -51,6 +51,7 @@ def handle_init(params: dict[str, Any]) -> None:
     worker_size  = params.get("worker_size", "s-1vcpu-1gb")
     daemon_config: Optional[str] = params.get("daemon_config") or None
     tailscale_key: str = params.get("tailscale_key", "")
+    bootstrap_expect: int = int(params.get("bootstrap_expect", 1))
 
     # Validate provider
     if not is_provider_usable(provider):
@@ -71,6 +72,7 @@ def handle_init(params: dict[str, Any]) -> None:
             tailscale_key=tailscale_key,
             leader_ip="",          # leader doesn't need to know its own IP at boot
             daemon_config=daemon_config,
+            bootstrap_expect=bootstrap_expect,
         )
     except Exception as exc:
         print_json_error(
@@ -87,6 +89,7 @@ def handle_init(params: dict[str, Any]) -> None:
             tailscale_key=tailscale_key,
             leader_ip=leader_ip,
             daemon_config=None,    # daemon runs on leader only
+            bootstrap_expect=bootstrap_expect,
         )
 
     # Provision

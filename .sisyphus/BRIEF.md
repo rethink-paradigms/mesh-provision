@@ -10,7 +10,7 @@
 
 ## Active Decisions
 
-- [2026-05-07-003] Environment Variable & Secrets Management System — all env vars from root .env via direnv
+- [2026-05-07-003] Environment Variable & Secrets Management System — all env vars from `.workspace-secrets.yml` synced to Infisical
 - [2026-05-06-002] Product Launch Dependency Graph — Wave 1 contracts
 - [2026-05-06-001] Agentic Management Paradigm — contract-based governance
 
@@ -20,7 +20,7 @@
 - CLI via Typer + Questionary (interactive) or `--output json` (machine)
 - Existing CI: ruff lint, pytest (excludes e2e/cloud tests)
 - Reusable GitHub Actions for Docker build + Nomad deploy
-- **Environment**: All env vars from `os.environ` (loaded by direnv from root `.env`). NEVER read `.env` directly. Scoped DO token required (droplet:create/read/delete, image:read, ssh_key:read only). Use `src/mesh/infrastructure/config/env.py` as the canonical registry.
+- **Environment**: All env vars from `os.environ` (injected via Infisical from `.workspace-secrets.yml`). NEVER read `.env` directly. Scoped DO token required (droplet:create/read/delete, image:read, ssh_key:read only). Use `src/mesh/infrastructure/config/env.py` as the canonical registry.
 
 ## Known Constraints
 

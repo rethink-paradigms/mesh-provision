@@ -2,6 +2,15 @@
 
 Complete reference for all `mesh` CLI commands.
 
+> **⚠️ Production Warning:** In production, mesh-provision is ONLY invoked by
+> agent-bodies as a subprocess via the stdin JSON protocol. Direct CLI use
+> bypasses Auth0 auth, database tracking, and audit logging. See
+> [`MANIFEST.yaml`](../../MANIFEST.yaml) and
+> [`contracts/mesh-provision.interface.md`](../../../contracts/mesh-provision.interface.md).
+>
+> **Workspace:** Use `infisical run -- python -m mesh ...` from workspace root.
+> See [`SERVICES.md`](../../SERVICES.md).
+
 ---
 
 ## `mesh init`

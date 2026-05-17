@@ -13,8 +13,8 @@
 - [x] F3: Real Manual QA — APPROVE (6/6 scenarios, evidence saved)
 - [x] F4: Scope Fidelity Check — APPROVE (7/7 compliant, 0 creep, 0 contamination)
 ## Blocked:
-- [ ] T8: Real DO E2E — unblocked but pending `daemon_config` integration. Scoped DO token available via root `.env` + direnv (Decision 2026-05-07-003). CLI invocation now requires the `daemon_config` stdin parameter per `mesh-provision-protocol.md`. Ready to run: `mesh init --output json --api-key $DIGITALOCEAN_API_TOKEN --name test-cluster --region nyc3 --daemon-config '{...}'`
-**Status updated by Mnemosyne (2026-05-07): DO token blocker resolved — scoped token available via root .env + direnv (Decision 003).**
+- [ ] T8: Real DO E2E — unblocked but pending `daemon_config` integration. Scoped DO token available via Infisical from `.workspace-secrets.yml` (Decision 2026-05-07-003). CLI invocation now requires the `daemon_config` stdin parameter per `mesh-provision-protocol.md`. Ready to run: `mesh init --output json --api-key $DIGITALOCEAN_API_TOKEN --name test-cluster --region nyc3 --daemon-config '{...}'`
+**Status updated by Mnemosyne (2026-05-07): DO token blocker resolved — scoped token available via Infisical from `.workspace-secrets.yml` (Decision 003).**
 **Status updated (2026-05-10): T8 now also depends on `daemon_config` parameter being wired. See `contracts/mesh-provision-protocol.md` for the full stdin protocol schema. The old GitHub Releases binary download pattern has been replaced with cloud-init `write_files` + `runcmd` driven by `daemon_config`.**
 
 ## Summary:

@@ -69,6 +69,7 @@ def test_boot_script_files_exist():
     Test_BootScript_Files_Exist: Basic check that modular scripts exist.
     Note: GPU scripts (04, 05, 08) and spot script (09) were planned but not yet
     implemented; numbering skips them (01, 02, 03, 06, 07, 10).
+    07-configure-nomad.sh is now a Jinja2 template (.j2) rendered at provision time.
     """
     feature_dir = os.path.dirname(__file__)
     scripts_dir = os.path.join(feature_dir, "scripts")
@@ -79,7 +80,7 @@ def test_boot_script_files_exist():
         "02-install-tailscale.sh",
         "03-install-hashicorp.sh",
         "06-configure-consul.sh",
-        "07-configure-nomad.sh",
+        "07-configure-nomad.sh.j2",  # Jinja2 template, rendered at provision time
         "10-install-caddy.sh",
     ]
 
@@ -203,3 +204,88 @@ def test_existing_tests_still_pass():
     assert 'ROLE="server"' in rendered
     assert 'CLUSTER_TIER="standard"' in rendered
     assert 'ENABLE_CADDY="true"' in rendered
+
+
+def test_nomad_template_renders_bootstrap_expect():
+    """
+    Test_NomadTemplate_RendersBootstrapExpect: Verify rendered nomad script
+    contains the correct bootstrap_expect value.
+    """
+    rendered = generate_cloud_init(
+        cluster_tier="standard",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+        bootstrap_expect=3,
+    )
+    assert "bootstrap_expect = 3" in rendered
+
+
+def test_nomad_template_default_bootstrap_expect_is_one():
+    """
+    Test_NomadTemplate_DefaultBootstrapExpectIsOne: Verify default is 1.
+    """
+    rendered = generate_cloud_init(
+        cluster_tier="standard",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+    )
+    assert "bootstrap_expect = 1" in rendered
+
+
+def test_nomad_template_server_role_includes_server_block():
+    """
+    Test_NomadTemplate_ServerRoleIncludesServerBlock: Verify server nodes
+    get the server stanza in their Nomad config.
+    """
+    rendered = generate_cloud_init(
+        cluster_tier="standard",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+    )
+    assert "server {" in rendered
+    assert 'role = "server"' in rendered
+
+
+def test_nomad_template_client_role_no_server_block():
+    """
+    Test_NomadTemplate_ClientRoleNoServerBlock: Verify worker nodes
+    do NOT get the server stanza.
+    """
+    rendered = generate_cloud_init(
+        cluster_tier="standard",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="client",
+    )
+    assert "server {" not in rendered
+    assert 'role = "client"' in rendered
+
+
+def test_nomad_template_gpu_enables_nvidia_config():
+    """
+    Test_NomadTemplate_GpuEnablesNvidiaConfig: Verify has_gpu=True includes
+    NVIDIA plugin configuration.
+    """
+    rendered = generate_cloud_init(
+        cluster_tier="standard",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+        has_gpu=True,
+    )
+    assert "nvidia" in rendered
+    assert "driver.allowlist" in rendered
+
+
+def test_nomad_template_no_gpu_omits_nvidia():
+    """
+    Test_NomadTemplate_NoGpuOmitsNvidia: Verify has_gpu=False (default)
+    does NOT include NVIDIA plugin config in the rendered Nomad script.
+    """
+    rendered = generate_cloud_init(
+        cluster_tier="standard",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+    )
+    # Extract the 07-configure-nomad.sh content from write_files
+    import yaml
+    config = yaml.safe_load(rendered.replace("#cloud-config\n", ""))
+    nomad_script = None
+    for item in config.get("write_files", []):
+        if "07-configure-nomad.sh" in item.get("path", ""):
+            nomad_script = item.get("content", "")
+            break
+    assert nomad_script is not None, "07-configure-nomad.sh not found in write_files"
+    assert "nvidia" not in nomad_script.lower(), "NVIDIA config should not appear when has_gpu=False"

@@ -1,8 +1,7 @@
 """Tests for daemon_config parameter in boot scripts and cloud-init YAML."""
 
-import base64
 import yaml
-from mesh.provisioning.boot import generate_cloud_init, generate_cloud_init
+from mesh.provisioning.boot import generate_cloud_init, _resolve_mesh_version
 
 
 MINIMAL_ARGS = {
@@ -11,11 +10,18 @@ MINIMAL_ARGS = {
     "role": "server",
 }
 
-FLAT_YAML = "gateway_url: https://api.example.com\nheartbeat_interval_seconds: 30\ncluster_id: abc123\n"
-SAMPLE_DAEMON_CONFIG = base64.b64encode(FLAT_YAML.encode()).decode()
+SAMPLE_DAEMON_CONFIG = (
+    "gateway_url: https://api.example.com\n"
+    "heartbeat_interval_seconds: 30\n"
+    "cluster_id: abc123\n"
+)
 
-WRAPPED_YAML = "daemon:\n  cluster_id: abc123\n  gateway_url: https://api.example.com\n  heartbeat_interval_seconds: 30\n"
-SAMPLE_DAEMON_CONFIG_WRAPPED = base64.b64encode(WRAPPED_YAML.encode()).decode()
+SAMPLE_DAEMON_CONFIG_WRAPPED = (
+    "daemon:\n"
+    "  cluster_id: abc123\n"
+    "  gateway_url: https://api.example.com\n"
+    "  heartbeat_interval_seconds: 30\n"
+)
 
 
 def test_daemon_config_in_cloud_init_yaml():
@@ -120,9 +126,9 @@ def test_cloud_init_has_daemon_install_runcmd():
     )
     config = yaml.safe_load(y.replace("#cloud-config\n", ""))
     runcmds = config.get("runcmd", [])
-    install_cmds = [c for c in runcmds if "install.sh" in str(c)]
+    install_cmds = [c for c in runcmds if "install-mesh.sh" in str(c)]
     assert len(install_cmds) >= 1
-    assert "MESH_DAEMON_INSTALL_URL" in str(install_cmds[0])
+    assert "MESH_SKIP_INIT" in str(install_cmds[0])
 
 
 def test_daemon_config_in_shell_script_no_daemon_config_var():
@@ -159,3 +165,48 @@ def test_ssh_authorized_keys_none_backward_compat():
     )
     config = yaml.safe_load(y.replace("#cloud-config\n", ""))
     assert "ssh_authorized_keys" not in config
+
+
+def test_mesh_version_pinned_in_runcmd():
+    """Verify pinned mesh_version appears in the install runcmd."""
+    y = generate_cloud_init(
+        cluster_tier="standard",
+        **MINIMAL_ARGS,
+        daemon_config=SAMPLE_DAEMON_CONFIG,
+        mesh_version="1.0.0",
+    )
+    config = yaml.safe_load(y.replace("#cloud-config\n", ""))
+    runcmds = config.get("runcmd", [])
+    install_cmds = [c for c in runcmds if "install-mesh.sh" in str(c)]
+    assert len(install_cmds) == 1
+    assert "MESH_VERSION=1.0.0" in install_cmds[0]
+
+
+def test_mesh_version_latest_resolves():
+    """Verify 'latest' mesh_version resolves to a real semver in runcmd."""
+    y = generate_cloud_init(
+        cluster_tier="standard",
+        **MINIMAL_ARGS,
+        daemon_config=SAMPLE_DAEMON_CONFIG,
+        mesh_version="latest",
+    )
+    config = yaml.safe_load(y.replace("#cloud-config\n", ""))
+    runcmds = config.get("runcmd", [])
+    install_cmds = [c for c in runcmds if "install-mesh.sh" in str(c)]
+    assert len(install_cmds) == 1
+    # Should resolve to something like 1.0.0 (not literally "latest")
+    assert "MESH_VERSION=latest" not in install_cmds[0]
+    assert "MESH_VERSION=" in install_cmds[0]
+
+
+def test_resolve_mesh_version_passthrough():
+    """_resolve_mesh_version returns pinned versions unchanged."""
+    assert _resolve_mesh_version("1.0.0") == "1.0.0"
+    assert _resolve_mesh_version("2.1.0-rc1") == "2.1.0-rc1"
+
+
+def test_resolve_mesh_version_latest():
+    """_resolve_mesh_version('latest') returns a non-empty tag from GitHub."""
+    tag = _resolve_mesh_version("latest")
+    assert tag != ""
+    assert tag != "latest"  # Should have resolved to actual release
