@@ -195,7 +195,7 @@ def generate_cloud_init(
                 "content": install_sh_content,
             })
             cloud_config["runcmd"] += [
-                "MESH_SKIP_INIT=1 MESH_VERSION=v0.1.0 bash /tmp/install-mesh.sh",
+                "MESH_SKIP_INIT=1 MESH_VERSION=v0.1.1 bash /tmp/install-mesh.sh",
                 # Ensure ~/.mesh/ and sub-dirs exist (store + plugin dir needed at daemon start)
                 "mkdir -p /root/.mesh/plugins /root/.mesh/agents",
                 # Try daemon directly for 2s to capture any startup error
