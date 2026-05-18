@@ -64,6 +64,27 @@ def test_boot_script_rendering_cloud_init():
     assert f'ROLE="{context["ROLE"]}"' in startup_script_content
 
 
+def test_journald_persistence_in_cloud_init():
+    """Test_JournaldPersistence: Verify cloud-init creates /var/log/journal for persistent logs."""
+    rendered = generate_cloud_init(
+        cluster_tier="cluster",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+    )
+    assert "mkdir -p /var/log/journal" in rendered
+    assert "systemd-tmpfiles --create --prefix /var/log/journal" in rendered
+
+
+def test_journald_persistence_before_startup_script():
+    """Test_JournaldPersistence_Ordering: Verify journald setup runs before startup.sh."""
+    rendered = generate_cloud_init(
+        cluster_tier="cluster",
+        tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server",
+    )
+    journald_pos = rendered.index("mkdir -p /var/log/journal")
+    startup_pos = rendered.index("cd /opt/ops-platform && ./startup.sh")
+    assert journald_pos < startup_pos, "journald persistence must run before startup.sh"
+
+
 def test_boot_script_files_exist():
     """
     Test_BootScript_Files_Exist: Basic check that modular scripts exist.

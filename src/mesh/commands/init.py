@@ -62,7 +62,7 @@ def handle_init(params: dict[str, Any]) -> None:
             available_providers=sorted(USABLE_PROVIDERS),
         )
 
-    cluster_tier = "lite" if workers == 0 else "standard"
+    cluster_tier = "solo" if workers == 0 else "cluster"
 
     # Build leader boot script
     try:

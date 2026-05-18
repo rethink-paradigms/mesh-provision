@@ -350,8 +350,9 @@ class TestScriptFile:
         assert "nomad.service" in content
         assert "systemctl daemon-reload" in content
 
-    def test_script_has_caddy_host_volume(self):
+    def test_script_no_caddy_host_volume_in_nomad_config(self):
+        """Nomad v1.9.3 does not support host_volume in agent config.
+        host_volume was removed from agent config; it belongs in job specs if needed."""
         with open(SCRIPT_PATH) as f:
             content = f.read()
-        assert "caddy-data" in content
-        assert "host_volume" in content
+        assert 'host_volume "caddy-data"' not in content

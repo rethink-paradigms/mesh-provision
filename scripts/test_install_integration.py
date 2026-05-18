@@ -67,11 +67,6 @@ class TestServerConfigGeneration:
         """Nomad server config must have bootstrap_expect = 1."""
         assert "bootstrap_expect = 1" in script_content
 
-    def test_server_nomad_has_caddy_host_volume(self, script_content):
-        """Server Nomad config must include Caddy host_volume."""
-        assert 'host_volume "caddy-data"' in script_content
-        assert 'path = "/opt/caddy/data"' in script_content
-
     def test_server_consul_has_server_true(self, script_content):
         """Consul server config must have server = true."""
         consul_server_body = extract_function_body(
@@ -358,10 +353,6 @@ class TestIdempotency:
     def test_dpkg_package_checks(self, script_content):
         """install_deps uses dpkg -s to check if packages are installed."""
         assert "dpkg -s" in script_content
-
-    def test_caddy_volume_grep_check(self, script_content):
-        """Caddy host_volume uses grep before appending to nomad.hcl."""
-        assert 'grep -q "caddy-data" /etc/nomad.d/nomad.hcl' in script_content
 
     def test_caddy_command_v_check(self, script_content):
         """Script checks if caddy is already installed."""

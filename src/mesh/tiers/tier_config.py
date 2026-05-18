@@ -3,15 +3,14 @@ from enum import Enum
 
 
 class ClusterTier(Enum):
-    LITE = "lite"
-    STANDARD = "standard"
+    SOLO = "solo"
+    CLUSTER = "cluster"
 
 
 @dataclass
 class TierConfig:
-    tier: ClusterTier = ClusterTier.STANDARD
+    tier: ClusterTier = ClusterTier.CLUSTER
     enable_tailscale: bool = True
-    enable_consul: bool = True
     enable_telegraf: bool = False
     enable_caddy: bool = False
     enable_spot_handler: bool = False
@@ -19,17 +18,15 @@ class TierConfig:
     @classmethod
     def from_tier(cls, tier: ClusterTier) -> "TierConfig":
         configs = {
-            ClusterTier.LITE: cls(
+            ClusterTier.SOLO: cls(
                 tier=tier,
-                enable_tailscale=False,
-                enable_consul=False,
+                enable_tailscale=True,
                 enable_telegraf=False,
                 enable_caddy=True,
             ),
-            ClusterTier.STANDARD: cls(
+            ClusterTier.CLUSTER: cls(
                 tier=tier,
                 enable_tailscale=True,
-                enable_consul=True,
                 enable_telegraf=False,
                 enable_caddy=True,
             ),

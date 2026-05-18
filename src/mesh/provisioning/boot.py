@@ -81,14 +81,56 @@ _TIER_SCRIPTS: dict[str, list[str]] = {
 
 _SCRIPTS_DIR = os.path.join(os.path.dirname(__file__), "scripts")
 _BOOT_SH = os.path.join(os.path.dirname(__file__), "boot.sh")
-_INSTALL_SH = os.path.normpath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "mesh", "scripts", "install.sh")
-)
 
-# Path to canonical daemon config schema (workspace root → contracts/)
-# boot.py is at code/mesh-provision/src/mesh/provisioning/ ; 5x ".." reaches workspace root
-_SCHEMA_PATH = os.path.normpath(
-    os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "..", "contracts", "mesh-daemon-config.schema.json")
+# ---------------------------------------------------------------------------
+# Workspace root discovery
+#
+# boot.py lives at code/mesh-provision/src/mesh/provisioning/ but references
+# files outside the Python package (contracts/, code/mesh/scripts/, scripts/goss/).
+# Rather than hardcoding fragile relative paths, we discover the workspace root
+# by looking for a stable marker directory (contracts/) and resolve from there.
+#
+# Override with MESH_WORKSPACE_ROOT env var for non-standard layouts or
+# packaged deployments where the parent git tree isn't present.
+# ---------------------------------------------------------------------------
+
+def _find_workspace_root() -> Optional[str]:
+    """Walk up from this file until we find the workspace root (marked by contracts/).
+
+    Returns absolute path to workspace root, or None if not found
+    (consumers check existence before use, so this is non-fatal).
+
+    Override with MESH_WORKSPACE_ROOT env var for non-standard layouts or
+    packaged deployments where the parent git tree isn't available.
+    """
+    env_root = os.environ.get("MESH_WORKSPACE_ROOT")
+    if env_root:
+        env_path = os.path.abspath(env_root)
+        if os.path.isdir(os.path.join(env_path, "contracts")):
+            return env_path
+
+    dir_ = os.path.dirname(os.path.abspath(__file__))
+    for _ in range(10):  # safety limit
+        if os.path.isdir(os.path.join(dir_, "contracts")):
+            return dir_
+        parent = os.path.dirname(dir_)
+        if parent == dir_:
+            break
+        dir_ = parent
+
+    return None
+
+
+_WORKSPACE_ROOT: Optional[str] = _find_workspace_root()
+
+# Resolve paths relative to workspace root. If root is unknown (None),
+# resolve to a non-existent path so consumers with os.path.exists() guards
+# gracefully skip rather than crash with TypeError.
+_SCHEMA_PATH = os.path.join(
+    _WORKSPACE_ROOT or "", "contracts", "mesh-daemon-config.schema.json"
+)
+_INSTALL_SH = os.path.join(
+    _WORKSPACE_ROOT or "", "code", "mesh", "scripts", "install.sh"
 )
 
 
@@ -225,7 +267,10 @@ def generate_cloud_init(
                 "content": rendered_script,
             }
         ],
-        "runcmd": ["cd /opt/ops-platform && ./startup.sh"],
+        "runcmd": [
+            "mkdir -p /var/log/journal && systemd-tmpfiles --create --prefix /var/log/journal",
+            "cd /opt/ops-platform && ./startup.sh",
+        ],
     }
 
     # Bundle tier-appropriate modular scripts
@@ -447,12 +492,10 @@ def _validated_ssh_keys(keys: list[str]) -> list[str]:
 def _load_goss_spec() -> Optional[str]:
     """Load goss spec from workspace scripts/goss/ if available.
 
-    Uses a search relative to this file's known location in the repo.
     Returns None silently if not found -- goss is optional.
     """
-    # Walk up to find workspace root (mesh-provision is 3 levels above provisioning/)
-    candidate = os.path.normpath(
-        os.path.join(os.path.dirname(__file__), "..", "..", "..", "scripts", "goss", "mesh-daemon-goss.yaml")
+    candidate = os.path.join(
+        _WORKSPACE_ROOT or "", "scripts", "goss", "mesh-daemon-goss.yaml"
     )
     if os.path.exists(candidate):
         with open(candidate) as f:

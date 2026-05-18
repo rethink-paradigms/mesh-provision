@@ -1,7 +1,8 @@
 """Tests for daemon_config parameter in boot scripts and cloud-init YAML."""
 
+import pytest
 import yaml
-from mesh.provisioning.boot import generate_cloud_init, _resolve_mesh_version
+from mesh.provisioning.boot import generate_cloud_init, _resolve_mesh_version, _validate_daemon_config
 
 
 MINIMAL_ARGS = {
@@ -10,7 +11,29 @@ MINIMAL_ARGS = {
     "role": "server",
 }
 
+# Schema-valid minimal daemon config (aligned with contracts/mesh-daemon-config.schema.json)
 SAMPLE_DAEMON_CONFIG = (
+    "daemon:\n"
+    "  cluster_id: abc123\n"
+    "  gateway_url: https://api.example.com\n"
+    "  heartbeat_interval_seconds: 30\n"
+    "  auth_mode: token\n"
+    "  auth_token: test-token\n"
+    "  auth0_domain: test.eu.auth0.com\n"
+    "  auth0_audience: https://api.example.com\n"
+    "  listen_addr: 0.0.0.0:8080\n"
+    "store:\n"
+    "  path: /root/.mesh/state.db\n"
+    "plugin:\n"
+    "  dir: /root/.mesh/plugins\n"
+    "ingress:\n"
+    "  adapter: caddy\n"
+    "limits:\n"
+    "  max_bodies: 10\n"
+    "  max_snapshots: 5\n"
+)
+
+SAMPLE_DAEMON_CONFIG_UNWRAPPED = (
     "gateway_url: https://api.example.com\n"
     "heartbeat_interval_seconds: 30\n"
     "cluster_id: abc123\n"
@@ -26,7 +49,7 @@ SAMPLE_DAEMON_CONFIG_WRAPPED = (
 
 def test_daemon_config_in_cloud_init_yaml():
     """Verify generate_cloud_init includes /etc/mesh/config.yaml write_files entry."""
-    y = generate_cloud_init(cluster_tier="standard", 
+    y = generate_cloud_init(cluster_tier="cluster", 
         **MINIMAL_ARGS,
         daemon_config=SAMPLE_DAEMON_CONFIG,
     )
@@ -40,8 +63,8 @@ def test_daemon_config_in_cloud_init_yaml():
 
 def test_daemon_config_written_as_plain_text():
     """daemon_config is written verbatim (plain text, no base64, no transformation)."""
-    plain_config = "gateway_url: https://api.example.com\ncluster_id: abc123\n"
-    y = generate_cloud_init(cluster_tier="standard",
+    plain_config = SAMPLE_DAEMON_CONFIG
+    y = generate_cloud_init(cluster_tier="cluster",
         **MINIMAL_ARGS,
         daemon_config=plain_config,
     )
@@ -58,9 +81,10 @@ def test_daemon_config_written_as_plain_text():
 
 
 def test_daemon_config_passthrough_no_wrapping():
-    """daemon_config is passed through verbatim — no daemon: key wrapper added."""
-    plain_config = "gateway_url: https://api.example.com\ncluster_id: abc123\n"
-    y = generate_cloud_init(cluster_tier="standard",
+    """daemon_config is passed through verbatim — no extra wrapper added by boot.py."""
+    # Use a config that already has the daemon: wrapper; boot.py must not double-wrap
+    plain_config = SAMPLE_DAEMON_CONFIG
+    y = generate_cloud_init(cluster_tier="cluster",
         **MINIMAL_ARGS,
         daemon_config=plain_config,
     )
@@ -69,14 +93,14 @@ def test_daemon_config_passthrough_no_wrapping():
         f for f in config.get("write_files", []) if f["path"] == "/etc/mesh/config.yaml"
     ]
     written_content = config_files[0]["content"]
-    # Content should be exactly the plain_config — no wrapping
+    # Content should be exactly the plain_config
     assert written_content.strip() == plain_config.strip()
 
 
 def test_daemon_config_with_daemon_key_passes_through():
     """If input already has daemon: key, it is written as-is."""
-    wrapped = "daemon:\n  cluster_id: abc123\n  gateway_url: https://api.example.com\n"
-    y = generate_cloud_init(cluster_tier="standard",
+    wrapped = SAMPLE_DAEMON_CONFIG
+    y = generate_cloud_init(cluster_tier="cluster",
         **MINIMAL_ARGS,
         daemon_config=wrapped,
     )
@@ -93,7 +117,7 @@ def test_daemon_config_with_daemon_key_passes_through():
 
 def test_empty_daemon_config_skips():
     """Verify empty config produces no config.yaml or daemon install in cloud-init."""
-    y = generate_cloud_init(cluster_tier="standard", 
+    y = generate_cloud_init(cluster_tier="cluster", 
         **MINIMAL_ARGS,
         daemon_config="",
     )
@@ -102,12 +126,12 @@ def test_empty_daemon_config_skips():
         f for f in config.get("write_files", []) if f["path"] == "/etc/mesh/config.yaml"
     ]
     assert len(config_files) == 0
-    assert len(config.get("runcmd", [])) == 2
+    assert len(config.get("runcmd", [])) == 3
 
 
 def test_daemon_config_none_backward_compat():
     """Verify daemon_config=None skips config.yaml in cloud-init."""
-    y = generate_cloud_init(cluster_tier="standard", 
+    y = generate_cloud_init(cluster_tier="cluster", 
         **MINIMAL_ARGS,
         daemon_config=None,
     )
@@ -120,7 +144,7 @@ def test_daemon_config_none_backward_compat():
 
 def test_cloud_init_has_daemon_install_runcmd():
     """Verify cloud-init includes daemon install runcmd when daemon_config provided."""
-    y = generate_cloud_init(cluster_tier="standard", 
+    y = generate_cloud_init(cluster_tier="cluster", 
         **MINIMAL_ARGS,
         daemon_config=SAMPLE_DAEMON_CONFIG,
     )
@@ -133,7 +157,7 @@ def test_cloud_init_has_daemon_install_runcmd():
 
 def test_daemon_config_in_shell_script_no_daemon_config_var():
     """Shell script template does not handle daemon_config — cloud-init write_files does."""
-    rendered = generate_cloud_init(cluster_tier="standard", 
+    rendered = generate_cloud_init(cluster_tier="cluster", 
         **MINIMAL_ARGS,
         daemon_config=SAMPLE_DAEMON_CONFIG,
     )
@@ -142,7 +166,7 @@ def test_daemon_config_in_shell_script_no_daemon_config_var():
 
 def test_ssh_authorized_keys_in_cloud_init():
     """Verify ssh_authorized_keys parameter adds keys to cloud-init YAML."""
-    y = generate_cloud_init(cluster_tier="standard", 
+    y = generate_cloud_init(cluster_tier="cluster", 
         **MINIMAL_ARGS,
         ssh_authorized_keys=["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKtest test-key"],
     )
@@ -156,10 +180,9 @@ def test_ssh_authorized_keys_none_backward_compat():
     import pathlib
     key_file = pathlib.Path.home() / ".ssh" / "mesh_test_key.pub"
     if key_file.exists():
-        import pytest
         pytest.skip("mesh_test_key.pub exists — backward compat test requires clean state")
 
-    y = generate_cloud_init(cluster_tier="standard", 
+    y = generate_cloud_init(cluster_tier="cluster", 
         **MINIMAL_ARGS,
         ssh_authorized_keys=None,
     )
@@ -170,7 +193,7 @@ def test_ssh_authorized_keys_none_backward_compat():
 def test_mesh_version_pinned_in_runcmd():
     """Verify pinned mesh_version appears in the install runcmd."""
     y = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         **MINIMAL_ARGS,
         daemon_config=SAMPLE_DAEMON_CONFIG,
         mesh_version="1.0.0",
@@ -185,7 +208,7 @@ def test_mesh_version_pinned_in_runcmd():
 def test_mesh_version_latest_resolves():
     """Verify 'latest' mesh_version resolves to a real semver in runcmd."""
     y = generate_cloud_init(
-        cluster_tier="standard",
+        cluster_tier="cluster",
         **MINIMAL_ARGS,
         daemon_config=SAMPLE_DAEMON_CONFIG,
         mesh_version="latest",
@@ -210,3 +233,81 @@ def test_resolve_mesh_version_latest():
     tag = _resolve_mesh_version("latest")
     assert tag != ""
     assert tag != "latest"  # Should have resolved to actual release
+
+
+# ─── Canonical schema validation (boundary guard) ───────────────────────────
+
+
+def test_validate_daemon_config_accepts_valid_config():
+    """Schema-valid config passes boundary validation."""
+    # Should not raise
+    _validate_daemon_config(SAMPLE_DAEMON_CONFIG)
+
+
+def test_validate_daemon_config_rejects_missing_daemon_wrapper():
+    """Config without top-level daemon: key fails schema validation."""
+    with pytest.raises(ValueError, match="daemon_config failed canonical schema validation"):
+        _validate_daemon_config(SAMPLE_DAEMON_CONFIG_UNWRAPPED)
+
+
+def test_validate_daemon_config_rejects_missing_auth_token():
+    """Config with auth_mode=token but no auth_token fails validation."""
+    bad_config = (
+        "daemon:\n"
+        "  cluster_id: abc123\n"
+        "  gateway_url: https://api.example.com\n"
+        "  auth_mode: token\n"
+        "ingress:\n"
+        "  adapter: caddy\n"
+    )
+    with pytest.raises(ValueError, match="daemon_config failed canonical schema validation"):
+        _validate_daemon_config(bad_config)
+
+
+def test_validate_daemon_config_rejects_jwt_without_domain():
+    """Config with auth_mode=jwt but no auth0_domain fails validation."""
+    bad_config = (
+        "daemon:\n"
+        "  cluster_id: abc123\n"
+        "  gateway_url: https://api.example.com\n"
+        "  auth_mode: jwt\n"
+        "  auth_token: tok\n"
+        "  auth0_audience: https://api.example.com\n"
+        "ingress:\n"
+        "  adapter: caddy\n"
+    )
+    with pytest.raises(ValueError, match="daemon_config failed canonical schema validation"):
+        _validate_daemon_config(bad_config)
+
+
+def test_validate_daemon_config_rejects_s3_without_bucket():
+    """Config with registry.type=s3 but no bucket fails validation."""
+    bad_config = (
+        "daemon:\n"
+        "  cluster_id: abc123\n"
+        "  gateway_url: https://api.example.com\n"
+        "  auth_mode: token\n"
+        "  auth_token: tok\n"
+        "registry:\n"
+        "  type: s3\n"
+        "ingress:\n"
+        "  adapter: caddy\n"
+    )
+    with pytest.raises(ValueError, match="daemon_config failed canonical schema validation"):
+        _validate_daemon_config(bad_config)
+
+
+def test_validate_daemon_config_rejects_invalid_yaml():
+    """Malformed YAML raises ValueError."""
+    with pytest.raises(ValueError, match="daemon_config is not valid YAML"):
+        _validate_daemon_config("daemon: [invalid yaml here")
+
+
+def test_generate_cloud_init_rejects_invalid_daemon_config():
+    """generate_cloud_init raises when given a schema-invalid daemon_config."""
+    with pytest.raises(ValueError, match="daemon_config failed canonical schema validation"):
+        generate_cloud_init(
+            cluster_tier="cluster",
+            **MINIMAL_ARGS,
+            daemon_config=SAMPLE_DAEMON_CONFIG_UNWRAPPED,
+        )

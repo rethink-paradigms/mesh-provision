@@ -6,9 +6,9 @@ Infrastructure provisioner for the Mesh daemon.
 [![Python](https://img.shields.io/pypi/pyversions/rethink-mesh)](https://pypi.org/project/rethink-mesh/)
 [![License](https://img.shields.io/pypi/l/rethink-mesh)](https://github.com/rethink-paradigms/mesh)
 
-**Provision cloud VMs, bootstrap Nomad/Consul/Docker/Tailscale/Caddy infrastructure stack, and inject Mesh daemon configuration for agent body orchestration.**
+**HTTP provisioning service for cloud VMs — creates/destroys clusters, bootstraps infrastructure, and injects mesh-daemon configuration.**
 
-Provision VMs across cloud providers, bootstrap a Nomad + Consul + Docker + Tailscale + Caddy stack, and get back cluster connection details. Thats the scope. The Mesh daemon (separate project) handles agent body scheduling, ingress routing, and the REST API.
+Runs as a FastAPI HTTP server on port 8100. Creates cloud VMs, bootstraps the infrastructure stack (Docker, Tailscale, Caddy, Nomad), and returns cluster connection details. The mesh-daemon (separate Go project) handles agent body lifecycle and the REST API.
 
 ---
 
@@ -19,10 +19,11 @@ Provision VMs across cloud providers, bootstrap a Nomad + Consul + Docker + Tail
 This repo is part of the Mesh workspace. From workspace root:
 
 ```bash
-make up                   # Start all services (includes agent-bodies)
+make up                   # Start all services (includes mesh-provision HTTP server)
+make up-mesh-provision    # Start mesh-provision only (background)
+
 # Or manually:
-cd ../.. && infisical run -- python -m mesh init --provider "Local (Multipass)" --workers 0
-cd ../.. && infisical run -- python -m mesh status
+cd code/mesh-provision && infisical run -- uvicorn mesh.http_server:app --host 127.0.0.1 --port 8100
 ```
 
 See [`SERVICES.md`](../../SERVICES.md) and [`services.json`](../../services.json).
@@ -32,27 +33,19 @@ See [`SERVICES.md`](../../SERVICES.md) and [`services.json`](../../services.json
 ```bash
 # Install
 pip install rethink-mesh
-
-# Initialize a cluster
-mesh init
-
-# Check status
-mesh status
-
-# View logs
-mesh logs
 ```
 
-**From install to running:** ~5 minutes
+**Runs as an HTTP server on port 8100.** agent-bodies calls it via HTTP. The legacy CLI (`mesh init`, `mesh status`) is mechanically blocked in production and only available for dev/E2E with `MESH_PROVISION_ALLOW_DIRECT=1`.
 
 ---
 
 ## What It Does
 
+* **Runs as an HTTP server** — FastAPI on port 8100, called by agent-bodies via HTTP
 * **Provisions VMs** — Spins up cloud instances on DigitalOcean, Multipass (local dev), and other providers via Apache Libcloud
-* **Bootstraps the stack** — Installs and configures Nomad + Consul + Docker + Tailscale + Caddy on each node
-* **Deploys infrastructure workloads** — Caddy ingress as a Nomad system job for lite and standard tiers
-* **Returns cluster facts** — Leader IP, worker IPs, Tailscale network info, and connection details (JSON output for automation)
+* **Bootstraps the stack** — Installs and configures Docker + Tailscale + Caddy + Nomad on each node
+* **Returns cluster facts** — Leader IP, worker IPs, Tailscale network info, and connection details
+* **Production guard** — The legacy CLI (`python3 -m mesh init`) is mechanically blocked by `manifest.py`. Only the HTTP API is allowed in production.
 
 ---
 

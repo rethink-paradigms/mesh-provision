@@ -14,6 +14,11 @@ Usage:
     echo '{"version":"1","command":"init","params":{...}}' | python3 -m mesh.cli init --input stdin --output json
     # OR directly:
     echo '{"version":"1","command":"init","params":{...}}' | python3 -c "from mesh.entrypoint import main; main()"
+
+Direct-use guard:
+    entrypoint.py checks ``MANIFEST.yaml`` before dispatching any command.
+    Commands declared as ``direct_use: false`` or ``direct_cli_use: FORBIDDEN``
+    are blocked with a structured error.  See ``mesh/manifest.py`` for details.
 """
 
 from __future__ import annotations
@@ -59,6 +64,20 @@ def main() -> None:
 
     if not isinstance(params, dict):
         _fatal("invalid_json", "\"params\" must be a JSON object")
+
+    # ---- Direct-use guard -----------------------------------------------
+    # Check MANIFEST.yaml before dispatching any command that creates,
+    # destroys, or modifies infrastructure.  The HTTP API (port 8100) is
+    # the only valid entry point — it has its own auth and audit path via
+    # agent-bodies.  This guard is a safety net so that anyone who pipes
+    # JSON into the CLI gets a clear error instead of accidentally creating
+    # an orphan VM.
+    try:
+        from mesh.manifest import guard_command
+
+        guard_command(command)
+    except ImportError:
+        pass  # bare install / tests — guard is best-effort
 
     # Dispatch
     if command == "init":

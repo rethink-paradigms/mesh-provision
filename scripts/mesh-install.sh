@@ -399,16 +399,7 @@ install_caddy() {
 
     run_cmd mkdir -p /opt/caddy/data
 
-    # Add caddy-data host volume to Nomad config
-    if ! grep -q "caddy-data" /etc/nomad.d/nomad.hcl 2>/dev/null; then
-        cat <<EOF | run_cmd tee -a /etc/nomad.d/nomad.hcl
-
-host_volume "caddy-data" {
-  path = "/opt/caddy/data"
-  read_only = false
-}
-EOF
-    fi
+    # nomad v1.9.3 does not support host_volume in agent config; if needed, define in a job spec
 
     log "Caddy installed."
 }

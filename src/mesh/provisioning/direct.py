@@ -41,6 +41,7 @@ def provision_node(
     api_key: str,
     boot_script: str,
     image_id: Optional[str] = None,
+    tags: Optional[list[str]] = None,
 ) -> dict[str, Any]:
     """Create one cloud VM and return its details.
 
@@ -93,9 +94,14 @@ def provision_node(
         "ex_user_data": boot_script,
     }
     if provider in ("digitalocean", "do"):
+        ex_create_attr: dict[str, Any] = {}
+        if tags:
+            ex_create_attr["tags"] = tags
         ssh_keys = _do_list_ssh_key_ids(api_key)
         if ssh_keys:
-            create_kwargs["ex_create_attr"] = {"ssh_keys": ssh_keys}
+            ex_create_attr["ssh_keys"] = ssh_keys
+        if ex_create_attr:
+            create_kwargs["ex_create_attr"] = ex_create_attr
 
     try:
         node = driver.create_node(**create_kwargs)
@@ -134,6 +140,7 @@ def provision_cluster(
     api_key: str,
     leader_boot_script: str,
     worker_boot_script_fn,
+    tags: Optional[list[str]] = None,
 ) -> dict[str, Any]:
     """Create a cluster: one leader and N workers.
 
@@ -141,7 +148,7 @@ def provision_cluster(
         name:                  Cluster name prefix (VMs named {name}-leader, {name}-worker-N).
         worker_boot_script_fn: Callable(leader_ip: str) → str.
                                Called AFTER the leader is up so it can embed the leader IP.
-                               For lite tier (workers=0) this is never called.
+                               For solo tier (workers=0) this is never called.
 
     Returns:
         {cluster_name, provider, region, leader: {...}, workers: [{...}]}
@@ -153,6 +160,7 @@ def provision_cluster(
         size_id=leader_size,
         api_key=api_key,
         boot_script=leader_boot_script,
+        tags=tags,
     )
 
     leader_ip = leader.get("public_ip") or leader.get("private_ip") or ""
@@ -168,6 +176,7 @@ def provision_cluster(
             size_id=worker_size,
             api_key=api_key,
             boot_script=worker_script,
+            tags=tags,
         )
         worker_nodes.append(worker)
 
@@ -370,7 +379,7 @@ def query_cluster(
 def poll_daemon_health(
     leader_ip: str,
     port: int = 8080,
-    timeout: int = 120,
+    timeout: int = 300,
     interval: int = 5,
 ) -> bool:
     """Poll http://{leader_ip}:{port}/healthz every `interval` seconds.
@@ -379,6 +388,9 @@ def poll_daemon_health(
     Returns False if `timeout` seconds elapse with no 200.
     Uses urllib.request — no extra dependencies.
     Swallows all per-attempt exceptions (connection refused, timeout, etc.).
+
+    Note: Default timeout of 300s (5 min) accommodates 3-5 min VM boot + daemon
+    startup via cloud-init before /healthz responds.
     """
     import urllib.request as _urllib_req
     import urllib.error as _urllib_err

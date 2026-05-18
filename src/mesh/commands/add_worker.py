@@ -43,8 +43,8 @@ def handle_add_worker(params: dict[str, Any]) -> None:
     api_key      = params["api_key"]
     tailscale_key = params.get("tailscale_key", "")
 
-    # Determine tier from context: if tailscale_key provided → standard, else lite
-    cluster_tier = "standard" if tailscale_key else "lite"
+    # Workers always join a cluster — tier is cluster by definition
+    cluster_tier = "cluster"
 
     if not is_provider_usable(provider):
         print_json_error(

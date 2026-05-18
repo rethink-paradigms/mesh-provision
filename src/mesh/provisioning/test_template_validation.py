@@ -98,7 +98,7 @@ class TestGenerateShellScriptValidation:
 
     def test_generate_with_all_variables_validates(self):
         """Test that script generation with all variables passes validation"""
-        script = generate_cloud_init(cluster_tier="standard", 
+        script = generate_cloud_init(cluster_tier="cluster", 
             tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server", validate=True
         )
         assert script is not None
@@ -108,7 +108,7 @@ class TestGenerateShellScriptValidation:
     @pytest.mark.skip(reason="GPU/spot params removed from generate_cloud_init")
     def test_generate_without_validation_skip_check(self):
         """Test that script generation with validate=False skips validation"""
-        script = generate_cloud_init(cluster_tier="standard", 
+        script = generate_cloud_init(cluster_tier="cluster", 
             tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server", validate=False
         )
         assert script is not None
@@ -117,7 +117,7 @@ class TestGenerateShellScriptValidation:
     @pytest.mark.skip(reason="GPU/spot params removed from generate_cloud_init")
     def test_generate_with_gpu_validates(self):
         """Test that script generation with GPU parameters passes validation"""
-        script = generate_cloud_init(cluster_tier="standard", 
+        script = generate_cloud_init(cluster_tier="cluster", 
             tailscale_key="ts-key-123",
             leader_ip="10.0.0.1",
             role="client",
@@ -129,7 +129,7 @@ class TestGenerateShellScriptValidation:
     @pytest.mark.skip(reason="GPU/spot params removed from generate_cloud_init")
     def test_generate_with_spot_handling_validates(self):
         """Test that script generation with spot handling passes validation"""
-        script = generate_cloud_init(cluster_tier="standard", 
+        script = generate_cloud_init(cluster_tier="cluster", 
             tailscale_key="ts-key-123",
             leader_ip="10.0.0.1",
             role="client",
@@ -188,7 +188,7 @@ class TestGenerateCloudInitValidation:
 
     def test_generate_cloud_init_validates(self):
         """Test that cloud-init generation validates shell script"""
-        yaml_content = generate_cloud_init(cluster_tier="standard", 
+        yaml_content = generate_cloud_init(cluster_tier="cluster", 
             tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server", validate=True
         )
         assert yaml_content is not None
@@ -196,7 +196,7 @@ class TestGenerateCloudInitValidation:
 
     def test_generate_cloud_init_without_validation(self):
         """Test that cloud-init generation can skip validation"""
-        yaml_content = generate_cloud_init(cluster_tier="standard", 
+        yaml_content = generate_cloud_init(cluster_tier="cluster", 
             tailscale_key="ts-key-123", leader_ip="10.0.0.1", role="server", validate=False
         )
         assert yaml_content is not None

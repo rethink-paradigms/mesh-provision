@@ -25,6 +25,7 @@ Design:
 
 from __future__ import annotations
 
+import asyncio
 import hmac
 import os
 import time
@@ -230,7 +231,7 @@ def _handle_init(params: dict[str, Any]) -> dict[str, Any]:
 
     _validate_provider(provider)
 
-    cluster_tier = "lite" if workers == 0 else "standard"
+    cluster_tier = "solo" if workers == 0 else "cluster"
 
     try:
         leader_boot = generate_cloud_init(
@@ -270,6 +271,7 @@ def _handle_init(params: dict[str, Any]) -> dict[str, Any]:
             api_key=api_key,
             leader_boot_script=leader_boot,
             worker_boot_script_fn=_make_worker_boot,
+            tags=[cluster_name, "e2e"],
         )
     except Exception as exc:
         raise HTTPException(
@@ -420,7 +422,7 @@ def _handle_add_worker(params: dict[str, Any]) -> dict[str, Any]:
     api_key = params["api_key"]
     tailscale_key = params.get("tailscale_key", "")
 
-    cluster_tier = "standard" if tailscale_key else "lite"
+    cluster_tier = "cluster"
     _validate_provider(provider)
 
     try:
@@ -451,6 +453,7 @@ def _handle_add_worker(params: dict[str, Any]) -> dict[str, Any]:
             size_id=worker_size,
             api_key=api_key,
             boot_script=boot_script,
+            tags=[cluster_name, "e2e"],
         )
     except Exception as exc:
         raise HTTPException(
@@ -549,7 +552,7 @@ COMMAND_MAP: dict[str, callable] = {
 
 
 @app.post("/api/provision")
-def provision(req: ProvisionRequest):
+async def provision(req: ProvisionRequest):
     """Unified provisioning endpoint — accepts the same envelope as stdin protocol.
 
     The request body mirrors the stdin JSON format:
@@ -590,7 +593,8 @@ def provision(req: ProvisionRequest):
             },
         )
 
-    return handler(req.params)
+    result = await asyncio.get_running_loop().run_in_executor(None, handler, req.params)
+    return result
 
 
 @app.get("/health")

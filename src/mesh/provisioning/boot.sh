@@ -19,9 +19,7 @@ ENABLE_CADDY="{{ ENABLE_CADDY }}"
 
 bash scripts/01-install-deps.sh
 
-if [ "$CLUSTER_TIER" != "lite" ]; then
-	bash scripts/02-install-tailscale.sh "$TAILSCALE_KEY"
-fi
+bash scripts/02-install-tailscale.sh "$TAILSCALE_KEY"
 
 bash scripts/03-install-hashicorp.sh
 
@@ -33,9 +31,6 @@ bash scripts/03-install-hashicorp.sh
 #     bash scripts/05-install-nvidia-plugin.sh
 # fi
 
-if [ "$CLUSTER_TIER" != "lite" ]; then
-	bash scripts/06-configure-consul.sh "$LEADER_IP" "$ROLE"
-fi
 bash scripts/07-configure-nomad.sh
 
 # GPU verification (only if HAS_GPU == "true")
@@ -86,30 +81,9 @@ if [ "$ENABLE_CADDY" == "true" ]; then
 	mkdir -p /opt/caddy/data
 fi
 
-if [ "$ENABLE_CADDY" == "true" ]; then
-	if ! grep -q "caddy-data" /etc/nomad.d/nomad.hcl 2>/dev/null; then
-		echo 'host_volume "caddy-data" {
-  path = "/opt/caddy/data"
-  read_only = false
-}' | sudo tee -a /etc/nomad.d/nomad.hcl
-	fi
-fi
-
-
 # Start Services
-if [ "$CLUSTER_TIER" != "lite" ]; then
-	cat <<EOF >/etc/systemd/system/consul.service
-[Unit]
-Description=Consul Agent
-Requires=network-online.target
-After=network-online.target
-[Service]
-Restart=on-failure
-ExecStart=/usr/local/bin/consul agent -config-dir=/etc/consul.d
-[Install]
-WantedBy=multi-user.target
-EOF
-fi
+systemctl enable docker
+systemctl start docker
 
 cat <<EOF >/etc/systemd/system/nomad.service
 [Unit]
@@ -117,7 +91,9 @@ Description=Nomad Agent
 Requires=network-online.target
 After=network-online.target
 [Service]
+Environment=HOME=/root
 Restart=on-failure
+RestartSec=5
 ExecStart=/usr/local/bin/nomad agent -config=/etc/nomad.d
 [Install]
 WantedBy=multi-user.target
@@ -125,13 +101,13 @@ EOF
 
 systemctl daemon-reload
 
-if [ "$CLUSTER_TIER" != "lite" ]; then
-	systemctl enable consul nomad
-	systemctl restart consul nomad
-else
-	systemctl enable nomad
-	systemctl restart nomad
-fi
+systemctl enable nomad
+systemctl restart nomad
+
+# Wait for Nomad to elect a leader before issuing API commands
+# Without this, 'nomad namespace apply' races against raft initialization
+# and silently fails (the || true swallows the error).
+bash scripts/99-wait-for-nomad.sh
 
 # Create Nomad namespaces for safe co-existence with daemon
 nomad namespace apply -description "Mesh infrastructure (Caddy, monitoring)" mesh-infra || true

@@ -8,6 +8,12 @@ Complete reference for all `mesh` CLI commands.
 > [`MANIFEST.yaml`](../../MANIFEST.yaml) and
 > [`contracts/mesh-provision.interface.md`](../../../contracts/mesh-provision.interface.md).
 >
+> **Mechanical enforcement:** `entrypoint.py` reads `MANIFEST.yaml` and blocks all
+> CLI commands (init, destroy, add-worker, remove-worker, status) with a structured
+> error. See `src/mesh/manifest.py` and `src/mesh/entrypoint.py`.
+>
+> **Bypass for dev/E2E:** set `MESH_PROVISION_ALLOW_DIRECT=1`.
+>
 > **Workspace:** Use `infisical run -- python -m mesh ...` from workspace root.
 > See [`SERVICES.md`](../../SERVICES.md).
 

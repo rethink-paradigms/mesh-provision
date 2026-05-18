@@ -38,7 +38,9 @@ http:
   http://localhost:8080/healthz:
     status: 200
     body:
-      - "status"   # Accept both "healthy" and "degraded" - just verify JSON shape
+      - "status"            # Verify JSON shape
+      - "gateway_url"       # Verify config is parsed and threaded into RouterConfig
+      - "heartbeat_enabled" # Verify heartbeat_enabled=true when interval > 0 and gateway_url set
     timeout: 5000
 
 command:
