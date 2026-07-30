@@ -181,7 +181,7 @@ def generate_cloud_init(
     daemon_config: Optional[str] = None,
     ssh_authorized_keys: Optional[list[str]] = None,
     validate: bool = True,
-    mesh_version: str = "latest",
+    mesh_version: Optional[str] = None,
     bootstrap_expect: int = 1,
     has_gpu: bool = False,
 ) -> str:
@@ -198,8 +198,9 @@ def generate_cloud_init(
         ssh_authorized_keys: List of SSH public key strings to inject.
                             Nothing is injected if omitted or empty.
         validate:           If True, raise if any {{ VAR }} remains unreplaced.
-        mesh_version:       Mesh release version to install (e.g. "1.0.0").
-                            Defaults to "latest" which resolves from GitHub API.
+        mesh_version:       Mesh release version to install (e.g. "1.0.10").
+                            Resolution order when omitted: MESH_VERSION env,
+                            workspace mesh.version file, then "latest".
         bootstrap_expect:   Expected number of Nomad server nodes for raft quorum.
                             Defaults to 1 (single-server cluster).
         has_gpu:            Whether to include NVIDIA GPU plugin configuration.
@@ -208,6 +209,8 @@ def generate_cloud_init(
     Returns:
         A "#cloud-config\\n..." YAML string ready for use as VM userdata.
     """
+    if not mesh_version:
+        mesh_version = _default_mesh_version()
     resolved_version = _resolve_mesh_version(mesh_version)
 
     # Boundary guard: validate daemon_config against canonical schema before it
@@ -551,15 +554,39 @@ class TemplateValidationError(ValueError):
         super().__init__(f"Template validation failed. {message} Unreplaced: {', '.join(unreplaced_variables)}")
 
 
+def _default_mesh_version() -> str:
+    """Pin resolution: MESH_VERSION env → workspace mesh.version file → latest."""
+    env = os.environ.get("MESH_VERSION", "").strip()
+    if env:
+        return env
+    # Walk up from this file looking for control-plane mesh.version
+    here = os.path.abspath(os.path.dirname(__file__))
+    for _ in range(8):
+        candidate = os.path.join(here, "mesh.version")
+        if os.path.isfile(candidate):
+            try:
+                with open(candidate, encoding="utf-8") as f:
+                    pin = f.read().strip().splitlines()[0].strip()
+                if pin:
+                    return pin
+            except OSError:
+                pass
+        parent = os.path.dirname(here)
+        if parent == here:
+            break
+        here = parent
+    return "latest"
+
+
 def _resolve_mesh_version(version: str) -> str:
     """Resolve mesh version for install.sh.
 
-    - If version is not "latest", return it as-is.
+    - If version is not "latest", return it as-is (strip optional leading v).
     - If "latest", query GitHub API for the newest release tag.
     - On any failure, fall back to "latest" (install.sh will also resolve it).
     """
     if version != "latest":
-        return version
+        return version.lstrip("v") if version.startswith("v") else version
     try:
         req = urllib.request.Request(
             "https://api.github.com/repos/rethink-paradigms/mesh/releases/latest",
@@ -569,7 +596,7 @@ def _resolve_mesh_version(version: str) -> str:
             data = json.loads(resp.read().decode("utf-8"))
             tag = data.get("tag_name", "")
             if tag:
-                return tag
+                return tag.lstrip("v") if tag.startswith("v") else tag
     except Exception:
         pass
     return "latest"
