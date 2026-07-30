@@ -1,0 +1,30 @@
+=== TEST 5: Without daemon_token — init still works ===
+Date: Mon May  4 23:26:43 IST 2026
+
+--- RAW JSON OUTPUT ---
+{
+  "cluster_id": "no-token-test",
+  "provider": "digitalocean",
+  "region": "nyc3",
+  "tier": "lite",
+  "leader": {
+    "ip": "192.0.2.1",
+    "id": "demo-no-token-test-leader",
+    "size": "s-2vcpu-4gb"
+  },
+  "workers": [],
+  "nomad_addr": "http://127.0.0.1:4646",
+  "daemon_url": "https://daemon-no-token-test.agentbodies.com",
+  "daemon_token": "demo-token-placeholder",
+  "caddy_admin": "http://127.0.0.1:2019",
+  "created_at": "2026-05-04T17:56:43.758198Z",
+  "demo": true
+}
+
+--- VALIDATION ---
+NO_TOKEN_OK
+  cluster_id: no-token-test
+  tier: lite
+  daemon_token: demo-token-placeholder
+  demo: True
+EXIT=0

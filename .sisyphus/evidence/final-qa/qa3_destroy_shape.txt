@@ -1,0 +1,17 @@
+QA3 PASSED: Destroy shape valid
+Demo result: {
+  "cluster_id": "test-brief",
+  "status": "destroyed",
+  "destroyed": true,
+  "resources_cleaned": [],
+  "demo": true
+}
+Brief result: {
+  "cluster_id": "prod",
+  "status": "destroyed",
+  "destroyed": true,
+  "resources_cleaned": [
+    "d-1",
+    "d-2"
+  ]
+}

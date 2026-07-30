@@ -1,0 +1,36 @@
+=== TEST 4: Stdout is PURE JSON (no ANSI codes) ===
+Date: Mon May  4 23:26:28 IST 2026
+
+--- stdout captured to /tmp/task11-stdout.txt ---
+--- first 5 chars (hex dump to check for ANSI): ---
+00000000: 7b0a 2020 2263 6c75 7374 6572 5f69 6422  {.  "cluster_id"
+00000010: 3a20 2263 6c65 616e 2d74 6573 7422 2c0a  : "clean-test",.
+00000020: 2020 2270 726f 7669 6465 7222 3a20 2264    "provider": "d
+
+--- VALIDATION ---
+CLEAN_JSON
+  starts with: '{\n'
+  length: 473 chars
+  no ANSI codes: confirmed
+  valid JSON: confirmed
+EXIT=0
+
+--- Full content ---
+{
+  "cluster_id": "clean-test",
+  "provider": "digitalocean",
+  "region": "nyc3",
+  "tier": "lite",
+  "leader": {
+    "ip": "192.0.2.1",
+    "id": "demo-clean-test-leader",
+    "size": "s-2vcpu-4gb"
+  },
+  "workers": [],
+  "nomad_addr": "http://127.0.0.1:4646",
+  "daemon_url": "https://daemon-clean-test.agentbodies.com",
+  "daemon_token": "demo-token-placeholder",
+  "caddy_admin": "http://127.0.0.1:2019",
+  "created_at": "2026-05-04T17:56:29.168630Z",
+  "demo": true
+}

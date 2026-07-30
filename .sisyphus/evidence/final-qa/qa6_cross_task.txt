@@ -1,0 +1,27 @@
+QA6 PASSED: Init and destroy shapes consistent
+Init brief: {
+  "cluster_id": "consistent",
+  "leader_ip": "1.2.3.4",
+  "status": "ready",
+  "nodes": [
+    {
+      "id": "l-1",
+      "ip": "1.2.3.4",
+      "role": "leader"
+    },
+    {
+      "id": "w-1",
+      "ip": "1.2.3.5",
+      "role": "worker"
+    }
+  ]
+}
+Destroy brief: {
+  "cluster_id": "consistent",
+  "status": "destroyed",
+  "destroyed": true,
+  "resources_cleaned": [
+    "l-1",
+    "w-1"
+  ]
+}

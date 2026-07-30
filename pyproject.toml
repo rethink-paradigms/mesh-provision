@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "rethink-mesh"
-version = "0.3.0"
+version = "0.4.0"
 description = "Lightweight infrastructure orchestration platform for multi-cloud container deployment"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -12,7 +12,7 @@ license = {text = "MIT"}
 authors = [
     {name = "Mesh Platform Contributors"}
 ]
-keywords = ["infrastructure", "multi-cloud", "nomad", "consul", "pulumi", "containers"]
+keywords = ["infrastructure", "multi-cloud", "nomad", "consul", "containers", "provisioning"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -24,33 +24,25 @@ classifiers = [
 ]
 
 dependencies = [
-# Pulumi - Infrastructure as Code
-    "pulumi>=3.110.0",
-    "pulumi-aws>=6.0.0", 
-    "pulumi-tailscale>=0.8.0",
+    # Cloud provider drivers (DigitalOcean, AWS, Linode, Vultr, 50+ others)
+    "apache-libcloud>=3.8.0",
 
-    # Environment & Configuration
-    "python-dotenv>=1.0.0",
+    # Cloud-init YAML generation
+    "pyyaml>=6.0.0",
 
-    # Templating
+    # Boot script templating
     "jinja2>=3.1.0",
+
+    # Health polling after VM creation
+    "requests>=2.31.0",
+
+    # .env file loading
+    "python-dotenv>=1.0.0",
 
     # Testing
     "pytest>=7.4.0",
     "pytest-mock>=3.12.0",
     "pytest-cov>=4.1.0",
-
-    # HTTP & API
-    "requests>=2.31.0",
-
-    # Multi-Provider Cloud Support (NEW)
-    "apache-libcloud>=3.8.0",  # 13+ cloud provider drivers (via apache-libcloud)
-    "pyyaml>=6.0.0",           # YAML configuration for provider registry
-    
-    # CLI Framework (NEW - required for CLI implementation)
-    "typer>=0.9.0",           # CLI framework
-    "questionary>=2.0.0",       # Interactive prompts  
-    "rich>=13.0.0",             # Progress bars and formatting
 ]
 
 [project.optional-dependencies]
@@ -62,12 +54,17 @@ dev = [
     "pre-commit>=3.3.0",
     "mkdocs>=1.5.0",
     "mkdocs-material>=9.4.0",
+    "towncrier>=24.0.0",
+]
+http = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
 ]
 
 # Enterprise features (GPU, monitoring, backups) are in the mesh-enterprise package
 
 [project.scripts]
-mesh = "mesh.cli.main:main"
+mesh = "mesh.entrypoint:main"
 
 # Enterprise and third-party CLI plugins register under this group:
 # [project.entry-points."mesh.plugins"]
@@ -171,7 +168,7 @@ omit = [
     "*/test_*.py",
     "*/__pycache__/*",
     "*/tests/*",
-    "src/mesh/infrastructure/provision_cloud_cluster/*",  # Pulumi main entrypoint
+    "*/tiers/*",
 ]
 
 [tool.coverage.report]
@@ -186,3 +183,31 @@ exclude_lines = [
     "@abstract",
 ]
 precision = 2
+
+[tool.towncrier]
+directory = "changelog.d"
+filename = "CHANGELOG.md"
+start_string = "<!-- towncrier release notes start -->\n"
+underlines = ["", "", ""]
+title_format = "## [{version}] - {project_date}"
+issue_format = "[#{issue}](https://github.com/rethink-paradigms/mesh/issues/{issue})"
+name = "rethink-mesh"
+package_dir = "src"
+
+[[tool.towncrier.type]]
+name = "Security"
+
+[[tool.towncrier.type]]
+name = "Removed"
+
+[[tool.towncrier.type]]
+name = "Deprecated"
+
+[[tool.towncrier.type]]
+name = "Added"
+
+[[tool.towncrier.type]]
+name = "Changed"
+
+[[tool.towncrier.type]]
+name = "Fixed"

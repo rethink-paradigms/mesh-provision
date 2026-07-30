@@ -2,6 +2,10 @@
 
 Get a running Mesh cluster and deploy your first application in under 15 minutes.
 
+> **Workspace:** If you're working in the Mesh workspace, use workspace-level commands.
+> See [`SERVICES.md`](../../SERVICES.md) and [`services.json`](../../services.json).
+> The instructions below are for public/standalone installation.
+
 ---
 
 ## Prerequisites
@@ -113,13 +117,14 @@ brew install --cask multipass
 git clone https://github.com/rethink-paradigms/mesh.git
 cd mesh
 pip install -e ".[dev]"
-cp .env.example .env
 ```
 
-Edit `.env` and add your Tailscale auth key:
+Set environment variables in your shell or a local `.env` file:
 
 ```bash
-TAILSCALE_KEY=tskey-auth-xxxxx
+export TAILSCALE_KEY=tskey-auth-xxxxx
+# Also set your cloud provider token, e.g.:
+# export DIGITALOCEAN_API_TOKEN=...
 ```
 
 ### Step 3: Launch
@@ -152,7 +157,7 @@ mesh status
 | Problem | Solution |
 |:---|:---|
 | `pip install rethink-mesh` fails | Ensure Python 3.11+: `python --version` |
-| `mesh init` can't find provider credentials | Set env vars in `.env` — see [.env.example](https://github.com/rethink-paradigms/mesh/blob/main/.env.example) |
+| `mesh init` can't find provider credentials | Set env vars in your shell or a local `.env` file |
 | Multipass VMs won't start | Ensure 3GB+ free RAM. On macOS: check Docker Desktop isn't consuming all resources |
 | Tailscale key rejected | Generate a new key at [tailscale.com/admin/authkeys](https://login.tailscale.com/admin/authkeys). Keys expire |
 

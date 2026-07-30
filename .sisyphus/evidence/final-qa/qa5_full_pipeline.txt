@@ -1,0 +1,18 @@
+QA5 PASSED: Full demo pipeline produces BRIEF shape with no rich field leakage
+Output: {
+  "cluster_id": "qa-test",
+  "leader_ip": "192.0.2.1",
+  "status": "ready",
+  "nodes": [
+    {
+      "id": "demo-qa-test-leader",
+      "ip": "192.0.2.1",
+      "role": "leader"
+    },
+    {
+      "id": "demo-qa-test-worker-0",
+      "ip": "192.0.2.2",
+      "role": "worker"
+    }
+  ]
+}

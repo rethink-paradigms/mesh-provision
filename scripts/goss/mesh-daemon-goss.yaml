@@ -1,0 +1,49 @@
+# Goss spec: healthy mesh daemon on a provisioned VM
+# Run: goss -g /etc/mesh/goss.yaml validate --format json
+# Config path confirmed: cloud-init writes to /etc/mesh/config.yaml
+# Process name confirmed: cloud-init runcmd: systemctl daemon-reload && systemctl enable && systemctl start mesh-daemon
+
+file:
+  /etc/mesh/config.yaml:
+    exists: true
+    mode: "0600"
+    contents:
+      - "gateway_url"
+      - "heartbeat_interval_seconds"
+      - "cluster_id"
+      - "auth_token"
+      - "type: none"         # Verifies P5 registry fix was deployed
+      - "listen_addr"        # Verifies P5 listen_addr fix was deployed
+
+  /usr/local/bin/mesh-daemon:
+    exists: true
+    filetype: file
+    mode: "0755"
+
+process:
+  mesh-daemon:
+    running: true
+
+service:
+  mesh-daemon:
+    enabled: true
+    running: true
+
+port:
+  # Daemon binds to [::]:8080 (IPv6 dual-stack) on Linux - check tcp6, not tcp
+  tcp6:8080:
+    listening: true
+
+http:
+  http://localhost:8080/healthz:
+    status: 200
+    body:
+      - "status"            # Verify JSON shape
+      - "gateway_url"       # Verify config is parsed and threaded into RouterConfig
+      - "heartbeat_enabled" # Verify heartbeat_enabled=true when interval > 0 and gateway_url set
+    timeout: 5000
+
+command:
+  "mesh-daemon version":
+    exit-status: 0
+    timeout: 5000

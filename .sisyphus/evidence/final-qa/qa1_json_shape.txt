@@ -1,0 +1,18 @@
+QA1 PASSED: JSON shape valid, no rich field leakage
+Result: {
+  "cluster_id": "test-cluster",
+  "leader_ip": "164.90.123.45",
+  "status": "ready",
+  "nodes": [
+    {
+      "id": "droplet-abc",
+      "ip": "164.90.123.45",
+      "role": "leader"
+    },
+    {
+      "id": "droplet-def",
+      "ip": "164.90.123.46",
+      "role": "worker"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "error": {
+    "code": "provision_failed",
+    "message": "Failed to list regions for digitalocean: 'Unable to authenticate you'",
+    "phase": "create_vm",
+    "partial_resources": []
+  }
+}

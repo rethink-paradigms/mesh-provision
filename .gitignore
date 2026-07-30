@@ -41,7 +41,20 @@ consul-data/
 .DS_Store
 .vscode/
 .idea/
+.claude/
+.opencode/
 *.swp
+
+# AI agent worktrees and artifacts
+.worktrees/# Generated site/docs
+site/
+
+# Research and discovery artifacts
+discovery/
+
+# Temporary files
+*.tmp
+stderr.txt
 
 # Logs
 *.log

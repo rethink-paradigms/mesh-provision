@@ -1,0 +1,1500 @@
+/Users/samanvayayagsen/.pyenv/versions/3.11.11/lib/python3.11/site-packages/pytest_asyncio/plugin.py:217: PytestDeprecationWarning: The configuration option "asyncio_default_fixture_loop_scope" is unset.
+The event loop scope for asynchronous fixtures will default to the fixture caching scope. Future versions of pytest-asyncio will default the loop scope for asynchronous fixtures to function scope. Set the default fixture loop scope explicitly in order to avoid unexpected behavior in the future. Valid fixture loop scopes are: "function", "class", "module", "package", "session"
+
+  warnings.warn(PytestDeprecationWarning(_DEFAULT_FIXTURE_LOOP_SCOPE_UNSET))
+============================= test session starts ==============================
+platform darwin -- Python 3.11.11, pytest-8.3.5, pluggy-1.5.0 -- /Users/samanvayayagsen/.pyenv/versions/3.11.11/bin/python3
+cachedir: .pytest_cache
+rootdir: /Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision
+configfile: pyproject.toml
+plugins: anyio-4.12.1, mock-3.15.1, httpx-0.35.0, asyncio-0.26.0, hydra-core-1.3.2, cov-7.0.0, langsmith-0.4.49
+asyncio: mode=Mode.STRICT, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 472 items / 21 deselected / 451 selected
+
+src/mesh/cli/commands/test_add_worker_stdin.py::TestAddWorkerStdinDemo::test_add_worker_stdin_demo PASSED [  0%]
+src/mesh/cli/commands/test_add_worker_stdin.py::TestAddWorkerStdinFullFlow::test_add_worker_stdin_full_flow PASSED [  0%]
+src/mesh/cli/commands/test_add_worker_stdin.py::TestAddWorkerStdinErrors::test_add_worker_stdin_missing_leader_ip PASSED [  0%]
+src/mesh/cli/commands/test_add_worker_stdin.py::TestAddWorkerStdinErrors::test_add_worker_stdin_missing_provider PASSED [  0%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrEnvVarPriority::test_env_var_takes_precedence_over_config PASSED [  1%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrEnvVarPriority::test_env_var_takes_precedence_over_default PASSED [  1%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrFromConfig::test_reads_quoted_value PASSED [  1%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrFromConfig::test_reads_single_quoted_value PASSED [  1%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrFromConfig::test_reads_unquoted_value PASSED [  1%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrFromConfig::test_skips_comments PASSED [  2%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrFromConfig::test_reads_among_multiple_keys PASSED [  2%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrFromConfig::test_missing_key_returns_none PASSED [  2%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrDefaultFallback::test_default_when_no_env_and_no_config PASSED [  2%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrDefaultFallback::test_default_when_config_file_missing PASSED [  3%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrDefaultFallback::test_default_when_empty_config_file PASSED [  3%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestNomadAddrDefaultFallback::test_default_when_config_has_only_comments PASSED [  3%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestConsulAddrDiscovery::test_env_var_priority PASSED [  3%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestConsulAddrDiscovery::test_reads_from_config PASSED [  3%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestConsulAddrDiscovery::test_default_fallback PASSED [  4%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestConsulAddrDiscovery::test_config_missing_consul_key PASSED [  4%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestParseConfigValueEdgeCases::test_nonexistent_file_returns_none PASSED [  4%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestParseConfigValueEdgeCases::test_unreadable_file_returns_none PASSED [  4%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestParseConfigValueEdgeCases::test_line_without_equals_skipped PASSED [  5%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestParseConfigValueEdgeCases::test_empty_lines_skipped PASSED [  5%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestReturnTypeContract::test_get_nomad_addr_returns_str PASSED [  5%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestReturnTypeContract::test_get_consul_addr_returns_str PASSED [  5%]
+src/mesh/cli/commands/test_deploy_hardening.py::TestReturnTypeContract::test_get_nomad_addr_from_config_returns_optional PASSED [  5%]
+src/mesh/cli/commands/test_destroy_json.py::TestDestroyJsonDemo::test_demo_produces_brief_shape PASSED [  6%]
+src/mesh/cli/commands/test_destroy_json.py::TestDestroyJsonDemo::test_demo_exits_0 PASSED [  6%]
+src/mesh/cli/commands/test_destroy_json.py::TestDestroyStdin::test_destroy_stdin_success PASSED [  6%]
+src/mesh/cli/commands/test_destroy_json.py::TestDestroyStdin::test_destroy_stdin_unsupported_provider PASSED [  6%]
+src/mesh/cli/commands/test_destroy_json.py::TestDestroyStdin::test_destroy_stdin_unsupported_version PASSED [  7%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorDemoMode::test_demo_mode_passes <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  7%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorDemoMode::test_demo_mode_shows_banner <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  7%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorPythonCheck::test_python_check_passes <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  7%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorPythonCheck::test_python_check_fails <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  7%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorAllChecks::test_all_pass <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  8%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorAllChecks::test_all_fail <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  8%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorIndividualChecks::test_docker_not_installed <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  8%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorIndividualChecks::test_docker_installed <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  8%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorIndividualChecks::test_pulumi_not_installed <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  9%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorIndividualChecks::test_tailscale_not_installed <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  9%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorIndividualChecks::test_env_check_passes <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py PASSED [  9%]
+src/mesh/cli/commands/test_doctor.py::TestDoctorIndividualChecks::test_env_check_fails <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py FAILED [  9%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_produces_brief_shape PASSED [  9%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_exits_0 PASSED [ 10%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_leader_ip_present PASSED [ 10%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_nodes_has_leader_role PASSED [ 10%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonDemo::test_demo_no_rich_output PASSED [ 10%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonErrors::test_missing_args_produces_error PASSED [ 11%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonFullFlow::test_full_flow_demo PASSED [ 11%]
+src/mesh/cli/commands/test_init_json.py::TestInitJsonFullFlow::test_full_flow_real_mocked PASSED [ 11%]
+src/mesh/cli/commands/test_init_json_health.py::test_health_check_success PASSED [ 11%]
+src/mesh/cli/commands/test_init_json_health.py::test_health_check_failure PASSED [ 11%]
+src/mesh/cli/commands/test_init_json_health.py::test_health_check_no_ip PASSED [ 12%]
+src/mesh/cli/commands/test_init_json_health.py::test_health_check_retry_then_success PASSED [ 12%]
+src/mesh/cli/commands/test_interactive_regression.py::TestInteractiveNoRegression::test_init_no_flags_non_tty_graceful PASSED [ 12%]
+src/mesh/cli/commands/test_interactive_regression.py::TestInteractiveNoRegression::test_init_demo_yes_no_json_output PASSED [ 12%]
+src/mesh/cli/commands/test_interactive_regression.py::TestInteractiveNoRegression::test_interactive_demo_yes_no_json_fields PASSED [ 13%]
+src/mesh/cli/commands/test_interactive_regression.py::TestJsonModeNoRegression::test_init_json_demo_no_rich_output PASSED [ 13%]
+src/mesh/cli/commands/test_interactive_regression.py::TestJsonModeNoRegression::test_destroy_no_flags_non_tty_graceful PASSED [ 13%]
+src/mesh/cli/commands/test_interactive_regression.py::TestJsonModeNoRegression::test_destroy_json_demo_no_rich_output PASSED [ 13%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_happy_path PASSED [ 13%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_empty_ips PASSED [ 14%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_zero_workers PASSED [ 14%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_three_workers PASSED [ 14%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefShape::test_to_brief_shape_cluster_id_preserved PASSED [ 14%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefDestroyShape::test_with_resources PASSED [ 15%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefDestroyShape::test_empty_resources PASSED [ 15%]
+src/mesh/cli/commands/test_json_output.py::TestToBriefDestroyShape::test_destroyed_always_true PASSED [ 15%]
+src/mesh/cli/commands/test_logs.py::TestLogsNoCluster::test_no_cluster_shows_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 15%]
+src/mesh/cli/commands/test_logs.py::TestLogsNoCluster::test_no_cluster_with_job_name <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 15%]
+src/mesh/cli/commands/test_logs.py::TestLogsListJobs::test_lists_jobs_when_no_job_name <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 16%]
+src/mesh/cli/commands/test_logs.py::TestLogsListJobs::test_no_jobs_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 16%]
+src/mesh/cli/commands/test_logs.py::TestLogsStreaming::test_follow_flag_passes_f <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 16%]
+src/mesh/cli/commands/test_logs.py::TestLogsStreaming::test_tail_flag_passes_n <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 16%]
+src/mesh/cli/commands/test_logs.py::TestLogsStreaming::test_stderr_flag <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 17%]
+src/mesh/cli/commands/test_logs.py::TestLogsStreaming::test_alloc_flag <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 17%]
+src/mesh/cli/commands/test_logs.py::TestLogsStreaming::test_nomad_not_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 17%]
+src/mesh/cli/commands/test_logs.py::TestLogsStreaming::test_job_name_in_command <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_logs.py PASSED [ 17%]
+src/mesh/cli/commands/test_plugins.py::test_discover_plugins_returns_empty_when_no_plugins <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_plugins.py PASSED [ 17%]
+src/mesh/cli/commands/test_plugins.py::test_discover_plugins_loads_valid_plugin <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_plugins.py PASSED [ 18%]
+src/mesh/cli/commands/test_plugins.py::test_discover_plugins_skips_broken_plugin <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_plugins.py PASSED [ 18%]
+src/mesh/cli/commands/test_plugins.py::test_discover_plugins_skips_non_typer_return <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_plugins.py PASSED [ 18%]
+src/mesh/cli/commands/test_plugins.py::test_plugin_group_constant <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_plugins.py PASSED [ 18%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotCreate::test_create_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 19%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotCreate::test_create_app_not_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 19%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotCreate::test_create_no_cluster <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 19%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotCreate::test_create_no_running_allocations <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 19%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotRestore::test_restore_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 19%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotRestore::test_restore_snapshot_not_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 20%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotRestore::test_restore_failure <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 20%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotList::test_list_with_snapshots <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 20%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotList::test_list_empty <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 20%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotList::test_list_empty_with_app_filter <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 21%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotList::test_list_with_app_filter <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 21%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotDelete::test_delete_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 21%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotDelete::test_delete_not_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 21%]
+src/mesh/cli/commands/test_snapshot_cmd.py::TestSnapshotDelete::test_delete_failure <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_snapshot_cmd.py PASSED [ 21%]
+src/mesh/cli/commands/test_ssh.py::TestSshNoCluster::test_no_cluster_shows_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 22%]
+src/mesh/cli/commands/test_ssh.py::TestSshNoCluster::test_no_cluster_with_node_name <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 22%]
+src/mesh/cli/commands/test_ssh.py::TestSshListNodes::test_lists_nodes_when_no_node_name <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 22%]
+src/mesh/cli/commands/test_ssh.py::TestSshListNodes::test_no_nodes_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 22%]
+src/mesh/cli/commands/test_ssh.py::TestSshListNodes::test_tailscale_ip_shown_in_list <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 23%]
+src/mesh/cli/commands/test_ssh.py::TestSshConnect::test_connect_with_tailscale_ip <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 23%]
+src/mesh/cli/commands/test_ssh.py::TestSshConnect::test_connect_fallback_to_node_address <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 23%]
+src/mesh/cli/commands/test_ssh.py::TestSshConnect::test_custom_user <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 23%]
+src/mesh/cli/commands/test_ssh.py::TestSshConnect::test_node_not_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 23%]
+src/mesh/cli/commands/test_ssh.py::TestSshConnect::test_ssh_not_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_ssh.py PASSED [ 24%]
+src/mesh/cli/commands/test_status.py::TestStatusNoCluster::test_no_cluster_shows_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_status.py PASSED [ 24%]
+src/mesh/cli/commands/test_status.py::TestStatusNoCluster::test_no_cluster_with_comparison <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_status.py PASSED [ 24%]
+src/mesh/cli/commands/test_status.py::TestStatusNoCluster::test_no_cluster_with_roadmap <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_status.py PASSED [ 24%]
+src/mesh/cli/commands/test_status.py::TestStatusDemoMode::test_demo_mode_shows_mock_data <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_status.py PASSED [ 25%]
+src/mesh/cli/commands/test_status.py::TestStatusWithCluster::test_shows_live_cluster_data <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_status.py PASSED [ 25%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_boot_script_rendering_shell PASSED [ 25%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_boot_script_rendering_cloud_init PASSED [ 25%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_boot_script_files_exist PASSED [ 25%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_shell_script_includes_cluster_tier_default_production PASSED [ 26%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_shell_script_includes_cluster_tier_lite PASSED [ 26%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_shell_script_lite_enables_caddy PASSED [ 26%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_shell_script_standard_enables_caddy PASSED [ 26%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_shell_script_production_disables_caddy PASSED [ 27%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_shell_script_ingress_disables_caddy PASSED [ 27%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_cloud_init_passes_cluster_tier PASSED [ 27%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_boot_script_has_namespace_commands PASSED [ 27%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_boot_script_namespace_commands_after_nomad_restart PASSED [ 27%]
+src/mesh/infrastructure/boot_consul_nomad/test_boot.py::test_existing_tests_still_pass PASSED [ 28%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidateRenderedTemplate::test_valid_template_no_variables <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 28%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidateRenderedTemplate::test_valid_template_with_quotes <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 28%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidateRenderedTemplate::test_invalid_template_unreplaced_variable <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 28%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidateRenderedTemplate::test_invalid_template_multiple_unreplaced <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 29%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidateRenderedTemplate::test_invalid_template_partial_syntax <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 29%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidateRenderedTemplate::test_invalid_template_no_spaces <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 29%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidateRenderedTemplate::test_invalid_template_extra_spaces <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 29%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestTemplateValidationError::test_exception_creation <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 29%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestTemplateValidationError::test_exception_string_format <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 30%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGenerateShellScriptValidation::test_generate_with_all_variables_validates <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 30%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGenerateShellScriptValidation::test_generate_without_validation_skip_check <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 30%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGenerateShellScriptValidation::test_generate_with_gpu_validates <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 30%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGenerateShellScriptValidation::test_generate_with_spot_handling_validates <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 31%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGetJinja2Env::test_strict_mode_by_default <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 31%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGetJinja2Env::test_strict_mode_enabled <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 31%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGetJinja2Env::test_strict_mode_disabled <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 31%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGetJinja2Env::test_strict_mode_raises_on_undefined <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 31%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGetJinja2Env::test_non_strict_mode_allows_undefined <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 32%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGenerateCloudInitValidation::test_generate_cloud_init_validates <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 32%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestGenerateCloudInitValidation::test_generate_cloud_init_without_validation <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 32%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidationEdgeCases::test_empty_content <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 32%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidationEdgeCases::test_content_with_braces_but_not_template <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 33%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidationEdgeCases::test_nested_braces <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 33%]
+src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py::TestValidationEdgeCases::test_mixed_valid_and_invalid <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_template_validation.py PASSED [ 33%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_lite_boot_skips_tailscale <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 33%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_lite_boot_skips_consul <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 33%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_lite_boot_installs_caddy <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 34%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_production_boot_includes_tailscale <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 34%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_production_boot_skips_caddy <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 34%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_caddy_install_script_exists <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 34%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_caddy_install_script_valid_bash <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 35%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_caddy_host_volume_configured <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 35%]
+src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py::test_lite_boot_consul_systemd_skipped <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/boot_consul_nomad/test_tier_gating.py PASSED [ 35%]
+src/mesh/infrastructure/configure_tailscale/test_configure.py::test_create_key_default_values_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/configure_tailscale/test_configure.py FAILED [ 35%]
+src/mesh/infrastructure/configure_tailscale/test_configure.py::test_create_key_custom_tags_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/configure_tailscale/test_configure.py FAILED [ 35%]
+src/mesh/infrastructure/configure_tailscale/test_configure.py::test_create_key_non_ephemeral_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/configure_tailscale/test_configure.py FAILED [ 36%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestTierConfig::test_lite_tier_enables_caddy_disables_others <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 36%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestTierConfig::test_standard_tier_enables_caddy_and_consul <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 36%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestTierConfig::test_default_tier_is_standard <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 36%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestTierConfig::test_tier_config_from_tier_returns_correct_config <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 37%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestDetectClusterTier::test_detect_single_node_is_lite <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 37%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestDetectClusterTier::test_detect_multi_node_same_region_is_standard <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 37%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestDetectClusterTier::test_detect_multi_region_is_standard <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 37%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestDetectClusterTier::test_override_tier_takes_precedence <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 37%]
+src/mesh/infrastructure/progressive_activation/test_tier_config.py::TestDetectClusterTier::test_tier_upgrade_error_is_exception <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/progressive_activation/test_tier_config.py PASSED [ 38%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSDriverInitialization::test_aws_driver_initialization_with_credentials <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 38%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSDriverInitialization::test_aws_driver_multiple_regions <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 38%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSNodeProvisioningFlow::test_aws_node_creation_with_boot_script <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 38%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSNodeProvisioningFlow::test_aws_size_selection_t3_small <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 39%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSNodeProvisioningFlow::test_aws_ubuntu_22_04_image_selection <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 39%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSErrorScenarios::test_aws_invalid_credentials_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 39%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSErrorScenarios::test_aws_invalid_region_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 39%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSErrorScenarios::test_aws_instance_limit_exceeded_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 39%]
+src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSSizeAndImageSelection::test_aws_region_availability <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py FAILED [ 40%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanDriverInitialization::test_digitalocean_driver_initialization_with_token <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 40%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanDriverInitialization::test_digitalocean_driver_multiple_regions <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 40%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanNodeProvisioningFlow::test_digitalocean_droplet_creation_with_boot_script <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 40%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanNodeProvisioningFlow::test_digitalocean_size_selection_small_droplet <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 41%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanNodeProvisioningFlow::test_digitalocean_ubuntu_22_04_image_selection <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 41%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanErrorScenarios::test_digitalocean_invalid_token_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 41%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanErrorScenarios::test_digitalocean_invalid_slug_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 41%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanErrorScenarios::test_digitalocean_droplet_limit_exceeded_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 41%]
+src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanSizeAndRegionSelection::test_digitalocean_region_availability <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py FAILED [ 42%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerDriverInitialization::test_hetzner_driver_initialization_with_token <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 42%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerDriverInitialization::test_hetzner_driver_multiple_regions <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 42%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerNodeProvisioningFlow::test_hetzner_server_creation_with_boot_script <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 42%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerNodeProvisioningFlow::test_hetzner_size_selection_cx22_server <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 43%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerNodeProvisioningFlow::test_hetzner_ubuntu_22_04_image_selection <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 43%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerErrorScenarios::test_hetzner_invalid_token_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 43%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerErrorScenarios::test_hetzner_invalid_datacenter_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 43%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerErrorScenarios::test_hetzner_server_limit_exceeded_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 43%]
+src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerSizeAndRegionSelection::test_hetzner_region_availability <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_hetzner_mock.py FAILED [ 44%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestProviderSupport::test_known_providers_are_supported PASSED [ 44%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestProviderSupport::test_unknown_provider_not_supported PASSED [ 44%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestProviderSupport::test_provider_enum_mappings_exist PASSED [ 44%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestProviderSupport::test_create_with_unknown_provider_fails PASSED [ 45%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestProviderSupport::test_get_driver_with_supported_provider PASSED [ 45%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_with_exact_size_id FAILED [ 45%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_with_invalid_size_id_fails FAILED [ 45%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_with_invalid_region_fails FAILED [ 45%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_with_explicit_image_id FAILED [ 46%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_auto_discovers_ubuntu_image FAILED [ 46%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_requires_size_id PASSED [ 46%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_passes_boot_script_via_userdata FAILED [ 46%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_handles_driver_failure FAILED [ 47%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDeleteAndReadMethods::test_delete_calls_driver_destroy_node PASSED [ 47%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDeleteAndReadMethods::test_delete_handles_nonexistent_node PASSED [ 47%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDeleteAndReadMethods::test_read_returns_current_node_state PASSED [ 47%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDeleteAndReadMethods::test_read_with_nonexistent_node_returns_none PASSED [ 47%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCredentialResolution::test_aws_credentials_from_environment PASSED [ 48%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCredentialResolution::test_digitalocean_credentials_from_environment PASSED [ 48%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCredentialResolution::test_missing_credentials_raise_error PASSED [ 48%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCredentialResolution::test_credential_override_bypasses_environment PASSED [ 48%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCredentialResolution::test_linode_credentials_from_environment PASSED [ 49%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDiscoveryMethods::test_list_sizes_queries_provider PASSED [ 49%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDiscoveryMethods::test_list_regions_queries_provider PASSED [ 49%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDiscoveryMethods::test_get_size_finds_exact_match PASSED [ 49%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDiscoveryMethods::test_get_size_returns_none_for_invalid_id PASSED [ 49%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestDiscoveryMethods::test_is_region_available_checks_existence PASSED [ 50%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestHardenedProviders::test_gcp_raises_unsupported PASSED [ 50%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestHardenedProviders::test_google_alias_raises_unsupported PASSED [ 50%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestHardenedProviders::test_azure_raises_unsupported PASSED [ 50%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestHardenedProviders::test_gridscale_absent_from_provider_enums PASSED [ 50%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestHardenedProviders::test_cloudscale_absent_from_provider_enums PASSED [ 51%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestHardenedProviders::test_unsupported_providers_set_includes_gcp_and_azure PASSED [ 51%]
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestHardenedProviders::test_gridscale_cloudscale_not_in_unsupported_providers PASSED [ 51%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_contains_tailscale_key <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 51%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_contains_role_server <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 52%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_contains_role_client <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 52%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_contains_leader_ip <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 52%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_with_gpu <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 52%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_with_spot_handling <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 52%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_full_leader <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 53%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_full_worker <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 53%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_with_gpu_and_spot <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 53%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_custom_driver_version <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 53%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_custom_spot_intervals <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 54%]
+src/mesh/infrastructure/provision_node/test_boot_script_integration.py::test_boot_script_without_optional_features <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_boot_script_integration.py PASSED [ 54%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_invalid_provider_raises_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 54%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_bare_metal_provider_not_implemented <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py PASSED [ 54%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_empty_provider_name <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 54%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_none_provider <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 55%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_valid_aws_provider <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 55%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_valid_multipass_provider <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py SKIPPED [ 55%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_case_sensitive_provider <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 55%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_whitespace_in_provider <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 56%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_provider_with_special_chars <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 56%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_gpu_config_with_server_role <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 56%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_spot_config_with_server_role <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 56%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_empty_node_name <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py SKIPPED [ 56%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_special_chars_in_node_name <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 57%]
+src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_very_long_node_name <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py FAILED [ 57%]
+src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_leader_and_worker_provisioning <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py FAILED [ 57%]
+src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_multiple_workers_with_leader <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py FAILED [ 57%]
+src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_gpu_worker_with_spot_handling <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py FAILED [ 58%]
+src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_full_stack_with_dependencies <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py FAILED [ 58%]
+src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_cluster_provisioning_sequence <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py FAILED [ 58%]
+src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_cross_region_cluster_simulation <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py FAILED [ 58%]
+src/mesh/infrastructure/provision_node/test_multipass.py::test_generate_cloud_init_yaml <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_multipass.py PASSED [ 58%]
+src/mesh/infrastructure/provision_node/test_multipass.py::test_provision_multipass_node_launch <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_multipass.py PASSED [ 59%]
+src/mesh/infrastructure/provision_node/test_multipass.py::test_provision_multipass_node_existing_running <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_multipass.py PASSED [ 59%]
+src/mesh/infrastructure/provision_node/test_multipass.py::test_provision_multipass_node_existing_stopped <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_multipass.py PASSED [ 59%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_public_ip_output_resolves <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 59%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_private_ip_output_resolves <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 60%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_instance_id_output_resolves <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 60%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_chaining_with_apply <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 60%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_all_combination <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 60%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_outputs_are_pulumi_outputs <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 60%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_values_accessible <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 61%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_multiple_nodes_distinct_outputs <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 61%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_resolution_with_gpu <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 61%]
+src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_resolution_with_spot <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py FAILED [ 61%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::test_provision_node_aws_dispatch <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 62%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::test_provision_node_multipass_dispatch <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 62%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::test_provision_node_unknown_provider <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 62%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::test_provision_node_digitalocean_dispatch <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 62%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestDispatcherRouting::test_multipass_routes_to_multipass_adapter <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 62%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestDispatcherRouting::test_aws_routes_to_libcloud <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py FAILED [ 63%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestDispatcherRouting::test_digitalocean_routes_to_libcloud <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py FAILED [ 63%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestDispatcherRouting::test_unknown_provider_raises_error <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 63%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestDispatcherRouting::test_bare_metal_raises_not_implemented <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 63%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_universal_cloud_node_instantiated <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py FAILED [ 64%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_boot_script_passed_through <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 64%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_credentials_resolved_correctly <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py FAILED [ 64%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_outputs_returned_in_correct_format <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 64%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_resource_options_propagated <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 64%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_region_parameter_passed <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 65%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_gpu_config_passed_to_boot_script <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 65%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_spot_config_passed_to_boot_script <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 65%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_depends_on_resources_propagated <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 65%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestBackwardCompatibility::test_multipass_calls_still_work <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 66%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestBackwardCompatibility::test_aws_calls_migrate_transparently <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 66%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestTierConfigThreading::test_provision_node_with_lite_tier <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 66%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestTierConfigThreading::test_provision_node_without_tier_defaults_production <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 66%]
+src/mesh/infrastructure/provision_node/test_provision_node.py::TestTierConfigThreading::test_provision_node_tier_config_passed_to_boot_script <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py PASSED [ 66%]
+src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_leader_has_no_dependencies <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py FAILED [ 67%]
+src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_worker_depends_on_leader <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py FAILED [ 67%]
+src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_depends_on_with_none <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py FAILED [ 67%]
+src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_depends_on_with_empty_list <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py FAILED [ 67%]
+src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_multiple_workers_depend_on_leader <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py FAILED [ 68%]
+src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_chained_dependencies <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py FAILED [ 68%]
+src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_multiple_dependencies_list <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py FAILED [ 68%]
+src/mesh/shared/test_security_hardening.py::TestNoCurlBashPatterns::test_no_curl_pipe_bash_or_sh[boot.sh] PASSED [ 68%]
+src/mesh/shared/test_security_hardening.py::TestNoCurlBashPatterns::test_no_curl_pipe_bash_or_sh[02-install-tailscale.sh] PASSED [ 68%]
+src/mesh/shared/test_security_hardening.py::TestNoCurlBashPatterns::test_no_curl_pipe_bash_or_sh[10-install-caddy.sh] PASSED [ 69%]
+src/mesh/shared/test_security_hardening.py::TestNoCurlBashPatterns::test_no_curl_pipe_bash_or_sh[mesh-install.sh] PASSED [ 69%]
+src/mesh/shared/test_types.py::TestSnapshotStatus::test_snapshot_status_has_all_values PASSED [ 69%]
+src/mesh/shared/test_types.py::TestSnapshotStatus::test_snapshot_status_values_are_strings PASSED [ 69%]
+src/mesh/shared/test_types.py::TestSnapshotMetadata::test_snapshot_metadata_all_fields_present PASSED [ 70%]
+src/mesh/shared/test_types.py::TestSnapshotMetadata::test_to_dict_returns_dict_representation PASSED [ 70%]
+src/mesh/shared/test_types.py::TestSnapshotMetadata::test_to_dict_status_converts_to_string PASSED [ 70%]
+src/mesh/shared/test_types.py::TestSnapshotMetadata::test_validation_id_non_empty PASSED [ 70%]
+src/mesh/shared/test_types.py::TestSnapshotMetadata::test_validation_app_name_non_empty PASSED [ 70%]
+src/mesh/shared/test_types.py::TestSnapshotMetadata::test_validation_size_bytes_non_negative PASSED [ 71%]
+src/mesh/shared/test_types.py::TestSnapshotMetadata::test_validation_size_bytes_zero_allowed PASSED [ 71%]
+src/mesh/shared/test_types.py::TestConstants::test_snapshot_dir_default_value PASSED [ 71%]
+src/mesh/shared/test_types.py::TestConstants::test_nomad_data_dir_constant PASSED [ 71%]
+src/mesh/shared/test_types.py::TestConstants::test_snapshot_dir_configurable_via_env_var PASSED [ 72%]
+src/mesh/shared/test_types.py::TestConstants::test_snapshot_dir_falls_back_to_default_when_env_unset PASSED [ 72%]
+src/mesh/snapshots/test_snapshots.py::TestCreateSnapshot::test_create_snapshot_does_not_raise PASSED [ 72%]
+src/mesh/snapshots/test_snapshots.py::TestCreateSnapshot::test_create_snapshot_queries_nomad_allocations PASSED [ 72%]
+src/mesh/snapshots/test_snapshots.py::TestCreateSnapshot::test_create_snapshot_creates_tar_archive PASSED [ 72%]
+src/mesh/snapshots/test_snapshots.py::TestCreateSnapshot::test_create_snapshot_writes_metadata_json PASSED [ 73%]
+src/mesh/snapshots/test_snapshots.py::TestCreateSnapshot::test_create_snapshot_returns_snapshot_metadata PASSED [ 73%]
+src/mesh/snapshots/test_snapshots.py::TestRestoreSnapshot::test_restore_snapshot_does_not_raise PASSED [ 73%]
+src/mesh/snapshots/test_snapshots.py::TestRestoreSnapshot::test_restore_snapshot_extracts_tar PASSED [ 73%]
+src/mesh/snapshots/test_snapshots.py::TestRestoreSnapshot::test_restore_snapshot_stops_allocations PASSED [ 74%]
+src/mesh/snapshots/test_snapshots.py::TestRestoreSnapshot::test_restore_snapshot_restarts_allocations PASSED [ 74%]
+src/mesh/snapshots/test_snapshots.py::TestRestoreSnapshot::test_restore_snapshot_returns_true_on_success PASSED [ 74%]
+src/mesh/snapshots/test_snapshots.py::TestListSnapshots::test_list_snapshots_does_not_raise PASSED [ 74%]
+src/mesh/snapshots/test_snapshots.py::TestListSnapshots::test_list_snapshots_scans_snapshot_directory PASSED [ 74%]
+src/mesh/snapshots/test_snapshots.py::TestListSnapshots::test_list_snapshots_filters_by_app_name PASSED [ 75%]
+src/mesh/snapshots/test_snapshots.py::TestListSnapshots::test_list_snapshots_returns_empty_list_when_none PASSED [ 75%]
+src/mesh/snapshots/test_snapshots.py::TestDeleteSnapshot::test_delete_snapshot_does_not_raise PASSED [ 75%]
+src/mesh/snapshots/test_snapshots.py::TestDeleteSnapshot::test_delete_snapshot_removes_tar_file PASSED [ 75%]
+src/mesh/snapshots/test_snapshots.py::TestDeleteSnapshot::test_delete_snapshot_removes_json_file PASSED [ 76%]
+src/mesh/snapshots/test_snapshots.py::TestDeleteSnapshot::test_delete_snapshot_returns_true_on_success PASSED [ 76%]
+src/mesh/snapshots/test_snapshots.py::TestModuleImports::test_module_exports_create_snapshot PASSED [ 76%]
+src/mesh/snapshots/test_snapshots.py::TestModuleImports::test_module_exports_restore_snapshot PASSED [ 76%]
+src/mesh/snapshots/test_snapshots.py::TestModuleImports::test_module_exports_list_snapshots PASSED [ 76%]
+src/mesh/snapshots/test_snapshots.py::TestModuleImports::test_module_exports_delete_snapshot PASSED [ 77%]
+src/mesh/snapshots/test_snapshots.py::TestModuleImports::test_module_imports_shared_types PASSED [ 77%]
+src/mesh/snapshots/test_snapshots.py::TestPathTraversal::test_path_traversal_blocked PASSED [ 77%]
+src/mesh/snapshots/test_snapshots.py::TestPathTraversal::test_normal_extraction_still_works PASSED [ 77%]
+src/mesh/snapshots/test_snapshots.py::TestEnsureSnapshotDir::test_creates_directory PASSED [ 78%]
+src/mesh/snapshots/test_snapshots.py::TestEnsureSnapshotDir::test_returns_existing_directory PASSED [ 78%]
+src/mesh/snapshots/test_snapshots.py::TestEnsureSnapshotDir::test_nested_directory_creation PASSED [ 78%]
+src/mesh/snapshots/test_snapshots.py::TestEnsureSnapshotDir::test_permission_error_propagates PASSED [ 78%]
+src/mesh/snapshots/test_snapshots.py::TestSaveSnapshot::test_creates_json_file PASSED [ 78%]
+src/mesh/snapshots/test_snapshots.py::TestSaveSnapshot::test_json_content_round_trips PASSED [ 79%]
+src/mesh/snapshots/test_snapshots.py::TestSaveSnapshot::test_atomic_write_no_partial_on_error PASSED [ 79%]
+src/mesh/snapshots/test_snapshots.py::TestSaveSnapshot::test_overwrites_existing_metadata PASSED [ 79%]
+src/mesh/snapshots/test_snapshots.py::TestSaveSnapshot::test_creates_directory_if_missing PASSED [ 79%]
+src/mesh/snapshots/test_snapshots.py::TestLoadSnapshotMetadata::test_loads_valid_metadata PASSED [ 80%]
+src/mesh/snapshots/test_snapshots.py::TestLoadSnapshotMetadata::test_returns_none_for_missing_file PASSED [ 80%]
+src/mesh/snapshots/test_snapshots.py::TestLoadSnapshotMetadata::test_returns_none_for_corrupted_json PASSED [ 80%]
+src/mesh/snapshots/test_snapshots.py::TestLoadSnapshotMetadata::test_returns_none_for_invalid_status PASSED [ 80%]
+src/mesh/snapshots/test_snapshots.py::TestLoadSnapshotMetadata::test_returns_none_for_malformed_json PASSED [ 80%]
+src/mesh/snapshots/test_snapshots.py::TestListAllMetadata::test_returns_empty_for_empty_directory PASSED [ 81%]
+src/mesh/snapshots/test_snapshots.py::TestListAllMetadata::test_returns_empty_for_nonexistent_directory PASSED [ 81%]
+src/mesh/snapshots/test_snapshots.py::TestListAllMetadata::test_lists_all_valid_metadata PASSED [ 81%]
+src/mesh/snapshots/test_snapshots.py::TestListAllMetadata::test_skips_corrupted_files_silently PASSED [ 81%]
+src/mesh/snapshots/test_snapshots.py::TestListAllMetadata::test_skips_non_json_files PASSED [ 82%]
+src/mesh/snapshots/test_snapshots.py::TestListAllMetadata::test_handles_mixed_valid_and_corrupted PASSED [ 82%]
+src/mesh/snapshots/test_snapshots.py::TestDeleteSnapshotFiles::test_deletes_tar_and_json PASSED [ 82%]
+src/mesh/snapshots/test_snapshots.py::TestDeleteSnapshotFiles::test_raises_for_missing_files PASSED [ 82%]
+src/mesh/snapshots/test_snapshots.py::TestDeleteSnapshotFiles::test_raises_if_tar_missing PASSED [ 82%]
+src/mesh/snapshots/test_snapshots.py::TestDeleteSnapshotFiles::test_raises_if_json_missing PASSED [ 83%]
+src/mesh/snapshots/test_snapshots.py::TestCheckDiskSpace::test_returns_true_when_enough_space PASSED [ 83%]
+src/mesh/snapshots/test_snapshots.py::TestCheckDiskSpace::test_returns_true_for_zero_bytes PASSED [ 83%]
+src/mesh/snapshots/test_snapshots.py::TestCheckDiskSpace::test_returns_false_for_impossible_size PASSED [ 83%]
+src/mesh/snapshots/test_snapshots.py::TestCheckDiskSpace::test_nonexistent_directory_uses_parent PASSED [ 84%]
+src/mesh/snapshots/test_snapshots.py::TestCheckDiskSpace::test_returns_false_on_os_error PASSED [ 84%]
+src/mesh/snapshots/test_snapshots.py::TestConcurrentWrites::test_concurrent_save_no_corruption PASSED [ 84%]
+src/mesh/verification/e2e_app_deployment/test_e2e_deploy.py::test_marketing_site_deployment <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_app_deployment/test_e2e_deploy.py SKIPPED [ 84%]
+src/mesh/verification/e2e_app_deployment/test_verification_logic.py::test_marketing_site_deployment <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_app_deployment/test_e2e_deploy.py SKIPPED [ 84%]
+src/mesh/verification/e2e_app_deployment/test_verification_logic.py::test_marketing_site_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_app_deployment/test_verification_logic.py PASSED [ 85%]
+src/mesh/verification/e2e_app_deployment/test_verification_logic.py::test_marketing_site_failure_timeout <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_app_deployment/test_verification_logic.py PASSED [ 85%]
+src/mesh/verification/e2e_lite_mode/test_lite_boot.py::TestLiteBoot::test_lite_tier_config_no_consul_no_tailscale <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_lite_mode/test_lite_boot.py PASSED [ 85%]
+src/mesh/verification/e2e_lite_mode/test_lite_boot.py::TestLiteBoot::test_lite_boot_script_no_tailscale <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_lite_mode/test_lite_boot.py PASSED [ 85%]
+src/mesh/verification/e2e_lite_mode/test_lite_boot.py::TestLiteBoot::test_lite_boot_script_no_consul_service <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_lite_mode/test_lite_boot.py PASSED [ 86%]
+src/mesh/verification/e2e_lite_mode/test_lite_boot.py::TestLiteBoot::test_lite_boot_installs_caddy <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_lite_mode/test_lite_boot.py PASSED [ 86%]
+src/mesh/verification/e2e_lite_mode/test_lite_boot.py::TestLiteBoot::test_single_node_detected_as_lite <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_lite_mode/test_lite_boot.py PASSED [ 86%]
+src/mesh/verification/e2e_lite_mode/test_lite_memory.py::TestLiteMemory::test_lite_mode_overhead_budget <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_lite_mode/test_lite_memory.py PASSED [ 86%]
+src/mesh/verification/e2e_lite_mode/test_lite_memory.py::TestLiteMemory::test_caddy_memory_allocation <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_lite_mode/test_lite_memory.py PASSED [ 86%]
+src/mesh/verification/e2e_lite_mode/test_lite_memory.py::TestLiteMemory::test_lite_vs_full_savings <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_lite_mode/test_lite_memory.py PASSED [ 87%]
+src/mesh/verification/e2e_lite_mode/test_lite_routing.py::TestLiteRouting::test_add_multiple_routes PASSED [ 87%]
+src/mesh/verification/e2e_lite_mode/test_lite_routing.py::TestLiteRouting::test_update_route PASSED [ 87%]
+src/mesh/verification/e2e_lite_mode/test_lite_routing.py::TestLiteRouting::test_list_routes PASSED [ 87%]
+src/mesh/verification/e2e_lite_mode/test_lite_routing.py::TestLiteRouting::test_lite_tier_has_caddy_enabled PASSED [ 88%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestClusterConfig::test_cluster_config_defaults <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 88%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestClusterConfig::test_cluster_config_from_env <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 88%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestClusterConfig::test_is_local <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 88%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestClusterConfig::test_is_cloud <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 88%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestClusterConfig::test_parse_worker_ips_empty <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 89%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestClusterConfig::test_parse_worker_ips_single <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 89%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestClusterConfig::test_parse_worker_ips_multiple <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 89%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestGetClusterNodes::test_get_cluster_nodes_with_leader <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 89%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestGetClusterNodes::test_get_cluster_nodes_with_workers <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 90%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestGetClusterNodes::test_get_cluster_nodes_local_discovery <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 90%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestGetMultipassIP::test_get_multipass_ip_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 90%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestGetMultipassIP::test_get_multipass_ip_failure <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 90%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestGetMultipassIP::test_get_multipass_ip_not_found <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 90%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestDeployJob::test_deploy_job_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 91%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestDeployJob::test_deploy_job_failure <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 91%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestDeployJob::test_deploy_job_default_nomad_addr <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 91%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestWaitForAllocation::test_wait_for_allocation_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 91%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestWaitForAllocation::test_wait_for_allocation_timeout <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 92%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestGetAllocationNodes::test_get_allocation_nodes_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 92%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestGetAllocationNodes::test_get_allocation_nodes_failure <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 92%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestVerifyServiceDiscovery::test_verify_service_discovery_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 92%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestVerifyServiceDiscovery::test_verify_service_discovery_failure <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 92%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCheckTailscaleMesh::test_check_tailscale_mesh_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 93%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCheckTailscaleMesh::test_check_tailscale_mesh_insufficient_nodes <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 93%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCheckTailscaleMesh::test_check_tailscale_mesh_failure <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 93%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCleanupJob::test_cleanup_job_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 93%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCleanupJob::test_cleanup_job_failure <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 94%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCleanupJob::test_cleanup_job_no_purge <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 94%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestJobTemplate::test_test_job_template_exists <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 94%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestJobTemplate::test_test_job_template_content <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 94%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCheckTraefikRouting::test_check_traefik_routing_success <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 94%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCheckTraefikRouting::test_check_traefik_routing_custom_port <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 95%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCheckTraefikRouting::test_check_traefik_routing_non_200 <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 95%]
+src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py::TestCheckTraefikRouting::test_check_traefik_routing_timeout <- ../../../rethink-paradigms/infa/mesh-workspace/oss/src/mesh/verification/e2e_multi_node_scenarios/test_utils_unit_tests.py PASSED [ 95%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestLiteIngressConfig::test_lite_ingress_config_defaults PASSED [ 95%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestLiteIngressConfig::test_lite_ingress_config_custom PASSED [ 96%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestDeployLiteIngress::test_deploy_lite_ingress_missing_job_file PASSED [ 96%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestDeployLiteIngress::test_deploy_lite_ingress_success PASSED [ 96%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestDeployLiteIngress::test_deploy_lite_ingress_nomad_addr PASSED [ 96%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestNomadJobTemplate::test_nomad_job_template_valid_hcl_syntax PASSED [ 96%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestNomadJobTemplate::test_caddy_template_has_correct_ports PASSED [ 97%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestNomadJobTemplate::test_caddy_template_has_http_redirect PASSED [ 97%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestNomadJobTemplate::test_caddy_template_has_server_constraint PASSED [ 97%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestNomadJobTemplate::test_caddy_template_has_host_volume PASSED [ 97%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestNomadJobTemplate::test_caddy_template_default_resources PASSED [ 98%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestNomadJobTemplate::test_caddy_template_has_mesh_infra_namespace PASSED [ 98%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestRouteManager::test_route_manager_add_route PASSED [ 98%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestRouteManager::test_route_manager_remove_route PASSED [ 98%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestRouteManager::test_route_manager_list_routes PASSED [ 98%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestRouteManager::test_route_manager_retry_on_failure PASSED [ 99%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestRouteManager::test_route_manager_add_route_failure PASSED [ 99%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestRouteManager::test_route_manager_remove_route_empty PASSED [ 99%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestRouteManager::test_route_manager_update_route PASSED [ 99%]
+src/mesh/workloads/deploy_lite_ingress/test_lite_ingress.py::TestRouteManager::test_route_manager_list_routes_error PASSED [100%]
+
+=================================== FAILURES ===================================
+_______________ TestDoctorIndividualChecks.test_env_check_fails ________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/cli/commands/test_doctor.py:193: in test_env_check_fails
+    ???
+E   assert True is False
+____________________ test_create_key_default_values_success ____________________
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/mocks.py:53: in wrapper
+    _sync_await(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/sync_await.py:34: in _sync_await
+    return loop.run_until_complete(fut)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/stack.py:85: in run_pulumi_func
+    await wait_for_rpcs()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/stack.py:127: in wait_for_rpcs
+    raise exn from cause
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/rpc_manager.py:73: in rpc_wrapper
+    result = await rpc
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/resource.py:981: in do_register
+    resolver = await prepare_resource(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/resource.py:220: in prepare_resource
+    parent_urn = await parent.urn.future()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/output.py:147: in get_value
+    val = await self._future
+E   RuntimeError: Task <Task pending name='Task-47' coro=<Output.future.<locals>.get_value() running at /Users/samanvayayagsen/.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/output.py:147> cb=[Task.task_wakeup()]> got Future <Future pending cb=[Output.__init__.<locals>.cleanup() at /Users/samanvayayagsen/.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/output.py:107]> attached to a different loop
+_____________________ test_create_key_custom_tags_success ______________________
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/mocks.py:53: in wrapper
+    _sync_await(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/sync_await.py:34: in _sync_await
+    return loop.run_until_complete(fut)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/stack.py:85: in run_pulumi_func
+    await wait_for_rpcs()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/stack.py:127: in wait_for_rpcs
+    raise exn from cause
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/rpc_manager.py:73: in rpc_wrapper
+    result = await rpc
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/resource.py:981: in do_register
+    resolver = await prepare_resource(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/resource.py:220: in prepare_resource
+    parent_urn = await parent.urn.future()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/output.py:147: in get_value
+    val = await self._future
+E   RuntimeError: await wasn't used with future
+____________________ test_create_key_non_ephemeral_success _____________________
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/mocks.py:53: in wrapper
+    _sync_await(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/sync_await.py:34: in _sync_await
+    return loop.run_until_complete(fut)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+    return future.result()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/stack.py:85: in run_pulumi_func
+    await wait_for_rpcs()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/stack.py:127: in wait_for_rpcs
+    raise exn from cause
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/rpc_manager.py:73: in rpc_wrapper
+    result = await rpc
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/resource.py:981: in do_register
+    resolver = await prepare_resource(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/runtime/resource.py:220: in prepare_resource
+    parent_urn = await parent.urn.future()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/output.py:147: in get_value
+    val = await self._future
+E   RuntimeError: await wasn't used with future
+_ TestAWSDriverInitialization.test_aws_driver_initialization_with_credentials __
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:918: in assert_called_once
+    raise AssertionError(msg)
+E   AssertionError: Expected 'get_driver' to have been called once. Called 0 times.
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:89: in test_aws_driver_initialization_with_credentials
+    ???
+E   AssertionError: Expected 'get_driver' to have been called once. Called 0 times.
+_________ TestAWSDriverInitialization.test_aws_driver_multiple_regions _________
+src/mesh/infrastructure/providers/discovery.py:224: in list_regions
+    return driver.list_locations()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:1482: in list_locations
+    iterator = enumerate(self.ex_list_availability_zones())
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:3108: in ex_list_availability_zones
+    result = self.connection.request(self.path, params=params.copy()).object
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:646: in request
+    return request_to_be_executed(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:708: in _retryable_request
+    response = responseCls(**kwargs)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:157: in __init__
+    code=self.status, message=self.parse_error(), headers=self.headers
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:869: in parse_error
+    raise InvalidCredsError(err_list[-1])
+E   libcloud.common.types.InvalidCredsError: 'AuthFailure: AWS was not able to validate the provided access credentials'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:145: in test_aws_driver_multiple_regions
+    ???
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:227: in list_regions
+    raise RuntimeError(f"Failed to list regions for {provider_id}: {str(e)}")
+E   RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+_____ TestAWSNodeProvisioningFlow.test_aws_node_creation_with_boot_script ______
+src/mesh/infrastructure/providers/discovery.py:224: in list_regions
+    return driver.list_locations()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:1482: in list_locations
+    iterator = enumerate(self.ex_list_availability_zones())
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:3108: in ex_list_availability_zones
+    result = self.connection.request(self.path, params=params.copy()).object
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:646: in request
+    return request_to_be_executed(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:708: in _retryable_request
+    response = responseCls(**kwargs)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:157: in __init__
+    code=self.status, message=self.parse_error(), headers=self.headers
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:869: in parse_error
+    raise InvalidCredsError(err_list[-1])
+E   libcloud.common.types.InvalidCredsError: 'AuthFailure: AWS was not able to validate the provided access credentials'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:225: in test_aws_node_creation_with_boot_script
+    ???
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:227: in list_regions
+    raise RuntimeError(f"Failed to list regions for {provider_id}: {str(e)}")
+E   RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+_________ TestAWSNodeProvisioningFlow.test_aws_size_selection_t3_small _________
+src/mesh/infrastructure/providers/discovery.py:224: in list_regions
+    return driver.list_locations()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:1482: in list_locations
+    iterator = enumerate(self.ex_list_availability_zones())
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:3108: in ex_list_availability_zones
+    result = self.connection.request(self.path, params=params.copy()).object
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:646: in request
+    return request_to_be_executed(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:708: in _retryable_request
+    response = responseCls(**kwargs)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:157: in __init__
+    code=self.status, message=self.parse_error(), headers=self.headers
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:869: in parse_error
+    raise InvalidCredsError(err_list[-1])
+E   libcloud.common.types.InvalidCredsError: 'AuthFailure: AWS was not able to validate the provided access credentials'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:302: in test_aws_size_selection_t3_small
+    ???
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:227: in list_regions
+    raise RuntimeError(f"Failed to list regions for {provider_id}: {str(e)}")
+E   RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+______ TestAWSNodeProvisioningFlow.test_aws_ubuntu_22_04_image_selection _______
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:918: in assert_called_once
+    raise AssertionError(msg)
+E   AssertionError: Expected 'list_images' to have been called once. Called 0 times.
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:371: in test_aws_ubuntu_22_04_image_selection
+    ???
+E   AssertionError: Expected 'list_images' to have been called once. Called 0 times.
+___________ TestAWSErrorScenarios.test_aws_invalid_credentials_error ___________
+src/mesh/infrastructure/providers/discovery.py:224: in list_regions
+    return driver.list_locations()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:1482: in list_locations
+    iterator = enumerate(self.ex_list_availability_zones())
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:3108: in ex_list_availability_zones
+    result = self.connection.request(self.path, params=params.copy()).object
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:646: in request
+    return request_to_be_executed(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:708: in _retryable_request
+    response = responseCls(**kwargs)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:157: in __init__
+    code=self.status, message=self.parse_error(), headers=self.headers
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:869: in parse_error
+    raise InvalidCredsError(err_list[-1])
+E   libcloud.common.types.InvalidCredsError: 'AuthFailure: AWS was not able to validate the provided access credentials'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:417: in test_aws_invalid_credentials_error
+    ???
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:227: in list_regions
+    raise RuntimeError(f"Failed to list regions for {provider_id}: {str(e)}")
+E   RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:416: in test_aws_invalid_credentials_error
+    ???
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Failed to initialize Libcloud driver'
+E    Input: "Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'"
+_____________ TestAWSErrorScenarios.test_aws_invalid_region_error ______________
+src/mesh/infrastructure/providers/discovery.py:224: in list_regions
+    return driver.list_locations()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:1482: in list_locations
+    iterator = enumerate(self.ex_list_availability_zones())
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:3108: in ex_list_availability_zones
+    result = self.connection.request(self.path, params=params.copy()).object
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:646: in request
+    return request_to_be_executed(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:708: in _retryable_request
+    response = responseCls(**kwargs)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:157: in __init__
+    code=self.status, message=self.parse_error(), headers=self.headers
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:869: in parse_error
+    raise InvalidCredsError(err_list[-1])
+E   libcloud.common.types.InvalidCredsError: 'AuthFailure: AWS was not able to validate the provided access credentials'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:461: in test_aws_invalid_region_error
+    ???
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:227: in list_regions
+    raise RuntimeError(f"Failed to list regions for {provider_id}: {str(e)}")
+E   RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+_________ TestAWSErrorScenarios.test_aws_instance_limit_exceeded_error _________
+src/mesh/infrastructure/providers/discovery.py:224: in list_regions
+    return driver.list_locations()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:1482: in list_locations
+    iterator = enumerate(self.ex_list_availability_zones())
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:3108: in ex_list_availability_zones
+    result = self.connection.request(self.path, params=params.copy()).object
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:646: in request
+    return request_to_be_executed(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:708: in _retryable_request
+    response = responseCls(**kwargs)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:157: in __init__
+    code=self.status, message=self.parse_error(), headers=self.headers
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/ec2.py:869: in parse_error
+    raise InvalidCredsError(err_list[-1])
+E   libcloud.common.types.InvalidCredsError: 'AuthFailure: AWS was not able to validate the provided access credentials'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:516: in test_aws_instance_limit_exceeded_error
+    ???
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:227: in list_regions
+    raise RuntimeError(f"Failed to list regions for {provider_id}: {str(e)}")
+E   RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_aws_mock.py:515: in test_aws_instance_limit_exceeded_error
+    ???
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Failed to create node on aws'
+E    Input: "Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'"
+__________ TestAWSSizeAndImageSelection.test_aws_region_availability ___________
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1831: in _inner
+    return f(*args, **kw)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1378: in patched
+    return func(*newargs, **newkeywargs)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1831: in _inner
+    return f(*args, **kw)
+E   TypeError: TestAWSSizeAndImageSelection.test_aws_region_availability() takes 4 positional arguments but 7 were given
+_ TestDigitalOceanDriverInitialization.test_digitalocean_driver_initialization_with_token _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_ TestDigitalOceanDriverInitialization.test_digitalocean_driver_multiple_regions _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_ TestDigitalOceanNodeProvisioningFlow.test_digitalocean_droplet_creation_with_boot_script _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_ TestDigitalOceanNodeProvisioningFlow.test_digitalocean_size_selection_small_droplet _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_ TestDigitalOceanNodeProvisioningFlow.test_digitalocean_ubuntu_22_04_image_selection _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_____ TestDigitalOceanErrorScenarios.test_digitalocean_invalid_token_error _____
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_____ TestDigitalOceanErrorScenarios.test_digitalocean_invalid_slug_error ______
+src/mesh/infrastructure/providers/discovery.py:224: in list_regions
+    return driver.list_locations()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/compute/drivers/digitalocean.py:124: in list_locations
+    data = self._paginated_request("/v2/regions", "regions")
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/digitalocean.py:204: in _paginated_request
+    data = self.connection.request(url)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:646: in request
+    return request_to_be_executed(
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:708: in _retryable_request
+    response = responseCls(**kwargs)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/base.py:157: in __init__
+    code=self.status, message=self.parse_error(), headers=self.headers
+../../../../.pyenv/versions/3.11.11/lib/python3.11/site-packages/libcloud/common/digitalocean.py:62: in parse_error
+    raise InvalidCredsError(body["message"])
+E   libcloud.common.types.InvalidCredsError: 'Unable to authenticate you'
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/providers/test_digitalocean_mock.py:455: in test_digitalocean_invalid_slug_error
+    ???
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:227: in list_regions
+    raise RuntimeError(f"Failed to list regions for {provider_id}: {str(e)}")
+E   RuntimeError: Failed to list regions for digitalocean: 'Unable to authenticate you'
+_ TestDigitalOceanErrorScenarios.test_digitalocean_droplet_limit_exceeded_error _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_ TestDigitalOceanSizeAndRegionSelection.test_digitalocean_region_availability _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1378: in patched
+    return func(*newargs, **newkeywargs)
+E   TypeError: TestDigitalOceanSizeAndRegionSelection.test_digitalocean_region_availability() takes 3 positional arguments but 5 were given
+_ TestHetznerDriverInitialization.test_hetzner_driver_initialization_with_token _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_____ TestHetznerDriverInitialization.test_hetzner_driver_multiple_regions _____
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_ TestHetznerNodeProvisioningFlow.test_hetzner_server_creation_with_boot_script _
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+___ TestHetznerNodeProvisioningFlow.test_hetzner_size_selection_cx22_server ____
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+__ TestHetznerNodeProvisioningFlow.test_hetzner_ubuntu_22_04_image_selection ___
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+__________ TestHetznerErrorScenarios.test_hetzner_invalid_token_error __________
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+_______ TestHetznerErrorScenarios.test_hetzner_invalid_datacenter_error ________
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+______ TestHetznerErrorScenarios.test_hetzner_server_limit_exceeded_error ______
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1375: in patched
+    with self.decoration_helper(patched,
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:137: in __enter__
+    return next(self.gen)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1357: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/contextlib.py:517: in enter_context
+    result = _enter(cm)
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1446: in __enter__
+    original, local = self.get_original()
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1419: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+______ TestHetznerSizeAndRegionSelection.test_hetzner_region_availability ______
+../../../../.pyenv/versions/3.11.11/lib/python3.11/unittest/mock.py:1378: in patched
+    return func(*newargs, **newkeywargs)
+E   TypeError: TestHetznerSizeAndRegionSelection.test_hetzner_region_availability() takes 3 positional arguments but 5 were given
+_______________ TestCreateMethod.test_create_with_exact_size_id ________________
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:191: in test_create_with_exact_size_id
+    result = provider.create(inputs)
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:221: in list_regions
+    driver = get_driver(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/__init__.py:299: in get_driver
+    credentials = get_credentials(provider_id, region)
+src/mesh/infrastructure/providers/__init__.py:200: in get_credentials
+    raise ValueError(
+E   ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+___________ TestCreateMethod.test_create_with_invalid_size_id_fails ____________
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:242: in test_create_with_invalid_size_id_fails
+    provider.create(inputs)
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:221: in list_regions
+    driver = get_driver(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/__init__.py:299: in get_driver
+    credentials = get_credentials(provider_id, region)
+src/mesh/infrastructure/providers/__init__.py:200: in get_credentials
+    raise ValueError(
+E   ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+
+During handling of the above exception, another exception occurred:
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:241: in test_create_with_invalid_size_id_fails
+    with pytest.raises(ValueError, match="Invalid size_id"):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Invalid size_id'
+E    Input: "Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter."
+____________ TestCreateMethod.test_create_with_invalid_region_fails ____________
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:278: in test_create_with_invalid_region_fails
+    provider.create(inputs)
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:221: in list_regions
+    driver = get_driver(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/__init__.py:299: in get_driver
+    credentials = get_credentials(provider_id, region)
+src/mesh/infrastructure/providers/__init__.py:200: in get_credentials
+    raise ValueError(
+E   ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+
+During handling of the above exception, another exception occurred:
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:277: in test_create_with_invalid_region_fails
+    with pytest.raises(ValueError, match="Invalid region"):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Invalid region'
+E    Input: "Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter."
+_____________ TestCreateMethod.test_create_with_explicit_image_id ______________
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:338: in test_create_with_explicit_image_id
+    result = provider.create(inputs)
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:221: in list_regions
+    driver = get_driver(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/__init__.py:299: in get_driver
+    credentials = get_credentials(provider_id, region)
+src/mesh/infrastructure/providers/__init__.py:200: in get_credentials
+    raise ValueError(
+E   ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+___________ TestCreateMethod.test_create_auto_discovers_ubuntu_image ___________
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:404: in test_create_auto_discovers_ubuntu_image
+    result = provider.create(inputs)
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:221: in list_regions
+    driver = get_driver(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/__init__.py:299: in get_driver
+    credentials = get_credentials(provider_id, region)
+src/mesh/infrastructure/providers/__init__.py:200: in get_credentials
+    raise ValueError(
+E   ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+_________ TestCreateMethod.test_create_passes_boot_script_via_userdata _________
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:494: in test_create_passes_boot_script_via_userdata
+    provider.create(inputs)
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:221: in list_regions
+    driver = get_driver(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/__init__.py:299: in get_driver
+    credentials = get_credentials(provider_id, region)
+src/mesh/infrastructure/providers/__init__.py:200: in get_credentials
+    raise ValueError(
+E   ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+_____________ TestCreateMethod.test_create_handles_driver_failure ______________
+src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py:552: in test_create_handles_driver_failure
+    provider.create(inputs)
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py:195: in create
+    location = get_region(provider_id, region)
+src/mesh/infrastructure/providers/discovery.py:253: in get_region
+    all_regions = list_regions(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/discovery.py:221: in list_regions
+    driver = get_driver(provider_id, credentials=credentials)
+src/mesh/infrastructure/providers/__init__.py:299: in get_driver
+    credentials = get_credentials(provider_id, region)
+src/mesh/infrastructure/providers/__init__.py:200: in get_credentials
+    raise ValueError(
+E   ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+______________________ test_invalid_provider_raises_error ______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:45: in test_invalid_provider_raises_error
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'invalid-provider'. Use list_regions('invalid-provider') to see available regions.
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:44: in test_invalid_provider_raises_error
+    ???
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Unknown compute provider'
+E    Input: "region is required for cloud provider 'invalid-provider'. Use list_regions('invalid-provider') to see available regions."
+___________________________ test_empty_provider_name ___________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:80: in test_empty_provider_name
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider ''. Use list_regions('') to see available regions.
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:79: in test_empty_provider_name
+    ???
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Unknown compute provider'
+E    Input: "region is required for cloud provider ''. Use list_regions('') to see available regions."
+______________________________ test_none_provider ______________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:97: in test_none_provider
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'None'. Use list_regions('None') to see available regions.
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:96: in test_none_provider
+    ???
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Unknown compute provider'
+E    Input: "region is required for cloud provider 'None'. Use list_regions('None') to see available regions."
+___________________________ test_valid_aws_provider ____________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:114: in test_valid_aws_provider
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_________________________ test_case_sensitive_provider _________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:161: in test_case_sensitive_provider
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'AWS'. Use list_regions('AWS') to see available regions.
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:160: in test_case_sensitive_provider
+    ???
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Unknown compute provider'
+E    Input: "region is required for cloud provider 'AWS'. Use list_regions('AWS') to see available regions."
+_________________________ test_whitespace_in_provider __________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:178: in test_whitespace_in_provider
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider ' aws '. Use list_regions(' aws ') to see available regions.
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:177: in test_whitespace_in_provider
+    ???
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Unknown compute provider'
+E    Input: "region is required for cloud provider ' aws '. Use list_regions(' aws ') to see available regions."
+_______________________ test_provider_with_special_chars _______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:195: in test_provider_with_special_chars
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws@123'. Use list_regions('aws@123') to see available regions.
+
+During handling of the above exception, another exception occurred:
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:194: in test_provider_with_special_chars
+    ???
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'Unknown compute provider'
+E    Input: "region is required for cloud provider 'aws@123'. Use list_regions('aws@123') to see available regions."
+_______________________ test_gpu_config_with_server_role _______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:215: in test_gpu_config_with_server_role
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+______________________ test_spot_config_with_server_role _______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:240: in test_spot_config_with_server_role
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_special_chars_in_node_name ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:284: in test_special_chars_in_node_name
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+___________________________ test_very_long_node_name ___________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_error_scenarios.py:305: in test_very_long_node_name
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_____________________ test_leader_and_worker_provisioning ______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py:55: in test_leader_and_worker_provisioning
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+______________________ test_multiple_workers_with_leader _______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py:110: in test_multiple_workers_with_leader
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+______________________ test_gpu_worker_with_spot_handling ______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py:180: in test_gpu_worker_with_spot_handling
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+______________________ test_full_stack_with_dependencies _______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py:240: in test_full_stack_with_dependencies
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+______________________ test_cluster_provisioning_sequence ______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py:313: in test_cluster_provisioning_sequence
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_____________________ test_cross_region_cluster_simulation _____________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_integration_scenarios.py:365: in test_cross_region_cluster_simulation
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+________________________ test_public_ip_output_resolves ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:54: in test_public_ip_output_resolves
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_private_ip_output_resolves ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:78: in test_private_ip_output_resolves
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_instance_id_output_resolves _______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:102: in test_instance_id_output_resolves
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_output_chaining_with_apply ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:128: in test_output_chaining_with_apply
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_________________________ test_output_all_combination __________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:156: in test_output_all_combination
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_outputs_are_pulumi_outputs ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:185: in test_outputs_are_pulumi_outputs
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+________________________ test_output_values_accessible _________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:218: in test_output_values_accessible
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_____________________ test_multiple_nodes_distinct_outputs _____________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:244: in test_multiple_nodes_distinct_outputs
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_output_resolution_with_gpu ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:282: in test_output_resolution_with_gpu
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_output_resolution_with_spot _______________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_output_resolution.py:314: in test_output_resolution_with_spot
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+______________ TestDispatcherRouting.test_aws_routes_to_libcloud _______________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py:228: in test_aws_routes_to_libcloud
+    ???
+E   KeyError: 'provider'
+__________ TestDispatcherRouting.test_digitalocean_routes_to_libcloud __________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py:256: in test_digitalocean_routes_to_libcloud
+    ???
+E   KeyError: 'provider'
+______ TestLibcloudPathIntegration.test_universal_cloud_node_instantiated ______
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py:330: in test_universal_cloud_node_instantiated
+    ???
+E   KeyError: 'provider'
+_______ TestLibcloudPathIntegration.test_credentials_resolved_correctly ________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_provision_node.py:396: in test_credentials_resolved_correctly
+    ???
+E   AssertionError: assert 'provider' in {'cloud_provider': 'aws', 'region': 'us-east-1', 'size_id': 't3.small', 'boot_script': <pulumi.output.Output object at 0x10cadec10>, 'opts': None}
+_______________________ test_leader_has_no_dependencies ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py:55: in test_leader_has_no_dependencies
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+________________________ test_worker_depends_on_leader _________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py:82: in test_worker_depends_on_leader
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+__________________________ test_depends_on_with_none ___________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py:118: in test_depends_on_with_none
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_depends_on_with_empty_list ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py:143: in test_depends_on_with_empty_list
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+____________________ test_multiple_workers_depend_on_leader ____________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py:168: in test_multiple_workers_depend_on_leader
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+__________________________ test_chained_dependencies ___________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py:215: in test_chained_dependencies
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+_______________________ test_multiple_dependencies_list ________________________
+/Users/samanvayayagsen/project/rethink-paradigms/infa/mesh-workspace/oss/src/mesh/infrastructure/provision_node/test_resource_dependencies.py:262: in test_multiple_dependencies_list
+    ???
+src/mesh/infrastructure/provision_node/provision_node.py:240: in provision_node
+    raise ValueError(
+E   ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.11.11-final-0 _______________
+
+Name                                                                 Stmts   Miss   Cover   Missing
+---------------------------------------------------------------------------------------------------
+src/mesh/__init__.py                                                     0      0 100.00%
+src/mesh/cli/__init__.py                                                 0      0 100.00%
+src/mesh/cli/commands/__init__.py                                        0      0 100.00%
+src/mesh/cli/commands/add_worker.py                                     55     33  40.00%   29-41, 63-65, 78, 80, 84, 118-119, 136-164
+src/mesh/cli/commands/destroy.py                                        96     57  40.62%   78-79, 112-113, 115-116, 126-210
+src/mesh/cli/commands/doctor.py                                        106     39  63.21%   35-40, 55-57, 61-74, 80-91, 97-109, 125, 128, 132-138
+src/mesh/cli/commands/helpers.py                                         3      0 100.00%
+src/mesh/cli/commands/init_cmd.py                                      273    160  41.39%   167-203, 211-236, 266-268, 308-312, 316-317, 325-342, 347-361, 367-373, 384, 401-409, 419-432, 441-442, 450-453, 484-556, 569-637, 661-662
+src/mesh/cli/commands/init_json.py                                     110     32  70.91%   43-53, 78, 118-136, 146-152, 162-168, 182-189, 240, 300-305, 319-323, 328-329
+src/mesh/cli/commands/json_output.py                                    55     16  70.91%   49-50, 84-99, 227, 314
+src/mesh/cli/commands/logs.py                                          109     50  54.13%   62-72, 76-100, 112-113, 184-186, 200-241
+src/mesh/cli/commands/snapshot.py                                       79      3  96.20%   34, 36, 40
+src/mesh/cli/commands/ssh.py                                           132     69  47.73%   67-77, 81-107, 111-134, 147-148, 223-225, 235-290
+src/mesh/cli/commands/status.py                                         56     20  64.29%   143, 146, 151-193
+src/mesh/cli/main.py                                                   108     60  44.44%   182-183, 270-342, 361-369, 375-376, 382-383, 391, 396
+src/mesh/cli/plugins.py                                                 22      3  86.36%   39, 50-51
+src/mesh/cli/ui/__init__.py                                              0      0 100.00%
+src/mesh/cli/ui/panels.py                                              117     34  70.94%   49, 59, 196, 205-233, 238-263
+src/mesh/cli/ui/themes.py                                               21      0 100.00%
+src/mesh/infrastructure/__init__.py                                      0      0 100.00%
+src/mesh/infrastructure/boot_consul_nomad/__init__.py                    2      0 100.00%
+src/mesh/infrastructure/boot_consul_nomad/generate_boot_scripts.py      46      1  97.83%   143
+src/mesh/infrastructure/config/__init__.py                               0      0 100.00%
+src/mesh/infrastructure/config/env.py                                   98      5  94.90%   117, 123, 128, 137, 215
+src/mesh/infrastructure/progressive_activation/__init__.py               2      0 100.00%
+src/mesh/infrastructure/progressive_activation/tier_config.py           17      0 100.00%
+src/mesh/infrastructure/progressive_activation/tier_manager.py          20      0 100.00%
+src/mesh/infrastructure/providers/__init__.py                           72      9  87.50%   170, 240-244, 281-282, 315, 319-320
+src/mesh/infrastructure/providers/discovery.py                          96     58  39.58%   72, 83-85, 89-90, 165-182, 219, 309-318, 349-402, 425-431, 466-472
+src/mesh/infrastructure/providers/libcloud_dynamic_provider.py         156     68  56.41%   178, 180, 184, 196-276, 308, 324-326, 334-335, 359, 373-375, 398-399, 424, 432-433, 476-493, 543-560
+src/mesh/infrastructure/provision_node/__init__.py                       0      0 100.00%
+src/mesh/infrastructure/provision_node/multipass.py                     67     10  85.07%   52, 70, 72, 104-105, 125-129
+src/mesh/infrastructure/provision_node/provision_direct.py              96     84  12.50%   82-93, 108-141, 186-247, 291-314, 343-370
+src/mesh/infrastructure/provision_node/provision_node.py                39      1  97.44%   109
+src/mesh/shared/__init__.py                                             28      0 100.00%
+src/mesh/snapshots/__init__.py                                         151      8  94.70%   156, 247, 256, 355-356, 364, 372-373
+src/mesh/verification/__init__.py                                        0      0 100.00%
+src/mesh/verification/e2e_lite_mode/__init__.py                          0      0 100.00%
+src/mesh/verification/e2e_multi_node_scenarios/__init__.py               2      0 100.00%
+src/mesh/verification/e2e_mvp/__init__.py                                0      0 100.00%
+src/mesh/workloads/deploy_lite_ingress/__init__.py                       2      0 100.00%
+src/mesh/workloads/deploy_lite_ingress/deploy.py                        75     16  78.67%   87-90, 94-131
+src/mesh/workloads/deploy_lite_ingress/route_manager.py                 64      7  89.06%   26, 49, 61, 69-70, 75, 84
+---------------------------------------------------------------------------------------------------
+TOTAL                                                                 2375    843  64.51%
+Coverage HTML written to dir htmlcov
+=========================== short test summary info ============================
+FAILED src/mesh/cli/commands/test_doctor.py::TestDoctorIndividualChecks::test_env_check_fails - assert True is False
+FAILED src/mesh/infrastructure/configure_tailscale/test_configure.py::test_create_key_default_values_success - RuntimeError: Task <Task pending name='Task-47' coro=<Output.future.<locals>.get_value() running at /Users/samanvayayagsen/.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/output.py:147> cb=[Task.task_wakeup()]> got Future <Future pending cb=[Output.__init__.<locals>.cleanup() at /Users/samanvayayagsen/.pyenv/versions/3.11.11/lib/python3.11/site-packages/pulumi/output.py:107]> attached to a different loop
+FAILED src/mesh/infrastructure/configure_tailscale/test_configure.py::test_create_key_custom_tags_success - RuntimeError: await wasn't used with future
+FAILED src/mesh/infrastructure/configure_tailscale/test_configure.py::test_create_key_non_ephemeral_success - RuntimeError: await wasn't used with future
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSDriverInitialization::test_aws_driver_initialization_with_credentials - AssertionError: Expected 'get_driver' to have been called once. Called 0 times.
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSDriverInitialization::test_aws_driver_multiple_regions - RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSNodeProvisioningFlow::test_aws_node_creation_with_boot_script - RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSNodeProvisioningFlow::test_aws_size_selection_t3_small - RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSNodeProvisioningFlow::test_aws_ubuntu_22_04_image_selection - AssertionError: Expected 'list_images' to have been called once. Called 0 times.
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSErrorScenarios::test_aws_invalid_credentials_error - AssertionError: Regex pattern did not match.
+ Regex: 'Failed to initialize Libcloud driver'
+ Input: "Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'"
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSErrorScenarios::test_aws_invalid_region_error - RuntimeError: Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSErrorScenarios::test_aws_instance_limit_exceeded_error - AssertionError: Regex pattern did not match.
+ Regex: 'Failed to create node on aws'
+ Input: "Failed to list regions for aws: 'AuthFailure: AWS was not able to validate the provided access credentials'"
+FAILED src/mesh/infrastructure/providers/test_aws_mock.py::TestAWSSizeAndImageSelection::test_aws_region_availability - TypeError: TestAWSSizeAndImageSelection.test_aws_region_availability() takes 4 positional arguments but 7 were given
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanDriverInitialization::test_digitalocean_driver_initialization_with_token - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanDriverInitialization::test_digitalocean_driver_multiple_regions - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanNodeProvisioningFlow::test_digitalocean_droplet_creation_with_boot_script - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanNodeProvisioningFlow::test_digitalocean_size_selection_small_droplet - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanNodeProvisioningFlow::test_digitalocean_ubuntu_22_04_image_selection - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanErrorScenarios::test_digitalocean_invalid_token_error - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanErrorScenarios::test_digitalocean_invalid_slug_error - RuntimeError: Failed to list regions for digitalocean: 'Unable to authenticate you'
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanErrorScenarios::test_digitalocean_droplet_limit_exceeded_error - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_digitalocean_mock.py::TestDigitalOceanSizeAndRegionSelection::test_digitalocean_region_availability - TypeError: TestDigitalOceanSizeAndRegionSelection.test_digitalocean_region_availability() takes 3 positional arguments but 5 were given
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerDriverInitialization::test_hetzner_driver_initialization_with_token - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerDriverInitialization::test_hetzner_driver_multiple_regions - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerNodeProvisioningFlow::test_hetzner_server_creation_with_boot_script - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerNodeProvisioningFlow::test_hetzner_size_selection_cx22_server - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerNodeProvisioningFlow::test_hetzner_ubuntu_22_04_image_selection - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerErrorScenarios::test_hetzner_invalid_token_error - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerErrorScenarios::test_hetzner_invalid_datacenter_error - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerErrorScenarios::test_hetzner_server_limit_exceeded_error - AttributeError: <module 'mesh.infrastructure.providers.libcloud_dynamic_provider' from '/Users/samanvayayagsen/project/rp-launch/mesh-workspace/mesh-provision/src/mesh/infrastructure/providers/libcloud_dynamic_provider.py'> does not have the attribute 'Provider'
+FAILED src/mesh/infrastructure/providers/test_hetzner_mock.py::TestHetznerSizeAndRegionSelection::test_hetzner_region_availability - TypeError: TestHetznerSizeAndRegionSelection.test_hetzner_region_availability() takes 3 positional arguments but 5 were given
+FAILED src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_with_exact_size_id - ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+FAILED src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_with_invalid_size_id_fails - AssertionError: Regex pattern did not match.
+ Regex: 'Invalid size_id'
+ Input: "Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter."
+FAILED src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_with_invalid_region_fails - AssertionError: Regex pattern did not match.
+ Regex: 'Invalid region'
+ Input: "Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter."
+FAILED src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_with_explicit_image_id - ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+FAILED src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_auto_discovers_ubuntu_image - ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+FAILED src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_passes_boot_script_via_userdata - ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+FAILED src/mesh/infrastructure/providers/test_libcloud_dynamic_provider.py::TestCreateMethod::test_create_handles_driver_failure - ValueError: Missing required credentials for 'aws': key (AWS_ACCESS_KEY_ID), secret (AWS_SECRET_ACCESS_KEY). Set these environment variables or pass credentials parameter.
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_invalid_provider_raises_error - AssertionError: Regex pattern did not match.
+ Regex: 'Unknown compute provider'
+ Input: "region is required for cloud provider 'invalid-provider'. Use list_regions('invalid-provider') to see available regions."
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_empty_provider_name - AssertionError: Regex pattern did not match.
+ Regex: 'Unknown compute provider'
+ Input: "region is required for cloud provider ''. Use list_regions('') to see available regions."
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_none_provider - AssertionError: Regex pattern did not match.
+ Regex: 'Unknown compute provider'
+ Input: "region is required for cloud provider 'None'. Use list_regions('None') to see available regions."
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_valid_aws_provider - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_case_sensitive_provider - AssertionError: Regex pattern did not match.
+ Regex: 'Unknown compute provider'
+ Input: "region is required for cloud provider 'AWS'. Use list_regions('AWS') to see available regions."
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_whitespace_in_provider - AssertionError: Regex pattern did not match.
+ Regex: 'Unknown compute provider'
+ Input: "region is required for cloud provider ' aws '. Use list_regions(' aws ') to see available regions."
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_provider_with_special_chars - AssertionError: Regex pattern did not match.
+ Regex: 'Unknown compute provider'
+ Input: "region is required for cloud provider 'aws@123'. Use list_regions('aws@123') to see available regions."
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_gpu_config_with_server_role - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_spot_config_with_server_role - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_special_chars_in_node_name - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_error_scenarios.py::test_very_long_node_name - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_leader_and_worker_provisioning - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_multiple_workers_with_leader - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_gpu_worker_with_spot_handling - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_full_stack_with_dependencies - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_cluster_provisioning_sequence - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_integration_scenarios.py::test_cross_region_cluster_simulation - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_public_ip_output_resolves - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_private_ip_output_resolves - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_instance_id_output_resolves - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_chaining_with_apply - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_all_combination - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_outputs_are_pulumi_outputs - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_values_accessible - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_multiple_nodes_distinct_outputs - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_resolution_with_gpu - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_output_resolution.py::test_output_resolution_with_spot - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_provision_node.py::TestDispatcherRouting::test_aws_routes_to_libcloud - KeyError: 'provider'
+FAILED src/mesh/infrastructure/provision_node/test_provision_node.py::TestDispatcherRouting::test_digitalocean_routes_to_libcloud - KeyError: 'provider'
+FAILED src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_universal_cloud_node_instantiated - KeyError: 'provider'
+FAILED src/mesh/infrastructure/provision_node/test_provision_node.py::TestLibcloudPathIntegration::test_credentials_resolved_correctly - AssertionError: assert 'provider' in {'cloud_provider': 'aws', 'region': 'us-east-1', 'size_id': 't3.small', 'boot_script': <pulumi.output.Output object at 0x10cadec10>, 'opts': None}
+FAILED src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_leader_has_no_dependencies - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_worker_depends_on_leader - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_depends_on_with_none - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_depends_on_with_empty_list - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_multiple_workers_depend_on_leader - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_chained_dependencies - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+FAILED src/mesh/infrastructure/provision_node/test_resource_dependencies.py::test_multiple_dependencies_list - ValueError: region is required for cloud provider 'aws'. Use list_regions('aws') to see available regions.
+========== 76 failed, 371 passed, 4 skipped, 21 deselected in 38.38s ===========

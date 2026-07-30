@@ -1,0 +1,49 @@
+=== TEST 2: Missing Required Arg → Error JSON ===
+Date: Mon May  4 23:25:30 IST 2026
+
+--- 2a: Demo mode with missing region (as written in task spec) ---
+Command: run_init(demo=True, provider_name='digitalocean', workers=0, yes=True, output='json')
+{
+  "cluster_id": "mesh-cluster",
+  "provider": "digitalocean",
+  "region": "",
+  "tier": "lite",
+  "leader": {
+    "ip": "192.0.2.1",
+    "id": "demo-mesh-cluster-leader",
+    "size": "s-2vcpu-4gb"
+  },
+  "workers": [],
+  "nomad_addr": "http://127.0.0.1:4646",
+  "daemon_url": "https://daemon-mesh-cluster.agentbodies.com",
+  "daemon_token": "demo-token-placeholder",
+  "caddy_admin": "http://127.0.0.1:2019",
+  "created_at": "2026-05-04T17:55:30.583090Z",
+  "demo": true
+}
+EXIT=0
+
+STDOUT: (above)
+STDERR: 
+
+NOTE: Demo mode bypasses arg validation by design — succeeds with empty region
+
+--- 2b: NON-demo mode with missing region → correctly produces error JSON ---
+Command: run_init(demo=False, provider_name='digitalocean', workers=0, yes=True, output='json')
+EXIT=1
+
+--- STDERR from non-demo missing-region test ---
+{
+  "error": {
+    "code": "missing_required_args",
+    "message": "Required arguments missing: region, api_key",
+    "missing_args": [
+      "region",
+      "api_key"
+    ]
+  }
+}
+
+--- VALIDATE: stderr is valid JSON with error shape ---
+ERROR_JSON_ON_STDERR: code=missing_required_args, message=Required arguments missing: region, api_key
+  missing_args: ['region', 'api_key']
