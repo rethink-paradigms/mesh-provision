@@ -65,6 +65,45 @@ app = FastAPI(
 )
 
 # ---------------------------------------------------------------------------
+# Stale-code detection — warn if .py files were modified after process start
+# ---------------------------------------------------------------------------
+
+import os as _os
+from datetime import datetime as _datetime
+from pathlib import Path as _Path
+
+_START_TIME = _datetime.now()
+
+
+def _check_stale_code():
+    """Log a warning if any .py file in this package is newer than the process."""
+    import logging as _logging
+    try:
+        pkg_root = _Path(__file__).parent
+        newer: list[str] = []
+        for f in pkg_root.rglob("*.py"):
+            mtime = _datetime.fromtimestamp(f.stat().st_mtime)
+            if mtime > _START_TIME:
+                newer.append(str(f.relative_to(pkg_root)))
+        if newer:
+            _logging.warning(
+                "mesh-provision started at %s but %d file(s) were modified later. "
+                "You may be running stale code. Run 'make restart-mesh-provision' to reload. "
+                "Stale files: %s",
+                _START_TIME.isoformat(),
+                len(newer),
+                ", ".join(newer[:5]) + ("..." if len(newer) > 5 else ""),
+            )
+    except Exception:
+        pass  # Non-fatal — fallback if anything goes wrong
+
+
+@app.on_event("startup")
+async def _startup():
+    _check_stale_code()
+
+
+# ---------------------------------------------------------------------------
 # Authentication
 #
 # Production: set MESH_PROVISION_API_KEY to a strong random value.
@@ -228,6 +267,7 @@ def _handle_init(params: dict[str, Any]) -> dict[str, Any]:
     worker_size = params.get("worker_size", "s-1vcpu-1gb")
     daemon_config: str | None = params.get("daemon_config") or None
     tailscale_key: str = params.get("tailscale_key", "")
+    cluster_id: str = params.get("cluster_id", "")
 
     _validate_provider(provider)
 
@@ -271,7 +311,7 @@ def _handle_init(params: dict[str, Any]) -> dict[str, Any]:
             api_key=api_key,
             leader_boot_script=leader_boot,
             worker_boot_script_fn=_make_worker_boot,
-            tags=[cluster_name, "e2e"],
+            tags=[cluster_name, "e2e", f"cluster:{cluster_id}"] if cluster_id else [cluster_name, "e2e"],
         )
     except Exception as exc:
         raise HTTPException(
@@ -323,6 +363,7 @@ def _handle_destroy(params: dict[str, Any]) -> dict[str, Any]:
     region = params.get("region", "")
     cleanup_all = bool(params.get("cleanup_all", False))
     api_key = _resolve_api_key(provider, params.get("api_key", ""))
+    node_ids: list[str] | None = params.get("node_ids")
 
     _validate_provider(provider)
 
@@ -333,6 +374,7 @@ def _handle_destroy(params: dict[str, Any]) -> dict[str, Any]:
             region=region,
             cluster_name=cluster_name,
             cleanup_all=cleanup_all,
+            node_ids=node_ids,
         )
     except NotImplementedError as exc:
         raise HTTPException(

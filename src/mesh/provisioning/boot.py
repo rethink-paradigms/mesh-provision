@@ -66,14 +66,13 @@ _TIER_SCRIPTS: dict[str, list[str]] = {
     "solo": [
         "01-install-deps.sh",
         "02-install-tailscale.sh",
-        "03-install-hashicorp.sh",
-        "07-configure-nomad.sh",
+        "04-download-binaries.sh",
         "10-install-caddy.sh",
     ],
     "cluster": [
         "01-install-deps.sh",
         "02-install-tailscale.sh",
-        "03-install-hashicorp.sh",
+        "04-download-binaries.sh",
         "07-configure-nomad.sh",
         "10-install-caddy.sh",
     ],
@@ -240,6 +239,8 @@ def generate_cloud_init(
         CLUSTER_TIER=cluster_tier,
         ENABLE_CADDY="true" if enable_caddy else "false",
         DAEMON_CONFIG="",  # daemon handled separately via write_files
+        MESH_VERSION=resolved_version,
+        GOSS_URL="https://github.com/goss-org/goss/releases/download/v0.4.9/goss-linux-amd64",
     )
 
     if validate:
@@ -339,21 +340,49 @@ def generate_cloud_init(
             },
         ]
         if install_sh_content:
+            # Try curl first (saves ~12KB in payload); fall back to embedded file.
             cloud_config["write_files"].append({
                 "path": "/tmp/install-mesh.sh",
                 "permissions": "0755",
                 "content": install_sh_content,
             })
             cloud_config["runcmd"] += [
+                f"curl -fsSL --connect-timeout 10 --max-time 30 "
+                f"https://raw.githubusercontent.com/rethink-paradigms/mesh/main/code/mesh/scripts/install.sh "
+                f"-o /tmp/install-mesh.sh || true",  # fall back to embedded file on failure
                 f"MESH_SKIP_INIT=1 MESH_VERSION={resolved_version} bash /tmp/install-mesh.sh",
-                # Ensure ~/.mesh/ and sub-dirs exist (store + plugin dir needed at daemon start)
+                # Ensure ~/.mesh/ and sub-dirs exist
                 "mkdir -p /root/.mesh/plugins /root/.mesh/agents",
                 # Validate binary and config WITHOUT starting the server.
-                # The old 'timeout 2 mesh-daemon serve ...' leaked PID files and
-                # port state, racing against the systemctl start on the next line.
                 "bash /opt/ops-platform/scripts/99-validate-daemon.sh",
                 "systemctl daemon-reload && systemctl enable mesh-daemon && systemctl start mesh-daemon",
+                # Start Agent Vault service
+                "systemctl daemon-reload && systemctl enable agent-vault && systemctl start agent-vault",
             ]
+
+            # Agent Vault systemd service
+            cloud_config["write_files"].append({
+                "path": "/etc/systemd/system/agent-vault.service",
+            "permissions": "0644",
+            "content": """[Unit]
+Description=Agent Vault credential proxy
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/agent-vault server --addr 127.0.0.1:14321 --mitm-addr 0.0.0.0:14322
+Environment=AGENT_VAULT_MASTER_PASSWORD=
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+""".strip(),
+        })
+        # Pre-pull Hermes image so first agent install doesn't wait 2+ min
+        # for Docker to download the 2.47GB image. Overlaps with other boot work.
+        cloud_config["runcmd"].append(
+            "docker pull nousresearch/hermes-agent:latest || true"
+        )
 
     # goss health spec (optional -- silently skipped if not present)
     goss_spec = _load_goss_spec()

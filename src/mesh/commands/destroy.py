@@ -36,6 +36,7 @@ def handle_destroy(params: dict[str, Any]) -> None:
     provider     = (params.get("provider") or "digitalocean").lower()
     region       = params.get("region", "")
     cleanup_all  = bool(params.get("cleanup_all", False))
+    node_ids     = params.get("node_ids")
 
     # api_key is optional — fall back to env vars
     api_key = _resolve_api_key(provider, params.get("api_key", ""))
@@ -55,6 +56,7 @@ def handle_destroy(params: dict[str, Any]) -> None:
             region=region,
             cluster_name=cluster_name,
             cleanup_all=cleanup_all,
+            node_ids=node_ids,
         )
     except NotImplementedError as exc:
         print_json_error(code="provision_failed", message=str(exc), phase="destroy")

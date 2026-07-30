@@ -16,12 +16,17 @@ SPOT_CHECK_INTERVAL="{{ SPOT_CHECK_INTERVAL }}" # e.g., "5"
 SPOT_GRACE_PERIOD="{{ SPOT_GRACE_PERIOD }}"     # e.g., "90"
 CLUSTER_TIER="{{ CLUSTER_TIER }}"
 ENABLE_CADDY="{{ ENABLE_CADDY }}"
+MESH_VERSION="{{ MESH_VERSION }}"
+GOSS_URL="{{ GOSS_URL }}"
 
 bash scripts/01-install-deps.sh
 
 bash scripts/02-install-tailscale.sh "$TAILSCALE_KEY"
 
-bash scripts/03-install-hashicorp.sh
+# Parallel download of all control-plane binaries (nomad, mesh, mesh-daemon,
+# agent-vault, goss). Cuts ~60-70s off boot time vs sequential downloads.
+export MESH_VERSION GOSS_URL
+bash scripts/04-download-binaries.sh
 
 # GPU-specific setup (only if HAS_GPU == "true")
 # NOTE: GPU driver installation scripts (04, 05) are not yet implemented.

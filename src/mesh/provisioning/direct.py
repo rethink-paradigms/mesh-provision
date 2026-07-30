@@ -200,12 +200,21 @@ def destroy_cluster(
     region: str,
     cluster_name: str,
     cleanup_all: bool = False,
+    node_ids: Optional[list[str]] = None,
 ) -> dict[str, Any]:
-    """Destroy all VMs whose names start with cluster_name + '-'.
+    """Destroy VMs belonging to a cluster.
+
+    Two modes:
+      1. Exact ID mode (preferred): Pass node_ids — destroys exactly those
+         DigitalOcean droplet IDs. Raises RuntimeError if any requested ID
+         could not be destroyed.
+      2. Name prefix mode (fallback): Pass only cluster_name — destroys all
+         VMs whose names start with cluster_name + '-'. Used when the caller
+         doesn't have known IDs (e.g., direct CLI usage).
 
     When cleanup_all=True also removes auxiliary DigitalOcean resources
-    (volumes, firewalls, floating IPs, SSH keys) that are TAGGED with the
-    cluster name. Never removes resources that don't match the cluster.
+    (volumes, firewalls, floating IPs, SSH keys) whose names start with
+    the cluster prefix. Never removes resources that don't match.
 
     Returns:
         {cluster_name, destroyed: True, resources_cleaned: [str]}
@@ -223,21 +232,44 @@ def destroy_cluster(
     if cleanup_all:
         cleaned += _do_cleanup_aux(driver, prefix)
 
-    # Phase 2: compute nodes — filtered by name prefix
+    # Phase 2: compute nodes
     try:
         all_nodes = driver.list_nodes()
     except Exception as exc:
         raise RuntimeError(f"Failed to list nodes on {provider}: {exc}") from exc
 
-    for node in all_nodes:
-        if node.name and node.name.startswith(prefix):
-            try:
-                driver.destroy_node(node)
-                if node.id:
-                    cleaned.append(node.id)
-                logger.info("Destroyed node %s (id=%s)", node.name, node.id)
-            except Exception as exc:
-                logger.warning("Failed to destroy node %s: %s", node.name, exc)
+    if node_ids:
+        # Exact ID mode — destroy only the requested droplet IDs.
+        # No name prefix guessing, no collision risk.
+        id_set = set(node_ids)
+        for node in all_nodes:
+            if node.id in id_set:
+                try:
+                    driver.destroy_node(node)
+                    if node.id:
+                        cleaned.append(node.id)
+                    logger.info("Destroyed node %s (id=%s)", node.name, node.id)
+                    id_set.discard(node.id)
+                except Exception as exc:
+                    logger.warning("Failed to destroy node %s (id=%s): %s", node.name, node.id, exc)
+
+        # Any IDs still in the set were not found or failed to destroy.
+        if id_set:
+            raise RuntimeError(
+                f"Failed to destroy {len(id_set)} of {len(node_ids)} requested node(s): "
+                f"{sorted(id_set)}"
+            )
+    else:
+        # Name prefix mode (fallback) — match by name prefix
+        for node in all_nodes:
+            if node.name and node.name.startswith(prefix):
+                try:
+                    driver.destroy_node(node)
+                    if node.id:
+                        cleaned.append(node.id)
+                    logger.info("Destroyed node %s (id=%s)", node.name, node.id)
+                except Exception as exc:
+                    logger.warning("Failed to destroy node %s: %s", node.name, exc)
 
     return {
         "cluster_name": cluster_name,
